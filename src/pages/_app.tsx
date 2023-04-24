@@ -1,11 +1,12 @@
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import { QueryClient, QueryClientProvider } from "react-query";
-const queryClient = new QueryClient();
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-export default function App({ Component, pageProps }: AppProps) {
+const queryClient = new QueryClient();
+
+export default function App({ Component, pageProps }: AppProps): JSX.Element {
   return (
     <QueryClientProvider client={queryClient}>
       <Component {...pageProps} />
@@ -21,7 +22,7 @@ export default function App({ Component, pageProps }: AppProps) {
         pauseOnHover
         theme="light"
         limit={1}
-      ></ToastContainer>
+      />
     </QueryClientProvider>
   );
 }

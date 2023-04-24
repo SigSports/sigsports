@@ -1,17 +1,19 @@
+import Link from "next/link";
+
+/* eslint-disable jsx-a11y/label-has-associated-control */
 export default function Sidebar() {
   return (
     <>
       <input type="checkbox" id="menu-open" className="hidden" />
 
       <header
-        className="bg-green-bg w-full text-gray-100 flex justify-between md:hidden"
+        className="flex w-full justify-between bg-green-bg text-gray-100 md:hidden"
         data-dev-hint="mobile menu bar"
       >
         <div className="flex w-full">
-          <img src={"#"} alt="" className="text-white" />
           <a
             href="#"
-            className="block p-4 text-white font-bold whitespace-nowrap truncate"
+            className="text-white block truncate whitespace-nowrap p-4 font-bold"
           >
             SIG SPORTS
           </a>
@@ -20,7 +22,7 @@ export default function Sidebar() {
         <label
           htmlFor="menu-open"
           id="mobile-menu-button"
-          className="m-2 p-2 focus:outline-none hover:text-white hover:cursor-pointer rounded-md"
+          className="hover:text-white m-2 rounded-md p-2 hover:cursor-pointer focus:outline-none"
         >
           <svg
             id="menu-open-icon"
@@ -57,7 +59,7 @@ export default function Sidebar() {
 
       <aside
         id="sidebar"
-        className="z-50 bg-green-200 text-gray-100 md:w-64 w-3/4 space-y-6 pt-6 px-0 absolute inset-y-0 left-0 transform md:relative md:translate-x-0 transition duration-200 ease-in-out md:flex md:flex-col md:justify-between overflow-y-auto"
+        className="absolute inset-y-0 left-0 z-50 w-3/4 transform space-y-6 overflow-y-auto bg-green-200 px-0 pt-6 text-gray-100 transition duration-200 ease-in-out md:relative md:flex md:w-64 md:translate-x-0 md:flex-col md:justify-between"
         data-dev-hint="sidebar; px-0 for frameless; px-2 for visually inset the navigation"
       >
         <div
@@ -69,8 +71,8 @@ export default function Sidebar() {
             className="text-white flex items-center space-x-2 px-4"
             title="Your App is cool"
           >
-            <img src="{% static 'assets/mascote.svg'%}" alt="" />
-            <span className="text-2xl font-extrabold whitespace-nowrap truncate">
+            {/* <img src="{% static 'assets/mascote.svg'%}" alt="" /> */}
+            <span className="truncate whitespace-nowrap text-2xl font-extrabold">
               SIG SPORTS
             </span>
           </a>
@@ -78,7 +80,7 @@ export default function Sidebar() {
           <nav data-dev-hint="main navigation">
             <a
               href="/profile"
-              className="flex items-center space-x-2 py-2 px-4 transition duration-200 hover:bg-green-300 hover:text-white"
+              className="hover:text-white flex items-center space-x-2 px-4 py-2 transition duration-200 hover:bg-green-300"
             >
               <svg
                 width="22"
@@ -106,9 +108,9 @@ export default function Sidebar() {
               <span>Meu Perfil</span>
             </a>
 
-            <a
+            <Link
               href="/solicitarMatricula"
-              className="flex items-center space-x-2 py-2 px-4 transition duration-200 hover:bg-green-300 hover:text-white"
+              className="hover:text-white flex items-center space-x-2 px-4 py-2 transition duration-200 hover:bg-green-300"
             >
               <svg
                 width="16"
@@ -126,10 +128,10 @@ export default function Sidebar() {
               </svg>
 
               <span className="">Solicitar nova matrícula</span>
-            </a>
+            </Link>
             <a
               href="/detalheMatricula"
-              className="flex items-center space-x-2 py-2 px-4 transition duration-200 hover:bg-green-300 hover:text-white group"
+              className="hover:text-white group flex items-center space-x-2 px-4 py-2 transition duration-200 hover:bg-green-300"
             >
               <svg
                 width="22"
@@ -165,7 +167,7 @@ export default function Sidebar() {
             </a>
             <a
               href="/registrarEspacoAtividade"
-              className="flex items-center space-x-2 py-2 px-4 transition duration-200 hover:bg-green-300 hover:text-white group"
+              className="hover:text-white group flex items-center space-x-2 px-4 py-2 transition duration-200 hover:bg-green-300"
             >
               <svg
                 width="13"
@@ -207,7 +209,7 @@ export default function Sidebar() {
 
             <a
               href="/redefinirSenha"
-              className="flex items-center space-x-2 py-2 px-4 transition duration-200 hover:bg-green-300 hover:text-white group"
+              className="hover:text-white group flex items-center space-x-2 px-4 py-2 transition duration-200 hover:bg-green-300"
             >
               <svg
                 fill="white"
@@ -251,7 +253,7 @@ export default function Sidebar() {
             </a>
             <a
               href="/logout"
-              className="flex items-center space-x-2 py-2 px-4 transition duration-200 hover:bg-green-300 hover:text-white group"
+              className="hover:text-white group flex items-center space-x-2 px-4 py-2 transition duration-200 hover:bg-green-300"
             >
               <svg
                 fill="white"
