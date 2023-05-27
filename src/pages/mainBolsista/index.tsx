@@ -3,14 +3,15 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import { GetServerSideProps } from "next";
 import Chapeu from "@/components/svg/Chapeu";
 import Layout from "../../components/Layout";
 import Grampo from "@/components/svg/Grampo";
 import Localizacao from "@/components/svg/Localizacao";
 
-export default function MainBolsista() {
+export default function MainBolsista({ countTurma }: { countTurma: number }) {
   const [theme, setTheme] = useState<string>("light");
-  const [countTurma, setCountTurma] = useState<number>(0);
+
   useEffect(() => {
     // Verifica o tema atual do navegador
     const currentTheme = window.matchMedia("(prefers-color-scheme: dark)")
@@ -19,9 +20,6 @@ export default function MainBolsista() {
       : "light";
 
     setTheme(currentTheme);
-    fetch("https://sigsport.pythonanywhere.com/api/v1/listarturmas/")
-      .then((resp) => resp.json())
-      .then((data) => setCountTurma(data.length));
   }, []);
   return (
     <Layout>
@@ -109,3 +107,16 @@ export default function MainBolsista() {
     </Layout>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  const response = await fetch(
+    "https://sigsport.pythonanywhere.com/api/v1/listarturmas/"
+  );
+  const turma = await response.json();
+  const countTurma = turma.length;
+  return {
+    props: {
+      countTurma,
+    },
+  };
+};
