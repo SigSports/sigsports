@@ -16,7 +16,7 @@ const schema = yup
     nomeAluno: yup
       .string()
       .required("Digite o nome do aluno")
-      .min(3, "Nome muito curto"),
+      .min(20, "Nome muito curto"),
     matricula: yup
       .string()
       .typeError("Digite uma matricula válida")
@@ -89,6 +89,7 @@ export default function Index({
       });
     }
   };
+
   return (
     <Layout>
       <div className="flex h-full w-full flex-col items-center pl-4 lg:items-start lg:pl-12">

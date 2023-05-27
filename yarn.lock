@@ -190,6 +190,11 @@
   dependencies:
     tslib "^2.4.0"
 
+"@types/intl@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@types/intl/-/intl-1.2.0.tgz#1245511f13064402087979f498764611a3c758fc"
+  integrity sha512-BP+KwmOvD9AR5aoxnbyyPr3fAtpjEI/bVImHsotmpuC43+z0NAmjJ9cQbX7vPCq8XcvCeAVc8E3KSQPYNaPsUQ==
+
 "@types/json-schema@^7.0.9":
   version "7.0.11"
   resolved "https://registry.yarnpkg.com/@types/json-schema/-/json-schema-7.0.11.tgz#d421b6c527a3037f7c84433fd2c4229e016863d3"
@@ -2315,6 +2320,13 @@ regexpp@^3.2.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/regexpp/-/regexpp-3.2.0.tgz#0425a2768d8f23bad70ca4b90461fa2f1213e1b2"
   integrity sha512-pq2bWo9mVD43nbts2wGv17XLiNLya+GklZ8kaDLV2Z08gDCsGpnKn9BFMepvWuHCbyVvY7J5o5+BVvoQbmlJLg==
+
+remask@^1.2.2:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/remask/-/remask-1.2.2.tgz#92f64bbd02923595a7a56748000a4bbd4ac694d6"
+  integrity sha512-zUNAiG1mYewmktEKpkvcmpDeP+04CzlWtoim7C9q/dnk7tgqtHoG9GIHjCH3I9fff7O41BLqOjRuX07s/hzF7w==
+  dependencies:
+    "@types/intl" "^1.2.0"
 
 remove-accents@0.4.2:
   version "0.4.2"
