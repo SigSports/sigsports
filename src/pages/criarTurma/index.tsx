@@ -500,9 +500,9 @@ export default function CriarTurma({
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const response = await fetch(`${url}/v1/C1`);
-  const response1 = await fetch(`${url}/v1/modalidade`);
-  const response2 = await fetch(`${url}/v1/listarprofessor/`);
+  const response = await fetch(`${url}/v1/listarCaterogias`);
+  const response1 = await fetch(`${url}/v1/listarModalidades`);
+  const response2 = await fetch(`${url}/v1/listarprofessores/`);
   const categorias = await response.json();
   const modalidades = await response1.json();
   const professores = await response2.json();
