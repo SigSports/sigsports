@@ -62,7 +62,7 @@ export default function CriarTurma({
   });
 
   const createSolicitation = useMutation(async (data: TFormData) => {
-    const response = await fetch(`${url}/v1/listarturmas/`, {
+    const response = await fetch(`${url}/v1/CriarTurma/`, {
       method: "POST",
       body: data as any,
       headers: {
@@ -97,6 +97,7 @@ export default function CriarTurma({
       const dias = ["seg", "ter", "qua"];
       const diasString = dias.join(",");
       const data1: any = JSON.stringify({
+        nomeTurma: data.nomeTurma,
         modalidade: data.modalidade,
         categoria: data.categoria,
         vagas: data.vagas,
