@@ -45,7 +45,7 @@ export default function MainBolsista({ countTurma }: { countTurma: number }) {
               {countTurma}
             </p>
 
-            <button className="mb-6 mt-2 	h-10 w-28 border-2 border-green-200 font-Montserrat text-xs font-bold leading-3 text-white-default">
+            <button className="mb-6 mt-2 	h-10 w-28 border-2 border-green-200 font-Montserrat text-xs font-bold leading-3 text-textGray dark:text-white-default">
               VER TURMAS
             </button>
 
@@ -71,7 +71,7 @@ export default function MainBolsista({ countTurma }: { countTurma: number }) {
               Cadastrar emprestimo de material
             </p>
 
-            <button className="mb-6 mt-2 	h-10 w-28 border-2 border-green-200 font-Montserrat text-xs font-bold leading-3 text-white-default">
+            <button className="mb-6 mt-2 	h-10 w-28 border-2 border-green-200 font-Montserrat text-xs font-bold leading-3 text-textGray dark:text-white-default">
               DETALHAR
             </button>
 
@@ -94,7 +94,7 @@ export default function MainBolsista({ countTurma }: { countTurma: number }) {
               Registrar aluguel de espaço
             </p>
 
-            <button className="mb-6 mt-2 	h-10 w-28 border-2 border-green-200 font-Montserrat text-xs font-bold leading-3 text-white-default">
+            <button className="mb-6 mt-2 	h-10 w-28 border-2 border-green-200 font-Montserrat text-xs font-bold leading-3 text-textGray dark:text-white-default">
               DETALHAR
             </button>
 
