@@ -14,6 +14,7 @@ module.exports = {
       },
       colors: {
         bgGray: "#2D3A3A",
+        grayIcon: "#AEBBCD",
         textGray: "#A8A7A7",
         green: {
           100: "#92E6A7",
