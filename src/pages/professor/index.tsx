@@ -21,19 +21,17 @@ const Calendar = () => {
   const firstDayOfWeek = new Date(year, month, 1).getDay();
   const url = "https://sigsport.pythonanywhere.com/api/v1/listarTurmasId/3/";
   const [turmas, setTurmas] = useState<ITurmas[]>([]);
-    useEffect(() => {
+  useEffect(() => {
     fetch(url)
-    .then((resp) => resp.json())
-    .then((data) => {
-      const turmasAtualizadas = data.map((turma: any) => ({
-        ...turma,
-        dias: turma.dias.split(","),
-      }));
-      setTurmas(turmasAtualizadas);
-    });
+      .then((resp) => resp.json())
+      .then((data) => {
+        const turmasAtualizadas = data.map((turma: any) => ({
+          ...turma,
+          dias: turma.dias.split(","),
+        }));
+        setTurmas(turmasAtualizadas);
+      });
   }, []);
-
-  
 
   const [popupContent, setPopupContent] = useState<string | null>(null);
 
