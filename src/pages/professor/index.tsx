@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Layout from "@/components/Layout";
 
 export interface ITurmas {
@@ -21,7 +21,8 @@ const Calendar = () => {
   const firstDayOfWeek = new Date(year, month, 1).getDay();
   const url = "https://sigsport.pythonanywhere.com/api/v1/listarTurmasId/3/";
   const [turmas, setTurmas] = useState<ITurmas[]>([]);
-  fetch(url)
+    useEffect(() => {
+    fetch(url)
     .then((resp) => resp.json())
     .then((data) => {
       const turmasAtualizadas = data.map((turma: any) => ({
@@ -30,6 +31,9 @@ const Calendar = () => {
       }));
       setTurmas(turmasAtualizadas);
     });
+  }, []);
+
+  
 
   const [popupContent, setPopupContent] = useState<string | null>(null);
 
