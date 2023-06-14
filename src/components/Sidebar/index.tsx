@@ -1,7 +1,15 @@
-import Link from "next/link";
-
+/* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable jsx-a11y/label-has-associated-control */
+import Link from "next/link";
+import Router from "next/router";
+import { destroyCookie } from "nookies";
+
 export default function Sidebar() {
+  function handleLogout() {
+    destroyCookie(null, "sig-token");
+    destroyCookie(null, "sig-refreshToken");
+    Router.push("/login");
+  }
   return (
     <>
       <input type="checkbox" id="menu-open" className="hidden" />
@@ -11,12 +19,12 @@ export default function Sidebar() {
         data-dev-hint="mobile menu bar"
       >
         <div className="flex w-full">
-          <a
-            href="#"
+          <Link
+            href="/"
             className="text-white block truncate whitespace-nowrap p-4 font-bold"
           >
             SIG SPORTS
-          </a>
+          </Link>
         </div>
 
         <label
@@ -251,9 +259,12 @@ export default function Sidebar() {
 
               <span>Redefinir senha</span>
             </a>
-            <a
-              href="/logout"
-              className="hover:text-white group flex items-center space-x-2 px-4 py-2 transition duration-200 hover:bg-green-300"
+            <button
+              type="button"
+              onClick={() => {
+                handleLogout();
+              }}
+              className="hover:text-white group flex w-full items-center space-x-2 px-4 py-2 transition duration-200 hover:bg-green-300"
             >
               <svg
                 fill="white"
@@ -294,7 +305,7 @@ export default function Sidebar() {
               </svg>
 
               <span>Sair</span>
-            </a>
+            </button>
           </nav>
         </div>
       </aside>

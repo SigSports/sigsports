@@ -1,40 +1,90 @@
+import { useContext, useState } from "react";
+import { GetServerSideProps } from "next";
 import Image from "next/image";
 
-import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 import LayoutInicial from "@/components/LayoutInicial";
+import { AuthContext } from "@/contexts/AuthContext";
+
+const schema = yup
+  .object({
+    username: yup
+      .string()
+      .matches(/^\d+$/, "A matrícula deve conter apenas números")
+      .min(4, "A matrícula deve ter no mínimo 4 dígitos")
+      .max(14, "A matrícula deve ter máximo 14 dígitos")
+      .required("Digite uma matrícula válida"),
+    password: yup.string().required("Senha obrigatória"),
+  })
+  .required();
+type FormData = yup.InferType<typeof schema>;
 
 export default function Login() {
-  const [showPassword, setShowPassword] = useState(false);
+  const { signIn } = useContext(AuthContext);
 
+  const [showPassword, setShowPassword] = useState(false);
+  const [errorRequest, setErrorRequest] = useState(false);
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>({
+    resolver: yupResolver(schema),
+  });
+  const onSubmit = async (data: FormData) => {
+    const response = await signIn(data);
+    if (response) {
+      setErrorRequest(true);
+    }
+  };
+
   return (
     <LayoutInicial>
       <div className="flex h-full flex-col justify-around lg:p-0">
         <div className="my-auto mt-24  w-[321px] px-8">
+          {errorRequest && (
+            <span className="flex items-center p-2 text-lg leading-5 text-red-500">
+              matricula ou senha invalido
+            </span>
+          )}
           <Image src="/SIGSport.svg" alt="Logo" width={321} height={83} />
-          <form className="">
+          <form onSubmit={handleSubmit(onSubmit)}>
             <div className="mt-7 w-72 lg:w-96">
               <div className="flex w-full flex-col">
                 <label
-                  htmlFor="email"
+                  htmlFor="username "
                   className="w-full font-Montserrat text-lg font-medium leading-6 text-white-default"
                 >
                   {" "}
-                  Email
+                  Matricula
                 </label>
                 <input
-                  placeholder="Insira seu email"
-                  name="email"
+                  {...register("username")}
+                  placeholder="Insira sua matricula"
+                  name="username"
                   type="text"
-                  className="plaheholder:font-Montserrat plaheholder:leading-5 text-gray  placeholder:text-gray  plaheholder:font-medium plaheholder:text-base h-14
-                  border-2 border-green-200 bg-white-default pl-4 text-base font-medium "
+                  className={`plaheholder:font-Montserrat plaheholder:leading-5 text-gray  placeholder:text-gray  plaheholder:font-medium plaheholder:text-base h-14
+                  border-2 ${
+                    errors.username
+                      ? "outline:border-red-600 border-red-600 focus:border-red-600"
+                      : "border-green-200"
+                  } bg-white-default pl-4 text-base font-medium`}
                 />
+                {errors.username && (
+                  <span className="flex items-center p-2 text-lg leading-5 text-red-500">
+                    {errors?.username?.message}
+                  </span>
+                )}
               </div>
               <div className="py-2">
                 <label
-                  htmlFor="password"
+                  htmlFor="senha"
                   className="w-full font-Montserrat text-lg font-medium leading-6 text-white-default"
                 >
                   {" "}
@@ -42,16 +92,20 @@ export default function Login() {
                 </label>
                 <div className="relative">
                   <input
+                    {...register("password")}
                     name="password"
                     placeholder="Insira sua senha"
                     type={showPassword ? "text" : "password"}
-                    className="plaheholder:font-Montserrat plaheholder:leading-5 text-gray  placeholder:text-gray  plaheholder:font-medium plaheholder:text-base focus:bg-white
-                    h-14 w-full border-2 border-green-200 bg-white-default pl-4 text-base
+                    className={`plaheholder:font-Montserrat plaheholder:leading-5 text-gray  placeholder:text-gray  plaheholder:font-medium plaheholder:text-base focus:bg-white
+                    h-14 w-full border-2 ${
+                      errors.password ? "border-red-600" : "border-green-200"
+                    } bg-white-default pl-4 text-base
                 font-medium
                 focus:border-gray-600
                 focus:placeholder-gray-500
-                focus:outline-none"
+                focus:outline-none`}
                   />
+
                   <div className="absolute inset-y-0 right-0 flex items-center pr-3 text-sm leading-5 hover:cursor-pointer">
                     <svg
                       fill="none"
@@ -77,6 +131,12 @@ export default function Login() {
                     </svg>
                   </div>
                 </div>
+
+                {errors.password && (
+                  <span className="flex items-center p-2 text-lg leading-5 text-red-500">
+                    {errors?.password?.message}
+                  </span>
+                )}
               </div>
               <div>
                 <a
@@ -101,3 +161,18 @@ export default function Login() {
     </LayoutInicial>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  const token = req.cookies["sig-token"];
+  if (token) {
+    return {
+      redirect: {
+        destination: "/mainBolsista",
+        permanent: false,
+      },
+    };
+  }
+  return {
+    props: {},
+  };
+};

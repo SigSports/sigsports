@@ -1,15 +1,24 @@
+/* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable react/button-has-type */
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { GetServerSideProps } from "next";
+import { destroyCookie, setCookie } from "nookies";
 import Chapeu from "@/components/svg/Chapeu";
 import Layout from "../../components/Layout";
 import Grampo from "@/components/svg/Grampo";
 import Localizacao from "@/components/svg/Localizacao";
+import { api } from "@/services/api";
 
-export default function MainBolsista({ countTurma }: { countTurma: number }) {
+export default function MainBolsista({
+  countTurma,
+  user,
+}: {
+  countTurma: number;
+  user: any;
+}) {
   const [theme, setTheme] = useState<string>("light");
 
   useEffect(() => {
@@ -25,7 +34,7 @@ export default function MainBolsista({ countTurma }: { countTurma: number }) {
     <Layout>
       <div className="flex h-full w-full flex-col items-center pl-4 lg:items-start lg:pl-12">
         <h1 className="mr-auto mt-4  pl-3 font-Raleway text-3xl  font-semibold leading-10 text-green-bg dark:text-white-default md:mt-16">
-          Boas vindas, [name]!
+          Boas vindas, {user.nome_usual}!
         </h1>
 
         <div className="mt-20 flex  flex-col flex-wrap items-start gap-y-4 lg:mt-36 lg:flex-row">
@@ -108,15 +117,56 @@ export default function MainBolsista({ countTurma }: { countTurma: number }) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   const response = await fetch(
     "https://sigsport.pythonanywhere.com/api/v1/listarTurmas/"
   );
   const turma = await response.json();
   const countTurma = turma.length;
+  let user;
+  let token = req.cookies["sig-token"];
+  if (!token) {
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    };
+  }
+
+  try {
+    const response1 = await api.get("minhas-informacoes/meus-dados/", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    user = response1.data;
+  } catch (error) {
+    try {
+      const tokenRefresh = req.cookies["sig-refreshToken"];
+      const response2 = await api.post("autenticacao/token/refresh/", {
+        refresh: tokenRefresh,
+      });
+      token = response2.data.access;
+      const response3 = await api.get("minhas-informacoes/meus-dados/", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      user = response3.data;
+      setCookie(undefined, "sig-token", response2.data.access);
+    } catch (e) {
+      destroyCookie(null, "sig-token");
+      destroyCookie(null, "sig-refreshToken");
+      return {
+        redirect: {
+          destination: "/login",
+          permanent: false,
+        },
+      };
+    }
+  }
+
   return {
     props: {
       countTurma,
+      user,
     },
   };
 };
