@@ -148,7 +148,7 @@ export default function LayoutInicial({
             )}
           </nav>
         </div>
-        <div className="tablet:w-full·flex·w-screen·items-center·justify-center">
+        <div className="tablet:w-full flex w-screen items-center justify-center">
           {children}
         </div>
       </div>
