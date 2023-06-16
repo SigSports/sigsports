@@ -13,6 +13,7 @@ export default function LayoutInicial({
   const toggleMenu = () => {
     setShowMenu(!showMenu);
   };
+
   return (
     <div className="flex h-full w-screen">
       <div className="flex h-full w-full flex-col lg:justify-between">
