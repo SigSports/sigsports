@@ -152,7 +152,7 @@ export default function LayoutInicial({
           {children}
         </div>
       </div>
-       <div className="invisible flex w-0 flex-row-reverse flex-wrap justify-between overflow-hidden lg:w-2/4 tablet:visible">
+        <div className="tablet:visible invisible flex w-0 flex-row-reverse flex-wrap justify-between overflow-hidden lg:w-2/4">
         <img
           src="/background.svg"
           alt="Logo"
@@ -160,7 +160,7 @@ export default function LayoutInicial({
         />
         <img src="/text.svg" alt="Logo" className="absolute h-full" />
 
-        <div className="invisible absolute flex h-full flex-wrap items-center justify-center tablet:visible">
+        <div className="tablet:visible invisible absolute flex h-full flex-wrap items-center justify-center">
           <img src="/women.svg" alt="Logo" className="h-full" />
         </div>
       </div>
