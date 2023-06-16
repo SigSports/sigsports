@@ -151,7 +151,11 @@ export default function LayoutInicial({
         </div>
       </div>
       <div className="tablet:visible invisible flex w-0 flex-row-reverse flex-wrap justify-between overflow-hidden lg:w-2/4">
-        <img src="/background.svg" alt="Logo" className="absolute top-0 h-full overflow-hidden" />
+         <img
+          src="/background.svg"
+          alt="Logo"
+          className="absolute top-0 h-full overflow-hidden"
+        />
         <img src="/text.svg" alt="Logo" className="absolute h-full" />
 
         <div className="tablet:visible invisible absolute flex h-full flex-wrap items-center justify-center">
