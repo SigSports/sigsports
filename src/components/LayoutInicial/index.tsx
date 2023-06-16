@@ -1,5 +1,7 @@
+/* eslint-disable @next/next/no-img-element */
 import React, { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function LayoutInicial({
   children,
@@ -20,7 +22,7 @@ export default function LayoutInicial({
               <div className="flex justify-between">
                 <div className="flex space-x-7 duration-300 ease-in-out">
                   <div>
-                    <a href="#" className="flex items-center px-2 py-4">
+                    <Link href="/" className="flex items-center px-2 py-4">
                       <Image
                         src="/mascote.svg"
                         alt="Logo"
@@ -31,7 +33,7 @@ export default function LayoutInicial({
                       <span className="text-2xl font-semibold text-green-200">
                         SIG SPORTS
                       </span>
-                    </a>
+                    </Link>
                   </div>
                   <div className="dropShadow-100 hidden items-center space-x-1 text-xl text-white-default md:flex">
                     <a
@@ -145,34 +147,20 @@ export default function LayoutInicial({
             )}
           </nav>
         </div>
-        <div className="tablet:w-full flex w-screen items-center justify-center">
+        <div className="flex w-screen items-center justify-center tablet:w-full">
           {children}
         </div>
       </div>
-      <div className="tablet:visible invisible flex w-0 flex-row-reverse flex-wrap justify-between overflow-hidden lg:w-2/4">
-        <Image
+      <div className="invisible flex w-0 flex-row-reverse flex-wrap justify-between overflow-hidden lg:w-2/4 tablet:visible">
+        <img
           src="/background.svg"
           alt="Logo"
-          className="mr-2 h-8 w-8"
-          width={32}
-          height={32}
+          className="absolute top-0 h-full overflow-hidden"
         />
-        <Image
-          src="/text.svg"
-          alt="Logo"
-          className="mr-2 h-8 w-8"
-          width={32}
-          height={32}
-        />
+        <img src="/text.svg" alt="Logo" className="absolute h-full" />
 
-        <div className="tablet:visible invisible absolute flex h-full flex-wrap items-center justify-center">
-          <Image
-            src="/women.svg"
-            alt="Logo"
-            className="mr-2 h-8 w-8"
-            width={32}
-            height={32}
-          />
+        <div className="invisible absolute flex h-full flex-wrap items-center justify-center tablet:visible">
+          <img src="/women.svg" alt="Logo" className="h-full" />
         </div>
       </div>
     </div>
