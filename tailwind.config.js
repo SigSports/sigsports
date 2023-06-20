@@ -31,7 +31,9 @@ module.exports = {
           100: "0px 4px 4px rgba(0, 0, 0, 0.25)",
         },
       },
-
+       screens: {
+              tablet: "1320px",
+            },
       fontFamily: {
         Raleway: ["Raleway", "sans-serif"],
         Montserrat: ["Montserrat", "sans-serif"],
