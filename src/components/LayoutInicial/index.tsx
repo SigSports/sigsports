@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 
 export default function LayoutInicial({
   children,
 }: {
   children: React.ReactNode;
-}) {
+}): JSX.Element {
   const [showMenu, setShowMenu] = useState(false);
 
   const toggleMenu = () => {
@@ -145,11 +145,11 @@ export default function LayoutInicial({
             )}
           </nav>
         </div>
-        <div className="tablet:w-full flex w-screen items-center justify-center">
+        <div className="flex w-screen items-center justify-center tablet:w-full">
           {children}
         </div>
       </div>
-      <div className="tablet:visible invisible flex w-0 flex-row-reverse flex-wrap justify-between overflow-hidden lg:w-2/4">
+      <div className="invisible flex w-0 flex-row-reverse flex-wrap justify-between overflow-hidden lg:w-2/4 tablet:visible">
         <Image
           src="/background.svg"
           alt="Logo"
@@ -165,7 +165,7 @@ export default function LayoutInicial({
           height={32}
         />
 
-        <div className="tablet:visible invisible absolute flex h-full flex-wrap items-center justify-center">
+        <div className="invisible absolute flex h-full flex-wrap items-center justify-center tablet:visible">
           <Image
             src="/women.svg"
             alt="Logo"
