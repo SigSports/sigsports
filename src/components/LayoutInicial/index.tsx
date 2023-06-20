@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { useState } from "react";
 import Image from "next/image";
 
@@ -11,6 +12,7 @@ export default function LayoutInicial({
   const toggleMenu = () => {
     setShowMenu(!showMenu);
   };
+
   return (
     <div className="flex h-full w-screen">
       <div className="flex h-full w-full flex-col lg:justify-between">
@@ -153,26 +155,17 @@ export default function LayoutInicial({
         <Image
           src="/background.svg"
           alt="Logo"
-          className="mr-2 h-8 w-8"
-          width={32}
-          height={32}
+          className="absolute top-0 h-full overflow-hidden"
+          layout="fill"
         />
         <Image
           src="/text.svg"
           alt="Logo"
-          className="mr-2 h-8 w-8"
-          width={32}
-          height={32}
+          className="absolute h-full"
+          layout="fill"
         />
-
         <div className="invisible absolute flex h-full flex-wrap items-center justify-center tablet:visible">
-          <Image
-            src="/women.svg"
-            alt="Logo"
-            className="mr-2 h-8 w-8"
-            width={32}
-            height={32}
-          />
+          <Image src="/women.svg" alt="Logo" className="h-full" layout="fill" />
         </div>
       </div>
     </div>
