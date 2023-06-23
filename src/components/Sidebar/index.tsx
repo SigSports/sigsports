@@ -15,7 +15,7 @@ export default function Sidebar() {
       <input type="checkbox" id="menu-open" className="hidden" />
 
       <header
-        className="flex w-full justify-between bg-green-bg text-gray-100 md:hidden"
+        className="text-gray-100 flex w-full justify-between bg-green-bg md:hidden"
         data-dev-hint="mobile menu bar"
       >
         <div className="flex w-full">
@@ -67,8 +67,8 @@ export default function Sidebar() {
 
       <aside
         id="sidebar"
-        className="absolute inset-y-0 left-0 z-50 w-3/4 transform space-y-6 overflow-y-auto bg-green-200 px-0 pt-6 text-gray-100 transition duration-200 ease-in-out md:relative md:flex md:w-64 md:translate-x-0 md:flex-col md:justify-between"
-        data-dev-hint="sidebar; px-0 for frameless; px-2 for visually inset the navigation"
+        className="text-gray-100 absolute inset-y-0 left-0 z-50 w-3/4 transform space-y-6 overflow-y-auto bg-green-200 px-0 pt-6 transition duration-200 ease-in-out md:relative md:flex md:w-64 md:translate-x-0 md:flex-col md:justify-between"
+        data-dev-hint="sidebar; px-0 for frameless; px-2 for visually inset the navigation "
       >
         <div
           className="flex flex-col space-y-6"
@@ -80,15 +80,15 @@ export default function Sidebar() {
             title="Your App is cool"
           >
             {/* <img src="{% static 'assets/mascote.svg'%}" alt="" /> */}
-            <span className="truncate whitespace-nowrap text-2xl font-extrabold">
+            <span className="truncate whitespace-nowrap text-2xl font-extrabold text-white-default">
               SIG SPORTS
             </span>
           </a>
 
-          <nav data-dev-hint="main navigation">
+          <nav data-dev-hint="main navigation ">
             <a
               href="/profile"
-              className="hover:text-white flex items-center space-x-2 px-4 py-2 transition duration-200 hover:bg-green-300"
+              className="hover:text-white flex items-center space-x-2 px-4 py-2 text-white-default transition duration-200 hover:bg-green-300"
             >
               <svg
                 width="22"
@@ -118,7 +118,7 @@ export default function Sidebar() {
 
             <Link
               href="/solicitarMatricula"
-              className="hover:text-white flex items-center space-x-2 px-4 py-2 transition duration-200 hover:bg-green-300"
+              className="hover:text-white flex items-center space-x-2 px-4 py-2 text-white-default transition duration-200 hover:bg-green-300"
             >
               <svg
                 width="16"
@@ -139,7 +139,7 @@ export default function Sidebar() {
             </Link>
             <a
               href="/detalheMatricula"
-              className="hover:text-white group flex items-center space-x-2 px-4 py-2 transition duration-200 hover:bg-green-300"
+              className="hover:text-white group flex items-center space-x-2 px-4 py-2 text-white-default transition duration-200 hover:bg-green-300"
             >
               <svg
                 width="22"
@@ -175,7 +175,7 @@ export default function Sidebar() {
             </a>
             <a
               href="/registrarEspacoAtividade"
-              className="hover:text-white group flex items-center space-x-2 px-4 py-2 transition duration-200 hover:bg-green-300"
+              className="hover:text-white group flex items-center space-x-2 px-4 py-2 text-white-default transition duration-200 hover:bg-green-300"
             >
               <svg
                 width="13"
@@ -217,7 +217,7 @@ export default function Sidebar() {
 
             <a
               href="/redefinirSenha"
-              className="hover:text-white group flex items-center space-x-2 px-4 py-2 transition duration-200 hover:bg-green-300"
+              className="hover:text-white group flex items-center space-x-2 px-4 py-2 text-white-default transition duration-200 hover:bg-green-300"
             >
               <svg
                 fill="white"
@@ -264,7 +264,7 @@ export default function Sidebar() {
               onClick={() => {
                 handleLogout();
               }}
-              className="hover:text-white group flex w-full items-center space-x-2 px-4 py-2 transition duration-200 hover:bg-green-300"
+              className="hover:text-white group flex w-full items-center space-x-2 px-4 py-2 text-white-default transition duration-200 hover:bg-green-300"
             >
               <svg
                 fill="white"

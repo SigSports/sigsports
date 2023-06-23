@@ -1,12 +1,11 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { GetServerSideProps } from "next";
-import Image from "next/image";
-
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import LayoutInicial from "@/components/LayoutInicial";
 import { AuthContext } from "@/contexts/AuthContext";
+import SigSport from "@/components/svg/SigSport";
 
 const schema = yup
   .object({
@@ -43,7 +42,17 @@ export default function Login() {
       setErrorRequest(true);
     }
   };
+  const [theme, setTheme] = useState<string>("light");
 
+  useEffect(() => {
+    // Verifica o tema atual do navegador
+    const currentTheme = window.matchMedia("(prefers-color-scheme: dark)")
+      .matches
+      ? "dark"
+      : "light";
+
+    setTheme(currentTheme);
+  }, [theme]);
   return (
     <LayoutInicial>
       <div className="flex h-full flex-col justify-around lg:p-0">
@@ -53,7 +62,11 @@ export default function Login() {
               matricula ou senha invalido
             </span>
           )}
-          <Image src="/SIGSport.svg" alt="Logo" width={321} height={83} />
+          {theme === "dark" ? (
+            <SigSport white="#FCFFFC" green="#16DB65" />
+          ) : (
+            <SigSport white="#2D3A3A" green="#058C42" />
+          )}
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="mt-7 w-72 lg:w-96">
               <div className="flex w-full flex-col">
@@ -69,8 +82,7 @@ export default function Login() {
                   placeholder="Insira sua matricula"
                   name="username"
                   type="text"
-                  className={`plaheholder:font-Montserrat plaheholder:leading-5 text-gray  placeholder:text-gray  plaheholder:font-medium plaheholder:text-base h-14
-                  border-2 ${
+                  className={`plaheholder:font-Montserrat plaheholder:leading-5 plaheholder:font-medium  plaheholder:text-base  h-14  border-2 ${
                     errors.username
                       ? "outline:border-red-600 border-red-600 focus:border-red-600"
                       : "border-green-200"
@@ -96,12 +108,10 @@ export default function Login() {
                     name="password"
                     placeholder="Insira sua senha"
                     type={showPassword ? "text" : "password"}
-                    className={`plaheholder:font-Montserrat plaheholder:leading-5 text-gray  placeholder:text-gray  plaheholder:font-medium plaheholder:text-base focus:bg-white
-                    h-14 w-full border-2 ${
+                    className={`plaheholder:font-Montserrat plaheholder:leading-5 plaheholder:font-medium plaheholder:text-base  focus:bg-white  
+                    h-14 w-full border-2 pl-4 ${
                       errors.password ? "border-red-600" : "border-green-200"
-                    } bg-white-default pl-4 text-base
-                font-medium
-                focus:border-gray-600
+                    } focus:border-gray-600 focus:placeholder-gray-500 focus:border-gray-600
                 focus:placeholder-gray-500
                 focus:outline-none`}
                   />

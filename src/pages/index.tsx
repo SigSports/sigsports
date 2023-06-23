@@ -1,8 +1,20 @@
-import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import LayoutInicial from "@/components/LayoutInicial";
+import SigSport from "@/components/svg/SigSport";
 
 export default function Home() {
+  const [theme, setTheme] = useState<string>("light");
+
+  useEffect(() => {
+    // Verifica o tema atual do navegador
+    const currentTheme = window.matchMedia("(prefers-color-scheme: dark)")
+      .matches
+      ? "dark"
+      : "light";
+
+    setTheme(currentTheme);
+  }, [theme]);
   return (
     <LayoutInicial>
       <div className="flex flex-col justify-around lg:p-0">
@@ -12,8 +24,13 @@ export default function Home() {
         </div>
 
         <div className="mx-auto w-[321px] px-8">
-          <Image src="/SIGSport.svg" alt="Logo" width={321} height={83} />
-          <div className="mt-12 flex w-full justify-around text-white-default">
+          {theme === "dark" ? (
+            <SigSport white="#FCFFFC" green="#16DB65" />
+          ) : (
+            <SigSport white="#2D3A3A" green="#058C42" />
+          )}
+
+          <div className="mt-12 flex w-full justify-around text-gray dark:text-white-default">
             <Link
               href="/login"
               className="mr-8 flex  h-[57.6px] w-[144px] items-center justify-center rounded-sm border border-green-200 font-Montserrat text-base font-bold leading-5"
@@ -22,7 +39,7 @@ export default function Home() {
             </Link>
             <Link
               href="/esportes"
-              className="flex h-[57.6px] w-[144px] items-center justify-center rounded-sm bg-green-200 font-Montserrat text-base font-bold leading-5"
+              className=" flex h-[57.6px] w-[144px] items-center justify-center rounded-sm bg-green-200 font-Montserrat text-base font-bold leading-5 text-white-default"
             >
               ESPORTES
             </Link>
