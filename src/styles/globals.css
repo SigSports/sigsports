@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap');
 
 #sidebar {
   --tw-translate-x: -100%;
@@ -12,9 +13,7 @@
 #menu-open:checked ~ #sidebar {
   --tw-translate-x: 0;
 }
-#menu-open:checked ~ * #mobile-menu-button {
-  background-color: #04471c;
-}
+
 #menu-open:checked ~ * #menu-open-icon {
   display: none;
 }

@@ -1,10 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
-import LayoutInicial from "@/components/LayoutInicial";
+import Layout from "@/components/Layout";
 
 export default function Home() {
   return (
-    <LayoutInicial>
+    <Layout>
       <div className="flex flex-col justify-around lg:p-0">
         <div className="flex flex-col p-8 font-Raleway text-[1.375rem] font-semibold leading-[50px] text-white-ligth ">
           <h1>Para iniciar faça seu login</h1>
@@ -29,6 +29,6 @@ export default function Home() {
           </div>
         </div>
       </div>
-    </LayoutInicial>
+    </Layout>
   );
 }
