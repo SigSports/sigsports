@@ -113,7 +113,7 @@ const Calendar = () => {
           </div>
         </div>
         {popupContent && (
-          <div className="absolute  ml-10 rounded-md border border-gray-300 bg-yellow-500 p-4 text-sm text-white-default">
+          <div className="bg-yellow-500  absolute ml-10 rounded-md border border-gray-300 p-4 text-sm text-white-default">
             {popupContent}
           </div>
         )}

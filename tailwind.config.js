@@ -13,11 +13,19 @@ module.exports = {
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
       colors: {
-        yellow: {
-          100: "#F8D442",
-          200:"#FEAF00"
+        pink:{
+          100:"#A634FF",
+          200:"#453961"
         },
-        bg:"#F2EAE1",
+        blue:{
+          200:"#2E5A62",
+          100:"#16ACDB"
+        },
+        yellow:"#575839",
+        orange:"#FFA234",
+        red: {
+          100: "#FF0000",
+        },
         bgGray: "#2D3A3A",
         grayIcon: "#AEBBCD",
         textGray: "#A8A7A7",
@@ -40,6 +48,7 @@ module.exports = {
         Raleway: ["Raleway", "sans-serif"],
         Montserrat: ["Montserrat", "sans-serif"],
         Quicksand: ["Quicksand", "sans-serif"],
+        Poppins: ["Poppins", "sans-serif"]
       },
     },
   },
