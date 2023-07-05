@@ -8,7 +8,7 @@ export default function ListarTurmas() {
         <h1 className="leading-[ 37.57px] mr-auto mt-4  font-Raleway text-3xl font-semibold text-green-bg dark:text-white-default md:mt-16">
           Listar turmas
         </h1>
-        <div className="mt-10 flex h-full w-full flex-wrap items-center ">
+        <div className="mt-10 flex h-full w-full flex-wrap items-center">
           <div className="flex flex-col justify-center">
             <label
               htmlFor="search"
