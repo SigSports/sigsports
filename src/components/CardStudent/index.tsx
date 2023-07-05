@@ -9,7 +9,7 @@ export default function Index() {
     setIsDropdownOpen(!isDropdownOpen);
   };
   return (
-    <div className="flex h-16 w-full items-center justify-between overflow-x-auto  text-white-default shadow-md hover:cursor-pointer hover:border-2 hover:border-green-200">
+    <div className="flex h-16 w-full items-center justify-between   text-white-default shadow-md hover:cursor-pointer hover:border-2 hover:border-green-200">
       <div className="ml-[18px] mr-8 flex gap-x-2">
         <Image src="/people.svg" alt="people" width={16} height={16} />
         <span className="font-Montserrat text-lg font-medium">

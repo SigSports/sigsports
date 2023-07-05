@@ -40,13 +40,13 @@ const VisualizarTurma: NextPage = () => (
         </h1>
       </div>
 
-      <div className="mt-10 flex h-48 w-full items-center rounded border-[3px] border-green-200 pl-14 pr-10">
-        <div className="flex w-full items-center justify-center">
-          <div className="flex h-full w-1/4 flex-col justify-center font-Montserrat font-medium text-white-default  ">
-            <h1 className="text-[4.695rem]">30</h1>
-            <p className="flex w-[50px] text-center">Capacidade Total</p>
+      <div className="mt-10 flex w-full  items-center rounded border-[3px] border-green-200 py-4 pl-14 pr-10">
+        <div className="flex w-full flex-col items-center tablet:flex-row">
+          <div className="flex h-full w-full flex-col items-center justify-center py-2 font-Montserrat font-medium text-white-default md:w-1/4 md:py-0  ">
+            <h1 className="text-6xl md:text-[4.695rem]">30</h1>
+            <p className="flex text-center tablet:w-[50px]">Capacidade Total</p>
           </div>
-          <div className="h-full w-1/4">
+          <div className="h-full md:w-1/4">
             <div className="flex w-full items-center">
               <Image
                 src="/people.svg"
@@ -79,7 +79,7 @@ const VisualizarTurma: NextPage = () => (
             <div />
             <div />
           </div>
-          <div className="h-full w-1/4">
+          <div className="h-full py-2 md:w-1/4">
             <div className="flex w-full items-center">
               <Image
                 src="/location.svg"
@@ -147,13 +147,13 @@ const VisualizarTurma: NextPage = () => (
           >
             Buscar aluno (a) {}
           </label>
-          <div className="flex ">
+          <div className="flex w-full items-center">
             <div className="relative ">
               <input
                 type="text"
                 name="search"
                 placeholder="Digite"
-                className="h-14 w-72 rounded-l border-y-2 border-l-2 border-green-200 bg-white-default pl-12 pr-6 font-Quicksand text-base font-medium text-textGray placeholder:text-textGray focus:border-green-200 md:w-[55rem]"
+                className="h-14 w-52 rounded-l border-y-2 border-l-2 border-green-200 bg-white-default pl-12 pr-6 font-Quicksand text-base font-medium text-textGray placeholder:text-textGray focus:border-green-200 xl:w-[500px] tablet:w-[800px] 3xl:w-[55rem]"
               />
 
               <div className="absolute inset-y-0 left-3 flex items-center">
@@ -179,16 +179,16 @@ const VisualizarTurma: NextPage = () => (
             </button>
           </div>
         </div>
-        <div className="ml-auto flex justify-end">
-          <div className="relative ml-auto w-full">
+        <div className="mt-3 flex sm:mt-0 3xl:ml-auto">
+          <div className="relative hover:cursor-pointer">
             <button
               type="button"
-              className=" mt-4 flex h-14 items-center justify-center rounded-r-sm bg-green-200 font-Montserrat text-[17.28px]  font-bold text-white-default md:ml-7 md:mt-7 xl:w-12 2xl:w-[21.5rem]"
+              className=" ml-4 mt-4 flex h-14 w-12 items-center justify-center rounded-r-sm bg-green-200  font-Montserrat text-[17.28px] font-bold text-transparent md:mt-7 3xl:w-[21.5rem] 3xl:text-white-default"
             >
               MATRICULAR ALUNO (A)
             </button>
 
-            <div className="absolute inset-y-0 left-12 top-6 md:top-9">
+            <div className="3lx:left-12 absolute inset-y-0 left-5 top-6 md:top-9">
               <svg
                 width="44"
                 height="44"
@@ -209,7 +209,7 @@ const VisualizarTurma: NextPage = () => (
         </div>
       </div>
 
-      <div className="mt-12 flex w-full flex-col ">
+      <div className=" mt-12 flex w-full flex-col ">
         <CardStudent />
         <CardStudent />
         <CardStudent />

@@ -43,6 +43,8 @@ module.exports = {
       },
        screens: {
               tablet: "1320px",
+              "2xl":"1600px",
+              "3xl": "1920px"
             },
       fontFamily: {
         Raleway: ["Raleway", "sans-serif"],
