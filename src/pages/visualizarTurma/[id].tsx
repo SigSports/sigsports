@@ -41,8 +41,8 @@ const VisualizarTurma: NextPage = () => (
       </div>
 
       <div className="mt-10 flex w-full  items-center rounded border-[3px] border-green-200 py-4 pl-14 pr-10">
-        <div className="flex w-full flex-col items-center tablet:flex-row">
-          <div className="flex h-full w-full flex-col items-center justify-center py-2 font-Montserrat font-medium text-white-default md:w-1/4 md:py-0  ">
+        <div className="flex w-full flex-col items-center font-Montserrat  tablet:flex-row">
+          <div className="flex h-full w-full flex-col items-center justify-center py-2 font-medium text-white-default md:w-1/4 md:py-0  ">
             <h1 className="text-6xl md:text-[4.695rem]">30</h1>
             <p className="flex text-center tablet:w-[50px]">Capacidade Total</p>
           </div>
@@ -183,7 +183,7 @@ const VisualizarTurma: NextPage = () => (
           <div className="relative hover:cursor-pointer">
             <button
               type="button"
-              className=" ml-4 mt-4 flex h-14 w-12 items-center justify-center rounded-r-sm bg-green-200  font-Montserrat text-[17.28px] font-bold text-transparent md:mt-7 3xl:w-[21.5rem] 3xl:text-white-default"
+              className=" ml-4 mt-4 flex h-14 w-12 items-center justify-center rounded-r-sm bg-green-200  font-Montserrat text-[17.28px] font-bold leading-normal text-transparent md:mt-7 3xl:w-[21.5rem] 3xl:text-white-default	"
             >
               MATRICULAR ALUNO (A)
             </button>

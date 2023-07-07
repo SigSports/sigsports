@@ -47,10 +47,10 @@ module.exports = {
               "3xl": "1920px"
             },
       fontFamily: {
-        Raleway: ["Raleway", "sans-serif"],
-        Montserrat: ["Montserrat", "sans-serif"],
-        Quicksand: ["Quicksand", "sans-serif"],
-        Poppins: ["Poppins", "sans-serif"]
+        Raleway: ["Raleway"],
+        Montserrat: ["Montserrat"],
+        Quicksand: ["Quicksand"],
+        Poppins: ["Poppins"]
       },
     },
   },

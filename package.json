@@ -23,6 +23,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.43.9",
+    "react-input-mask": "^2.0.4",
     "react-query": "^3.39.3",
     "react-toastify": "^9.1.2",
     "remask": "^1.2.2",
@@ -32,6 +33,7 @@
   },
   "devDependencies": {
     "@types/cookie": "^0.5.1",
+    "@types/react-input-mask": "^3.0.2",
     "@typescript-eslint/eslint-plugin": "^5.30.0",
     "@typescript-eslint/parser": "^5.30.0",
     "eslint": "8.18.0",
