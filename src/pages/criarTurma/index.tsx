@@ -50,6 +50,8 @@ export default function CriarTurma({
 }) {
   const [errorTurno, setErrrorTurno] = useState(false);
   const [turno, setTurno] = useState<string>("");
+  const [genero, setGenero] = useState<string>("");
+  const [errorGenero, setErrorGenero] = useState(false);
   const [horaInicio, setHoraInicio] = useState<string>("");
   const [horaFim, setHoraFim] = useState<string>("");
   const {
@@ -92,20 +94,23 @@ export default function CriarTurma({
   const onSubmit = async (data: TFormData | any) => {
     if (turno === "") {
       setErrrorTurno(true);
+    } else if (genero === "") {
+      setErrorGenero(true);
     } else {
       setErrrorTurno(false);
-      const dias = ["seg", "ter", "qua"];
-      const diasString = dias.join(",");
+
+      const diasString = data.dias.join(",");
       const data1: any = JSON.stringify({
         nomeTurma: data.nomeTurma,
         modalidade: data.modalidade,
         categoria: data.categoria,
         vagas: data.vagas,
         professor: data.professor,
-        turno,
+        genero,
         dias: diasString,
         horarioInicial: data.horaInicial,
         horarioFinal: data.horaFinal,
+        turno,
       });
 
       const response = await createSolicitation.mutateAsync(data1);
@@ -143,7 +148,9 @@ export default function CriarTurma({
   function handleTurnoChange(event: ChangeEvent<HTMLInputElement>) {
     setTurno(event.target.value);
   }
-
+  function handleGeneroChange(event: ChangeEvent<HTMLInputElement>) {
+    setGenero(event.target.value);
+  }
   return (
     <Layout>
       <div className="flex h-full w-full flex-col items-center pl-4 lg:items-start lg:pl-12">
@@ -257,6 +264,68 @@ export default function CriarTurma({
                 </option>
               ))}
             </select>
+          </div>
+          <span className="ml-4 mt-4 h-full w-full font-Raleway text-base font-medium text-textGray dark:text-gray-300">
+            Informe o tipo da turma
+          </span>
+          <div className="w-full pl-4">
+            <div className="mb-4 mt-8 flex items-center">
+              <input
+                type="radio"
+                name="genero"
+                value="Masculino"
+                checked={genero === "Masculino"}
+                onChange={handleGeneroChange}
+                className="h-5 w-5 rounded border-2 accent-green-300 outline-green-300 focus:accent-green-300 dark:accent-green-300"
+              />
+              <button
+                type="button"
+                className="ml-2 font-Raleway text-base font-medium text-textGray "
+                onClick={() => handleButtonClicked("Masculino")}
+              >
+                Masculino
+              </button>
+            </div>
+            <div className="mb-4 flex items-center">
+              <input
+                type="radio"
+                name="genero"
+                value="Feminino"
+                checked={genero === "Feminino"}
+                onChange={handleGeneroChange}
+                className="h-5 w-5 rounded border-2 accent-green-300 outline-green-300 focus:accent-green-300 dark:accent-green-300"
+              />
+              <button
+                type="button"
+                className="ml-2 font-Raleway text-base font-medium text-textGray "
+                onClick={() => handleButtonClicked("Feminino")}
+              >
+                Feminino
+              </button>
+            </div>
+            <div className="flex items-center">
+              <input
+                type="radio"
+                name="genero"
+                value="Misto"
+                checked={genero === "Misto"}
+                onChange={handleGeneroChange}
+                className="h-5 w-5 rounded border-2 accent-green-300 outline-green-300 focus:accent-green-300 dark:accent-green-300"
+              />
+
+              <button
+                type="button"
+                className="ml-2 font-Raleway text-base font-medium text-textGray "
+                onClick={() => handleButtonClicked("Misto")}
+              >
+                Misto
+              </button>
+            </div>
+            {errorGenero && (
+              <p className="mt-2 pl-6 text-base font-medium text-red-500">
+                Escolha uma das opções
+              </p>
+            )}
           </div>
           <div className="my-6 flex w-full flex-col pl-4">
             <label
@@ -402,10 +471,10 @@ export default function CriarTurma({
             <div className="mb-4 mt-2 flex items-center">
               <input
                 {...register("dias")}
-                id="seg"
+                id="segunda-feira "
                 type="checkbox"
                 name="dias"
-                value="seg "
+                value="segunda-feira "
                 className="h-5 w-5 rounded  border-2 accent-green-300 outline-green-300 focus:accent-green-300 dark:accent-green-300"
               />
               <label
@@ -418,9 +487,9 @@ export default function CriarTurma({
             <div className="mb-4 flex items-center">
               <input
                 {...register("dias")}
-                id="ter"
+                id="terça-feira "
                 type="checkbox"
-                value="ter "
+                value="terça-feira "
                 name="dias"
                 className="h-5 w-5 rounded border-2 accent-green-300 outline-green-300 focus:accent-green-300 dark:accent-green-300"
               />
@@ -434,9 +503,9 @@ export default function CriarTurma({
             <div className="mb-4 flex items-center">
               <input
                 {...register("dias")}
-                id="qua"
+                id="quarta-feira "
                 type="checkbox"
-                value="qua "
+                value="quarta-feira "
                 name="dias"
                 className="h-5 w-5 rounded  border-2 accent-green-300 outline-green-300 focus:accent-green-300 dark:accent-green-300"
               />
@@ -450,10 +519,10 @@ export default function CriarTurma({
             <div className="mb-4 flex items-center">
               <input
                 {...register("dias")}
-                id="qui"
+                id="quinta-feira "
                 type="checkbox"
                 name="dias"
-                value="qui "
+                value="quinta-feira "
                 className="h-5 w-5 rounded border-2 accent-green-300 outline-green-300 focus:accent-green-300 dark:accent-green-300"
               />
               <label
@@ -466,10 +535,10 @@ export default function CriarTurma({
             <div className="mb-4 flex items-center">
               <input
                 {...register("dias")}
-                id="sex"
+                id="sexta-feira"
                 type="checkbox"
                 name="dias"
-                value="sex"
+                value="sexta-feira"
                 className="h-5 w-5 rounded border-2  accent-green-300 outline-green-300 focus:accent-green-300 dark:accent-green-300"
               />
               <label

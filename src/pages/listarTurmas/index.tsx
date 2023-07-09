@@ -1,7 +1,21 @@
+import { GetServerSideProps } from "next";
 import Layout from "@/components/Layout";
 import Card from "@/components/Card";
 
-export default function ListarTurmas() {
+export type TurmaType = {
+  nomeTurma: "string";
+  modalidade: number;
+  categoria: number;
+  vagas: number;
+  professor: string;
+  genero: "string";
+  dias: "string";
+  horarioInicial: "string";
+  horarioFinal: "string";
+  turno: "string";
+};
+
+export default function ListarTurmas({ turmas }: { turmas: TurmaType[] }) {
   return (
     <Layout>
       <div className="flex h-full w-full flex-col items-center justify-center pl-4 md:w-4/5 md:pl-16 ">
@@ -22,7 +36,7 @@ export default function ListarTurmas() {
                   type="text"
                   name="search"
                   placeholder="Digite"
-                  className="h-14 w-72 rounded border-2 border-green-200 bg-white-default pl-12 pr-6 font-Quicksand text-base font-medium text-textGray placeholder:text-textGray focus:border-green-200 md:w-[55.5rem]"
+                  className="h-14 w-52 rounded-l border-y-2 border-l-2 border-green-200 bg-white-default pl-12 pr-6 font-Quicksand text-base font-medium text-textGray placeholder:text-textGray focus:border-green-200 xl:w-[500px] tablet:w-[800px] 3xl:w-[55rem]"
                 />
 
                 <div className="absolute inset-y-0 left-3 flex items-center">
@@ -48,44 +62,62 @@ export default function ListarTurmas() {
               </button>
             </div>
           </div>
-          <div className="relative w-full pl-8 pr-12 md:w-0 md:pl-0 md:pr-0">
-            <button
-              type="button"
-              className="mx-auto mt-4 flex h-14 w-full items-center justify-center rounded-r-sm bg-green-200 font-Montserrat  text-[17.28px] font-bold text-white-default md:ml-7 md:mt-7 md:w-[25.5rem]"
-            >
-              Criar nova turma
-            </button>
-
-            <div className="absolute inset-y-0 left-12 top-6 md:top-9">
-              <svg
-                width="44"
-                height="44"
-                viewBox="0 0 44 44"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
+          <div className="mt-3 flex sm:mt-0 3xl:ml-auto">
+            <div className="relative hover:cursor-pointer">
+              <button
+                type="button"
+                className=" ml-4 mt-4 flex h-14 w-12 items-center justify-center rounded-r-sm bg-green-200  font-Montserrat text-[17.28px] font-bold leading-normal text-transparent md:mt-7 3xl:w-[21.5rem] 3xl:text-white-default	"
               >
-                <path
-                  d="M21.9993 9.16602V34.8327M9.16602 21.9993H34.8327"
-                  stroke="white"
-                  strokeWidth="2.75"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
+                CRIAR NOVA TURMA
+              </button>
+
+              <div className="3lx:left-12 absolute inset-y-0 left-5 top-6 md:top-9">
+                <svg
+                  width="44"
+                  height="44"
+                  viewBox="0 0 44 44"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M21.9993 9.16602V34.8327M9.16602 21.9993H34.8327"
+                    stroke="white"
+                    strokeWidth="2.75"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </div>
             </div>
           </div>
         </div>
         <div className="mr-auto mt-14 grid gap-x-20 gap-y-10 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          <Card turma="Natação" sexo="Misto" />
-          <Card turma="Futsal" sexo="Feminino" />
-          <Card turma="Basquete" sexo="Masculino" />
-          <Card turma="Natação" sexo="Misto" />
-          <Card turma="Natação" sexo="Misto" />
-          <Card turma="Futsal" sexo="Feminino" />
-          <Card turma="Basquete" sexo="Masculino" />
-          <Card turma="Natação" sexo="Misto" />
+          {turmas.map((turma) => (
+            <Card
+              key={turma.nomeTurma}
+              turma={turma.nomeTurma}
+              sexo={turma.genero}
+              prof={turma.professor}
+              dias={turma.dias}
+              horaInicial={turma.horarioInicial}
+              horaFinal={turma.horarioFinal}
+            />
+          ))}
         </div>
       </div>
     </Layout>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  const response = await fetch(
+    "https://sigsport.pythonanywhere.com/api/v1/listarTurmas/"
+  );
+  const turmas = await response.json();
+
+  return {
+    props: {
+      turmas,
+    },
+  };
+};

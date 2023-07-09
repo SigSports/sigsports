@@ -3,12 +3,41 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
-export default function Card({ turma, sexo }: { turma: string; sexo: string }) {
+export default function Card({
+  turma,
+  sexo,
+  prof,
+  horaInicial,
+  horaFinal,
+  dias,
+}: {
+  turma: string;
+  sexo: string;
+  prof: string;
+  horaInicial: string;
+  horaFinal: string;
+  dias: string;
+}) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
+  function formatarDiasSemana(diasSemana: string) {
+    const diasArray = diasSemana.split(",");
+
+    if (diasArray.length === 1) {
+      return diasArray[0];
+    }
+    if (diasArray.length === 2) {
+      return diasArray.map((dia) => dia.replace("-feira", "")).join(" e ");
+    }
+    const ultimoDia = diasArray.pop();
+    const diasFormatados = diasArray
+      .map((dia) => dia.replace("-feira", ""))
+      .join(", ");
+    return `${diasFormatados} e ${ultimoDia?.replace("-feira", "")}`;
+  }
   return (
     <div className="shadow-bottom bg-custom w-[14.375rem] rounded border-2 border-green-200">
       <div className="flex w-full">
@@ -95,7 +124,7 @@ export default function Card({ turma, sexo }: { turma: string; sexo: string }) {
             alt="user"
             className=""
           />
-          <span>Profª Ana Lúcia</span>
+          <span>Profª {prof}</span>
         </div>
         <div className="flex items-center">
           <Image
@@ -105,7 +134,9 @@ export default function Card({ turma, sexo }: { turma: string; sexo: string }) {
             alt="user"
             className="ml-1 mr-1"
           />
-          <span>16:00 ás 16:45</span>
+          <span>
+            {horaInicial} ás {horaFinal}
+          </span>
         </div>
         <div className="flex items-center">
           <Image
@@ -115,7 +146,7 @@ export default function Card({ turma, sexo }: { turma: string; sexo: string }) {
             alt="user"
             className="mr-1"
           />
-          <span>Terça e Quinta</span>
+          <span>{formatarDiasSemana(dias)}</span>
         </div>
         <div className="flex items-center">
           <Image
