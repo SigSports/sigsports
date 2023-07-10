@@ -1,7 +1,12 @@
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
+/* eslint-disable @typescript-eslint/no-shadow */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable no-nested-ternary */
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/router";
 
 export default function Card({
   turma,
@@ -10,6 +15,8 @@ export default function Card({
   horaInicial,
   horaFinal,
   dias,
+  id,
+  vagasRestantes,
 }: {
   turma: string;
   sexo: string;
@@ -17,9 +24,12 @@ export default function Card({
   horaInicial: string;
   horaFinal: string;
   dias: string;
+  id: number;
+  vagasRestantes: number;
 }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
+  const [showModal, setShowModal] = useState(false);
+  const router = useRouter();
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
@@ -38,10 +48,17 @@ export default function Card({
       .join(", ");
     return `${diasFormatados} e ${ultimoDia?.replace("-feira", "")}`;
   }
+  function handleRedirect(id: number) {
+    router.push(`/visualizarTurma/${id}`);
+  }
+
   return (
     <div className="shadow-bottom bg-custom w-[14.375rem] rounded border-2 border-green-200">
       <div className="flex w-full">
-        <h1 className="flex h-[51px] w-full items-center justify-center bg-green-200 font-Montserrat text-[17.28px] font-bold text-white-default">
+        <h1
+          className="flex h-[51px] w-full items-center justify-center bg-green-200 font-Montserrat text-[17.28px] font-bold text-white-default hover:cursor-pointer"
+          onClick={() => handleRedirect(id)}
+        >
           {turma}
         </h1>
         <span className="relative flex items-center bg-green-200 hover:cursor-pointer">
@@ -106,6 +123,7 @@ export default function Card({
 
                 <Link
                   href="#"
+                  onClick={() => setShowModal(true)}
                   className="block px-4 py-2 font-Montserrat text-sm font-medium"
                 >
                   Excluir
@@ -156,7 +174,11 @@ export default function Card({
             alt="user"
             className="mr-1"
           />
-          <span>30 Alunos</span>
+          {vagasRestantes > 1 ? (
+            <span>{vagasRestantes} Alunos</span>
+          ) : (
+            <span>{vagasRestantes} Aluno</span>
+          )}
         </div>
 
         <span
@@ -173,6 +195,66 @@ export default function Card({
           {sexo}
         </span>
       </div>
+      {showModal ? (
+        <>
+          <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto overflow-x-hidden  outline-none focus:outline-none">
+            <div className="relative mx-auto my-6 w-[46.875rem] max-w-3xl bg-bgGray">
+              {/* content */}
+              <div className="bg-white relative flex w-full flex-col rounded-lg border-0 shadow-lg outline-none focus:outline-none">
+                {/* header */}
+                <div className="flex items-start justify-between rounded-t p-5">
+                  <h3 className="flex w-full justify-center font-Montserrat text-3xl text-[27px] font-bold leading-normal">
+                    DESEJA EXCLUIR O ALUNO?
+                  </h3>
+
+                  <span
+                    className="text-white-default hover:cursor-pointer"
+                    onClick={() => setShowModal(false)}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="42"
+                      height="42"
+                      viewBox="0 0 42 42"
+                      fill="none"
+                    >
+                      <path
+                        d="M23.7856 21.0005L31.5786 13.2075C31.9484 12.8383 32.1565 12.3373 32.1569 11.8147C32.1574 11.2921 31.9502 10.7908 31.581 10.4209C31.2118 10.0511 30.7108 9.84302 30.1882 9.84256C29.6657 9.8421 29.1643 10.0493 28.7944 10.4185L21.0015 18.2114L13.2085 10.4185C12.8386 10.0486 12.337 9.84082 11.814 9.84082C11.2909 9.84082 10.7893 10.0486 10.4194 10.4185C10.0496 10.7883 9.8418 11.2899 9.8418 11.813C9.8418 12.336 10.0496 12.8377 10.4194 13.2075L18.2124 21.0005L10.4194 28.7935C10.0496 29.1633 9.8418 29.6649 9.8418 30.188C9.8418 30.711 10.0496 31.2127 10.4194 31.5825C10.7893 31.9524 11.2909 32.1601 11.814 32.1601C12.337 32.1601 12.8386 31.9524 13.2085 31.5825L21.0015 23.7895L28.7944 31.5825C29.1643 31.9524 29.6659 32.1601 30.189 32.1601C30.712 32.1601 31.2136 31.9524 31.5835 31.5825C31.9533 31.2127 32.1611 30.711 32.1611 30.188C32.1611 29.6649 31.9533 29.1633 31.5835 28.7935L23.7856 21.0005Z"
+                        fill="white"
+                      />
+                    </svg>
+                  </span>
+                </div>
+                {/* body */}
+                <div className="relative w-full flex-auto p-6">
+                  <p className="flex w-[37.813rem] justify-center text-center font-['Raleway'] text-2xl font-semibold leading-9">
+                    Esta ação é permanente, não será possível recuperar o aluno
+                    posteriormente!
+                  </p>
+                </div>
+                {/* footer */}
+                <div className="flex items-center justify-center rounded-b  p-6">
+                  <button
+                    className="mr-4 h-12 w-[138.543px] rounded-md border border-green-200 font-Montserrat text-[14.87px] text-sm font-bold not-italic	text-white-default"
+                    type="button"
+                    onClick={() => setShowModal(false)}
+                  >
+                    CANCELAR
+                  </button>
+                  <button
+                    className="mr-4 h-12 w-[138.543px] rounded-md  bg-[#FF6636] font-Montserrat text-[14.87px] text-sm font-bold	not-italic text-white-default"
+                    type="button"
+                    onClick={() => setShowModal(false)}
+                  >
+                    EXCLUIR
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="fixed inset-0 z-40 bg-black opacity-25" />
+        </>
+      ) : null}
     </div>
   );
 }

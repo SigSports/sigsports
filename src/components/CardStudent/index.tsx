@@ -4,7 +4,15 @@ import Link from "next/link";
 import Image from "next/image";
 import React, { useState } from "react";
 
-export default function Index() {
+export default function Index({
+  nomeAluno,
+  curso,
+  matricula,
+}: {
+  nomeAluno: string;
+  matricula: string;
+  curso: string;
+}) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
@@ -15,21 +23,15 @@ export default function Index() {
     <div className="flex h-16 w-full items-center justify-between   text-white-default shadow-md hover:cursor-pointer hover:border-2 hover:border-green-200">
       <div className="ml-[18px] mr-8 flex gap-x-2">
         <Image src="/people.svg" alt="people" width={16} height={16} />
-        <span className="font-Montserrat text-lg font-medium">
-          Livia Maria Lima
-        </span>
+        <span className="font-Montserrat text-lg font-medium">{nomeAluno}</span>
       </div>
       <div className="mr-[50px] flex w-[379px] gap-x-2">
         <Image src="/school.svg" alt="course" width={24} height={24} />
-        <span className="font-Montserrat text-lg font-medium">
-          Análise e Desenvolvimento de Sistemas
-        </span>
+        <span className="font-Montserrat text-lg font-medium">{curso}</span>
       </div>
       <div className="mr-28 flex gap-x-2">
         <Image src="/card.svg" alt="card" width={24} height={24} />
-        <span className="font-Montserrat text-lg font-medium">
-          20201014040044
-        </span>
+        <span className="font-Montserrat text-lg font-medium">{matricula}</span>
       </div>
       <span className="relative mr-4 flex items-center hover:cursor-pointer">
         <svg
