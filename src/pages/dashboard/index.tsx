@@ -37,7 +37,19 @@ type AlunoTurma = {
   quantidadeAlunos: number;
 };
 
-const IndexPage = ({ turmas }: { turmas: Turma[] }) => {
+type AlunoType = {
+  turma_id: number;
+  nome_turma: string;
+  vagas_restantes: number;
+};
+
+const IndexPage = ({
+  turmas,
+  alunosT,
+}: {
+  turmas: Turma[];
+  alunosT: AlunoType[];
+}) => {
   const fetchTurmaAlunos = async (turmas: Turma[]): Promise<AlunoTurma[]> => {
     try {
       const promises = turmas.map(async (turma) => {
@@ -56,9 +68,15 @@ const IndexPage = ({ turmas }: { turmas: Turma[] }) => {
         return alunoTurma;
       });
 
-      return await Promise.all(promises);
+      const alunos = await Promise.all(promises);
+
+      // Sort the array in descending order based on the number of students
+      const sortedAlunos = alunos.sort(
+        (a, b) => b.quantidadeAlunos - a.quantidadeAlunos
+      );
+
+      return sortedAlunos;
     } catch (error) {
-      console.error("Erro ao obter os dados da turma:", error);
       return [];
     }
   };
@@ -86,12 +104,56 @@ const IndexPage = ({ turmas }: { turmas: Turma[] }) => {
 
       return totalAlunos;
     } catch (error) {
-      console.error("Erro ao obter os dados da turma:", error);
       return 0;
     }
   };
+  const fetchVagasRestantes = async () => {
+    try {
+      const response = await axios.get(
+        "https://sigsport.pythonanywhere.com/api/v1/vagasDeTurmas"
+      );
+      const { data } = response;
+
+      // Calcular o total de vagas restantes
+      const totalVagasRestantes = data.reduce(
+        (total: any, turma: { vagas_restantes: any }) =>
+          total + turma.vagas_restantes,
+        0
+      );
+
+      return totalVagasRestantes;
+    } catch (error) {
+      return 0;
+    }
+  };
+  const [modalidades, setModalidades] = useState<string[]>([]);
+  const [vagas, setVagas] = useState<number[]>([]);
+  const [vagasTotais, setVagasTotais] = useState<number[]>([]);
+
+  const graficBar = () => {
+    const modalidadesArray: string[] = [];
+    const vagasArray: number[] = [];
+    const vagasTotaisArray: number[] = [];
+
+    turmas.forEach((turma) => {
+      const turmaEncontrada = alunosT.find(
+        (aluno) => aluno.turma_id === turma.id
+      );
+
+      if (turmaEncontrada) {
+        modalidadesArray.push(turma.modalidade);
+        vagasArray.push(turma.vagas - turmaEncontrada.vagas_restantes);
+        vagasTotaisArray.push(turma.vagas);
+      }
+    });
+
+    setModalidades(modalidadesArray);
+    setVagas(vagasArray);
+    setVagasTotais(vagasTotaisArray);
+  };
 
   const [totalAlunos, setTotalAlunos] = useState<number>(0);
+  const [totalVagasRestantes, setTotalVagasRestantes] = useState<number>(0);
 
   const [alunos, setAlunos] = useState<AlunoTurma[]>([]);
 
@@ -105,10 +167,16 @@ const IndexPage = ({ turmas }: { turmas: Turma[] }) => {
       const alunosData = await fetchTotalAlunos(turmas);
       setTotalAlunos(alunosData);
     };
+    const fetchVagasRestantesData = async () => {
+      const totalVagasRestantesData = await fetchVagasRestantes();
+      setTotalVagasRestantes(totalVagasRestantesData);
+    };
 
     fetchData();
     fetchData1();
-  }, [turmas]);
+    fetchVagasRestantesData();
+    graficBar();
+  }, []);
   const data = {
     labels: [
       alunos[0]?.modalidade,
@@ -129,18 +197,18 @@ const IndexPage = ({ turmas }: { turmas: Turma[] }) => {
     ],
   };
   const data1 = {
-    labels: ["Futebol", "Basquete", "Vôlei", "Futsal", "Tênis"],
+    labels: modalidades,
     datasets: [
       {
         label: "Vagas Preenchidas",
-        data: [35, 20, 15, 20, 10], // Quantidade de vagas preenchidas por esporte
+        data: vagas, // Quantidade de vagas preenchidas por esporte
         backgroundColor: "#058C42",
         borderWidth: 1,
         barThickness: 25,
       },
       {
         label: "Vagas Totais",
-        data: [50, 30, 25, 15, 5], // Quantidade de vagas totais por esporte
+        data: vagasTotais, // Quantidade de vagas totais por esporte
         backgroundColor: "#AAAAAA",
         borderWidth: 1,
         barThickness: 25,
@@ -229,7 +297,9 @@ const IndexPage = ({ turmas }: { turmas: Turma[] }) => {
             <h1 className="font-Montserrat text-[22px] font-bold">
               VAGAS DISPONIVEIS
             </h1>
-            <h1 className="font-Montserrat text-[75px] font-medium">68</h1>
+            <h1 className="font-Montserrat text-[75px] font-medium">
+              {totalVagasRestantes}
+            </h1>
             <p className="w-[116px] text-center font-Montserrat text-lg font-medium leading-normal">
               Vagas totais
             </p>
@@ -307,10 +377,15 @@ export const getServerSideProps: GetServerSideProps = async () => {
   const response = await fetch(
     "https://sigsport.pythonanywhere.com/api/v1/listarTurmas/"
   );
+  const resp1 = await fetch(
+    "https://sigsport.pythonanywhere.com/api/v1/vagasDeTurmas"
+  );
   const turmas = await response.json();
+  const alunosT = await resp1.json();
   return {
     props: {
       turmas,
+      alunosT,
     },
   };
 };
