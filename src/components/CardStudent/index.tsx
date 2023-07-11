@@ -5,10 +5,12 @@ import Image from "next/image";
 import React, { useState } from "react";
 
 export default function Index({
+  id,
   nomeAluno,
   curso,
   matricula,
 }: {
+  id: number;
   nomeAluno: string;
   matricula: string;
   curso: string;
@@ -59,21 +61,22 @@ export default function Index({
         {isDropdownOpen && (
           <div className="absolute left-0 top-12 z-10 w-[10rem] rounded-md bg-green-200 px-4 py-2 shadow-md">
             <div className="flex items-center justify-center rounded  text-white-default hover:bg-green-300">
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M19.3 8.925L15.05 4.725L16.45 3.325C16.8333 2.94167 17.3043 2.75 17.863 2.75C18.4217 2.75 18.8923 2.94167 19.275 3.325L20.675 4.725C21.0583 5.10833 21.2583 5.571 21.275 6.113C21.2917 6.655 21.1083 7.11733 20.725 7.5L19.3 8.925ZM17.85 10.4L7.25 21H3V16.75L13.6 6.15L17.85 10.4Z"
-                  fill="white"
-                />
-              </svg>
-
+              <Link href={`/editarAluno/${id}`}>
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M19.3 8.925L15.05 4.725L16.45 3.325C16.8333 2.94167 17.3043 2.75 17.863 2.75C18.4217 2.75 18.8923 2.94167 19.275 3.325L20.675 4.725C21.0583 5.10833 21.2583 5.571 21.275 6.113C21.2917 6.655 21.1083 7.11733 20.725 7.5L19.3 8.925ZM17.85 10.4L7.25 21H3V16.75L13.6 6.15L17.85 10.4Z"
+                    fill="white"
+                  />
+                </svg>
+              </Link>
               <Link
-                href="/editarAluno/1"
+                href={`/editarAluno/${id}`}
                 className="block px-4 py-2 font-Montserrat text-sm font-medium"
               >
                 Editar
@@ -135,7 +138,7 @@ export default function Index({
       {showModal ? (
         <>
           <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto overflow-x-hidden  outline-none focus:outline-none">
-            <div className="relative mx-auto my-6 w-[46.875rem] max-w-3xl bg-bgGray">
+            <div className="relative mx-auto my-6 w-[46.875rem] max-w-3xl bg-bgGray text-white-default">
               {/* content */}
               <div className="bg-white relative flex w-full flex-col rounded-lg border-0 shadow-lg outline-none focus:outline-none">
                 {/* header */}

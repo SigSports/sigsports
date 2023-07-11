@@ -19,6 +19,7 @@
     "install-peerdeps": "^3.0.3",
     "next": "13.3.0",
     "nookies": "^2.5.2",
+    "pdfmake": "^0.2.7",
     "postcss": "8.4.21",
     "react": "18.2.0",
     "react-dom": "18.2.0",
@@ -33,6 +34,7 @@
   },
   "devDependencies": {
     "@types/cookie": "^0.5.1",
+    "@types/pdfmake": "^0.2.2",
     "@types/react-input-mask": "^3.0.2",
     "@typescript-eslint/eslint-plugin": "^5.30.0",
     "@typescript-eslint/parser": "^5.30.0",

@@ -7,6 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/router";
+import { toast } from "react-toastify";
 
 export default function Card({
   turma,
@@ -50,6 +51,57 @@ export default function Card({
   }
   function handleRedirect(id: number) {
     router.push(`/visualizarTurma/${id}`);
+  }
+
+  async function handleDeleteTurma() {
+    setShowModal(false);
+    try {
+      const resp = await fetch(
+        `https://sigsport.pythonanywhere.com/api/v1/gerenciarTurmaId/${id}/`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (resp.status === 204) {
+        await new Promise((resolve) => {
+          toast.success("Turma excluída com sucesso", {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            onOpen: resolve,
+          });
+        });
+        setTimeout(() => {
+          // Executar ação após 20 segundos
+          // Por exemplo, redirecionar para uma página específica
+          router.reload();
+        }, 3000); // 3 segundos
+      } else {
+        throw new Error("Erro ao excluir turma");
+      }
+    } catch (error) {
+      await new Promise((resolve, reject) => {
+        toast.error("Ocorreu um erro ao excluir a turma", {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          onOpen: reject,
+        });
+      });
+    }
   }
 
   return (
@@ -121,13 +173,13 @@ export default function Card({
                   />
                 </svg>
 
-                <Link
-                  href="#"
+                <button
+                  type="button"
                   onClick={() => setShowModal(true)}
                   className="block px-4 py-2 font-Montserrat text-sm font-medium"
                 >
                   Excluir
-                </Link>
+                </button>
               </div>
             </div>
           )}
@@ -198,7 +250,7 @@ export default function Card({
       {showModal ? (
         <>
           <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto overflow-x-hidden  outline-none focus:outline-none">
-            <div className="relative mx-auto my-6 w-[46.875rem] max-w-3xl bg-bgGray">
+            <div className="relative mx-auto my-6 w-[46.875rem] max-w-3xl bg-bgGray text-white-default">
               {/* content */}
               <div className="bg-white relative flex w-full flex-col rounded-lg border-0 shadow-lg outline-none focus:outline-none">
                 {/* header */}
@@ -244,7 +296,7 @@ export default function Card({
                   <button
                     className="mr-4 h-12 w-[138.543px] rounded-md  bg-[#FF6636] font-Montserrat text-[14.87px] text-sm font-bold	not-italic text-white-default"
                     type="button"
-                    onClick={() => setShowModal(false)}
+                    onClick={() => handleDeleteTurma()}
                   >
                     EXCLUIR
                   </button>

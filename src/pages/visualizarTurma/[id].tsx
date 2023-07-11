@@ -302,6 +302,7 @@ const VisualizarTurma: NextPage<{
           {filteredTurmas.map((aluno) => (
             <CardStudent
               key={aluno.id}
+              id={aluno.id}
               nomeAluno={aluno.nomeAluno}
               curso={aluno.curso}
               matricula={aluno.matricula}
