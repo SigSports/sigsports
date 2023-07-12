@@ -141,7 +141,7 @@ const IndexPage = ({
       );
 
       if (turmaEncontrada) {
-        modalidadesArray.push(turma.modalidade);
+        modalidadesArray.push(`${turma.modalidade} - ${turma.genero}`);
         vagasArray.push(turma.vagas - turmaEncontrada.vagas_restantes);
         vagasTotaisArray.push(turma.vagas);
       }
@@ -373,7 +373,16 @@ const IndexPage = ({
 
 export default IndexPage;
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  const token = req.cookies["sig-token"];
+  if (!token) {
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    };
+  }
   const response = await fetch(
     "https://sigsport.pythonanywhere.com/api/v1/listarTurmas/"
   );

@@ -1,5 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable jsx-a11y/label-has-associated-control */
+import { GetServerSideProps } from "next";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -250,14 +251,17 @@ export default function Index() {
   );
 }
 
-// export const getServerSideProps: GetServerSideProps = async () => {
-//   const response = await fetch(`${url}/v1/C1`);
-//   const response1 = await fetch(`${url}/v1/modalidade`);
-//   const categorias = await response.json();
-//   const modalidades = await response1.json();
-//   return {
-//     props: {
-//       categorias,
-//       modalidades,
-//     },
-//   };
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  const token = req.cookies["sig-token"];
+  if (!token) {
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    };
+  }
+  return {
+    props: {}, // Return an empty object
+  };
+};

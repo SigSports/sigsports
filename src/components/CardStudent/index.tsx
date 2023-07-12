@@ -3,7 +3,9 @@
 import Link from "next/link";
 import Image from "next/image";
 import React, { useState } from "react";
-
+import { toast } from "react-toastify";
+// eslint-disable-next-line import/newline-after-import
+import { useRouter } from "next/router";
 export default function Index({
   id,
   nomeAluno,
@@ -15,9 +17,56 @@ export default function Index({
   matricula: string;
   curso: string;
 }) {
+  const router = useRouter();
+
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [showModal, setShowModal] = useState(false);
-
+  const handleDelete = async () => {
+    setShowModal(false);
+    const response = await fetch(
+      `https://sigsport.pythonanywhere.com/api/v1/matriculas/${id}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    if (response.status === 204) {
+      await new Promise((resolve) => {
+        toast.success("Aluno excluído com sucesso", {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          onOpen: resolve,
+        });
+      });
+      setTimeout(() => {
+        // Executar ação após 20 segundos
+        // Por exemplo, redirecionar para uma página específica
+        router.reload();
+      }, 3000); // 3 segundos
+    } else {
+      await new Promise((resolve, reject) => {
+        toast.error("Ocorreu um erro ao excluir o aluno", {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          onOpen: reject,
+        });
+      });
+    }
+  };
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
@@ -184,7 +233,7 @@ export default function Index({
                   <button
                     className="mr-4 h-12 w-[138.543px] rounded-md  bg-[#FF6636] font-Montserrat text-[14.87px] text-sm font-bold	not-italic text-white-default"
                     type="button"
-                    onClick={() => setShowModal(false)}
+                    onClick={handleDelete}
                   >
                     EXCLUIR
                   </button>

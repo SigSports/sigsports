@@ -33,7 +33,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (response.data.access) {
         setToken(response.data.access);
       }
-      Router.push("/mainBolsista");
+      Router.push("/dashboard");
     } catch (error: any) {
       return error.response.status;
     }

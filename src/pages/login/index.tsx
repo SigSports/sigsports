@@ -167,7 +167,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   if (token) {
     return {
       redirect: {
-        destination: "/mainBolsista",
+        destination: "/dashboard",
         permanent: false,
       },
     };

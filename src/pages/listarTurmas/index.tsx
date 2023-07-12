@@ -186,7 +186,16 @@ export default function ListarTurmas({
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  const token = req.cookies["sig-token"];
+  if (!token) {
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    };
+  }
   const response = await fetch(
     "https://sigsport.pythonanywhere.com/api/v1/listarTurmas/"
   );

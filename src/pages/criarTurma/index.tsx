@@ -598,7 +598,16 @@ export default function CriarTurma({
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  const token = req.cookies["sig-token"];
+  if (!token) {
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    };
+  }
   const response = await fetch(`${url}/v1/listarCaterogias`);
   const response1 = await fetch(`${url}/v1/listarModalidades`);
   const response2 = await fetch(`${url}/v1/listarProfessores/`);
