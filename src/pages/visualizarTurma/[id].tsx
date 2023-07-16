@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable no-unsafe-optional-chaining */
 import { GetServerSideProps, NextPage } from "next";
 import Link from "next/link";
@@ -6,6 +8,7 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import Layout from "@/components/Layout";
 import CardStudent from "@/components/CardStudent";
+import { pdfTurma } from "@/components/pdfTurma";
 
 export type TurmaType = {
   id: number;
@@ -219,7 +222,7 @@ const VisualizarTurma: NextPage<{
                 />
               </svg>
 
-              <span>EXPORTAR</span>
+              <span onClick={() => pdfTurma(turma, alunos)}>EXPORTAR</span>
             </button>
           </div>
         </div>
@@ -278,21 +281,23 @@ const VisualizarTurma: NextPage<{
               </Link>
 
               <div className="3lx:left-12 absolute inset-y-0 left-5 top-6 md:top-9">
-                <svg
-                  width="44"
-                  height="44"
-                  viewBox="0 0 44 44"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M21.9993 9.16602V34.8327M9.16602 21.9993H34.8327"
-                    stroke="white"
-                    strokeWidth="2.75"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
+                <Link href={`/matricularAluno/${id}`}>
+                  <svg
+                    width="44"
+                    height="44"
+                    viewBox="0 0 44 44"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M21.9993 9.16602V34.8327M9.16602 21.9993H34.8327"
+                      stroke="white"
+                      strokeWidth="2.75"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </Link>
               </div>
             </div>
           </div>
