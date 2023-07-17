@@ -54,7 +54,7 @@ const IndexPage = ({
     try {
       const promises = turmas.map(async (turma) => {
         const response = await axios.get(
-          `http://18.211.33.55/api/v1/vagasDeTurmas/${turma.id}`
+          `https://sigsport.pythonanywhere.com/api/v1/vagasDeTurmas/${turma.id}`
         );
         const turmaData = response.data;
 
@@ -85,7 +85,7 @@ const IndexPage = ({
     try {
       const promises = turmas.map(async (turma) => {
         const response = await axios.get(
-          `http://18.211.33.55/api/v1/vagasDeTurmas/${turma.id}`
+          `https://sigsport.pythonanywhere.com/api/v1/vagasDeTurmas/${turma.id}`
         );
         const turmaData = response.data;
 
@@ -110,7 +110,7 @@ const IndexPage = ({
   const fetchVagasRestantes = async () => {
     try {
       const response = await axios.get(
-        "http://18.211.33.55/api/v1/vagasDeTurmas"
+        "https://sigsport.pythonanywhere.com/api/v1/vagasDeTurmas"
       );
       const { data } = response;
 
@@ -383,8 +383,12 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
       },
     };
   }
-  const response = await fetch("http://18.211.33.55/api/v1/listarTurmas/");
-  const resp1 = await fetch("http://18.211.33.55/api/v1/vagasDeTurmas");
+  const response = await fetch(
+    "https://sigsport.pythonanywhere.com/api/v1/listarTurmas/"
+  );
+  const resp1 = await fetch(
+    "https://sigsport.pythonanywhere.com/api/v1/vagasDeTurmas"
+  );
   const turmas = await response.json();
   const alunosT = await resp1.json();
   return {

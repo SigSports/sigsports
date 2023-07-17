@@ -118,7 +118,9 @@ export default function MainBolsista({
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-  const response = await fetch("http://18.211.33.55/api/v1/listarTurmas/");
+  const response = await fetch(
+    "https://sigsport.pythonanywhere.com/apiv1/listarTurmas/"
+  );
   const turma = await response.json();
   const countTurma = turma.length;
   let user;
