@@ -18,6 +18,7 @@
     "chart.js": "^4.3.0",
     "globby": "^13.1.4",
     "install-peerdeps": "^3.0.3",
+    "moment": "^2.29.4",
     "next": "13.3.0",
     "nookies": "^2.5.2",
     "pdfmake": "^0.2.7",

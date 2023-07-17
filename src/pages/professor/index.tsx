@@ -19,7 +19,7 @@ const Calendar = () => {
   const month = today.getMonth();
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   const firstDayOfWeek = new Date(year, month, 1).getDay();
-  const url = "https://sigsport.pythonanywhere.com/api/v1/listarTurmasId/3/";
+  const url = "http://18.211.33.55/api/v1/listarTurmasId/3/";
   const [turmas, setTurmas] = useState<ITurmas[]>([]);
   useEffect(() => {
     fetch(url)

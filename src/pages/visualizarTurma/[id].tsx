@@ -8,7 +8,7 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import Layout from "@/components/Layout";
 import CardStudent from "@/components/CardStudent";
-import { pdfTurma } from "@/components/pdfTurma";
+import { pdfTurma } from "@/utils/pdfTurma";
 
 export type TurmaType = {
   id: number;
@@ -311,6 +311,8 @@ const VisualizarTurma: NextPage<{
               nomeAluno={aluno.nomeAluno}
               curso={aluno.curso}
               matricula={aluno.matricula}
+              nomeTurma={turma.nomeTurma}
+              turno={turma.turno}
             />
           ))}
         </div>
@@ -333,13 +335,13 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
   const { id } = context.query;
   const response = await fetch(
-    `https://sigsport.pythonanywhere.com/api/v1/gerenciarTurmaId/${id}`
+    `http://18.211.33.55/api/v1/gerenciarTurmaId/${id}`
   );
   const response1 = await fetch(
-    `https://sigsport.pythonanywhere.com/api/v1/listarMatriculas/${id}`
+    `http://18.211.33.55/api/v1/listarMatriculas/${id}`
   );
   const response2 = await fetch(
-    `https://sigsport.pythonanywhere.com/api/v1/vagasDeTurmas/${id}`
+    `http://18.211.33.55/api/v1/vagasDeTurmas/${id}`
   );
   const turma = await response.json();
   const alunos = await response1.json();

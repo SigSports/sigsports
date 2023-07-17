@@ -6,16 +6,22 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 // eslint-disable-next-line import/newline-after-import
 import { useRouter } from "next/router";
+import { declaracao } from "@/utils/declaracaoAluno";
+
 export default function Index({
   id,
   nomeAluno,
   curso,
   matricula,
+  nomeTurma,
+  turno,
 }: {
   id: number;
   nomeAluno: string;
   matricula: string;
   curso: string;
+  nomeTurma: string;
+  turno: string;
 }) {
   const router = useRouter();
 
@@ -24,7 +30,7 @@ export default function Index({
   const handleDelete = async () => {
     setShowModal(false);
     const response = await fetch(
-      `https://sigsport.pythonanywhere.com/api/v1/matriculas/${id}`,
+      `http://18.211.33.55/api/v1/matriculas/${id}`,
       {
         method: "DELETE",
         headers: {
@@ -155,7 +161,12 @@ export default function Index({
               </button>
             </div>
             <div className="flex w-full items-center  justify-center rounded text-white-default hover:bg-green-300">
-              <span className="ml-8 h-6 w-6 ">
+              <span
+                className="ml-8 h-6 w-6"
+                onClick={() =>
+                  declaracao(nomeAluno, matricula, nomeTurma, turno)
+                }
+              >
                 <svg
                   width="24"
                   height="24"
@@ -174,12 +185,15 @@ export default function Index({
                 </svg>
               </span>
 
-              <Link
-                href="#"
+              <button
+                type="button"
+                onClick={() =>
+                  declaracao(nomeAluno, matricula, nomeTurma, turno)
+                }
                 className="block w-full px-4 py-2 font-Montserrat text-sm font-medium "
               >
                 Declaração
-              </Link>
+              </button>
             </div>
           </div>
         )}
