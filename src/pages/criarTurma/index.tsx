@@ -16,7 +16,7 @@ import {
   Tcategoria,
 } from "@/utils/typeTurma";
 
-const url = "https://sigsport.pythonanywhere.com/api";
+const url = "http://18.211.33.55/api";
 const schema = yup
   .object()
   .shape({
