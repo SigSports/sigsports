@@ -184,7 +184,7 @@ export default function Index() {
           <div className="my-4 w-full pl-6">
             <input
               type="submit"
-              value="Salvar"
+              value="Matricular"
               className="h-14 w-36 rounded-sm bg-green-200 font-Montserrat text-base font-bold text-white-default transition-colors duration-300 hover:cursor-pointer hover:bg-green-300 hover:text-white-default focus:border-transparent focus:outline-none focus:ring-2 focus:ring-green-100"
             />
           </div>
