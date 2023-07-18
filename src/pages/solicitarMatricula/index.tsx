@@ -77,7 +77,7 @@ export default function Index({
 
     const response = await createSolicitation.mutateAsync(data1);
     if (response.id) {
-      toast.success("Solicitação criada com sucesso", {
+      toast.success("Matrícula criada com sucesso", {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
