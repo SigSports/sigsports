@@ -48,7 +48,7 @@ export default function Index({
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: "light",
+          theme: "dark",
           onOpen: resolve,
         });
       });
@@ -67,7 +67,7 @@ export default function Index({
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: "light",
+          theme: "dark",
           onOpen: reject,
         });
       });

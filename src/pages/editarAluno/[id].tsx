@@ -4,6 +4,7 @@ import { GetServerSideProps, NextPage } from "next";
 import React from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/router";
 import * as yup from "yup";
 import InputMask from "react-input-mask";
 import { toast } from "react-toastify";
@@ -51,6 +52,7 @@ const editarAluno: NextPage<{ aluno: AlunoType }> = ({ aluno }) => {
   } = useForm<FormData>({
     resolver: yupResolver(schema),
   });
+  const router = useRouter();
   const updateSolicitation = async (data: AlunoType) => {
     try {
       const response = await fetch(
@@ -86,10 +88,31 @@ const editarAluno: NextPage<{ aluno: AlunoType }> = ({ aluno }) => {
       const response = await updateSolicitation(data1);
       if (response.id) {
         toast.success("Dados atualizados com sucesso", {
-          // Configurações da notificação de sucesso
+          position: "top-center",
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
         });
+        setTimeout(() => {
+          // Executar ação após 20 segundos
+          // Por exemplo, redirecionar para uma página específica
+          router.back();
+        }, 1000); // 20 segundos
       } else {
-        throw new Error("Erro em atualizar os dados, corrija os campos");
+        toast.error("Erro em atualizar os dados, corrija os campos", {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
       }
     } catch (error) {
       console.log(error);
@@ -234,7 +257,7 @@ const editarAluno: NextPage<{ aluno: AlunoType }> = ({ aluno }) => {
           <div className="my-4 w-full pl-6">
             <input
               type="submit"
-              value="Matricular"
+              value="Salvar"
               className="h-14 w-36 rounded-sm bg-green-200 font-Montserrat text-base font-bold text-white-default transition-colors duration-300 hover:cursor-pointer hover:bg-green-300 hover:text-white-default focus:border-transparent focus:outline-none focus:ring-2 focus:ring-green-100"
             />
           </div>

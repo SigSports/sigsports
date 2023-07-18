@@ -85,7 +85,7 @@ export default function Index() {
 
     const response = await createSolicitation.mutateAsync(data1);
     if (response.id) {
-      toast.success("Matrícula salva com sucesso", {
+      toast.success("Matrícula criada com sucesso", {
         position: "top-center",
         autoClose: 5000,
         hideProgressBar: false,
@@ -95,6 +95,11 @@ export default function Index() {
         progress: undefined,
         theme: "dark",
       });
+      setTimeout(() => {
+        // Executar ação após 20 segundos
+        // Por exemplo, redirecionar para uma página específica
+        router.push(`/visualizarTurma/${id}`);
+      }, 3000); // 20 segundos
     } else {
       toast.error("Erro na matricula, corriga os campos", {
         position: "top-center",
@@ -104,7 +109,7 @@ export default function Index() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: "light",
+        theme: "dark",
       });
     }
   };

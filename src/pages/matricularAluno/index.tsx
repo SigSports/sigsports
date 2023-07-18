@@ -70,7 +70,7 @@ export default function Index() {
   //   const response = await createSolicitation.mutateAsync(data1);
   //   if (response.id) {
   //     toast.success("Solicitação criada com sucesso", {
-  //       position: "top-right",
+  //       position: "top-center",
   //       autoClose: 5000,
   //       hideProgressBar: false,
   //       closeOnClick: true,

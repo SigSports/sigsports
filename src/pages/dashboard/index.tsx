@@ -226,7 +226,7 @@ const IndexPage = ({
   return (
     <Layout>
       <div className="flex h-full w-full flex-col items-center pl-4 lg:items-start lg:pl-12">
-        <div className="mt-4 flex w-full justify-around md:mt-16">
+        <div className="mt-4 flex w-full justify-between  pr-8 md:mt-16">
           <div className="flex h-[16.813rem] w-[35.063rem] flex-col items-center rounded border border-green-200 py-8 shadow-md ">
             <h2 className="font-Montserrat text-lg font-bold text-white-default">
               Esportes mais procurados
@@ -328,7 +328,7 @@ const IndexPage = ({
         </div>
         <div className="mx-auto mt-9 w-[90%] shadow-xl">
           <h1 className="flex h-20 items-center justify-center border-none bg-green-200 text-center font-Montserrat text-2xl font-bold uppercase text-white-default">
-            Quantidade de alunos por esporte (Masc)
+            Quantidade de alunos por esporte
           </h1>
           <div className="flex justify-center">
             <div className="mr-24 flex items-center text-white-default">

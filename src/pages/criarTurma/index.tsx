@@ -1,11 +1,12 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import { useState, ChangeEvent } from "react";
 import { useForm } from "react-hook-form";
+import { GetServerSideProps } from "next";
+import { useRouter } from "next/router";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { mask } from "remask";
 import { toast } from "react-toastify";
-import { GetServerSideProps } from "next";
 import { useMutation } from "react-query";
 import Link from "next/link";
 import Layout from "@/components/Layout";
@@ -48,6 +49,7 @@ export default function CriarTurma({
   modalidades: TModalidade[];
   professores: TProfessor[];
 }) {
+  const router = useRouter();
   const [errorTurno, setErrrorTurno] = useState(false);
   const [turno, setTurno] = useState<string>("");
   const [genero, setGenero] = useState<string>("");
@@ -117,7 +119,7 @@ export default function CriarTurma({
 
       if (response.modalidade) {
         toast.success("Turma Criada com sucesso", {
-          position: "top-right",
+          position: "top-center",
           autoClose: 5000,
           hideProgressBar: false,
           closeOnClick: true,
@@ -126,16 +128,21 @@ export default function CriarTurma({
           progress: undefined,
           theme: "dark",
         });
+        setTimeout(() => {
+          // Executar ação após 20 segundos
+          // Por exemplo, redirecionar para uma página específica
+          router.push("/dashboard");
+        }, 3000); // 20 segundos
       } else {
         toast.error("Erro ao criar turma, corriga os campos", {
-          position: "top-right",
+          position: "top-center",
           autoClose: 5000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: "light",
+          theme: "dark",
         });
       }
     }
@@ -222,18 +229,16 @@ export default function CriarTurma({
             </label>
             <select
               className="focus:shadow-outline h-14 w-60 border-2
-                border-green-300 bg-white-default pl-4 align-bottom font-Quicksand  text-xl font-medium text-textGray	hover:border-gray-500	"
-              name="modalidade_id"
+    border-green-300 bg-white-default pl-4 align-bottom font-Quicksand text-xl font-medium text-textGray hover:border-gray-500"
+              {...register("modalidade")} // Atualize o nome do campo para "modalidade_id"
             >
               {modalidades.map((modalidade) => (
                 <option
-                  {...register("modalidade")}
                   key={modalidade.id}
                   value={modalidade.id}
                   className="h-14 w-80 rounded-sm border-2
-                      border-green-200 pl-4
-                      font-Quicksand text-base font-medium text-textGray
-                      focus:border-transparent focus:outline-none focus:ring-2 focus:ring-green-100"
+        border-green-200 pl-4 font-Quicksand text-base font-medium text-textGray
+        focus:border-transparent focus:outline-none focus:ring-2 focus:ring-green-100"
                 >
                   {modalidade.nomeModalidade}
                 </option>
@@ -250,11 +255,10 @@ export default function CriarTurma({
             <select
               className="focus:shadow-outline h-14 w-60 border-2
                 border-green-300 bg-white-default pl-4 align-bottom font-Quicksand  text-xl font-medium text-textGray	hover:border-gray-500	"
-              name="modalidade_id"
+              {...register("categoria")}
             >
               {categorias.map((categoria) => (
                 <option
-                  {...register("categoria")}
                   key={categoria.id}
                   value={categoria.id}
                   className="h-14 w-80 rounded-sm border-2
@@ -277,11 +281,10 @@ export default function CriarTurma({
             <select
               className="focus:shadow-outline h-14 w-60 border-2
                 border-green-300 bg-white-default pl-4 align-bottom font-Quicksand  text-xl font-medium text-textGray	hover:border-gray-500	"
-              name="modalidade_id"
+              {...register("professor")}
             >
               {professores.map((professor) => (
                 <option
-                  {...register("professor")}
                   key={professor.id}
                   value={professor.id}
                   className="h-14 w-80 rounded-sm border-2
