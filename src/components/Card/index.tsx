@@ -153,7 +153,7 @@ export default function Card({
                 </svg>
 
                 <Link
-                  href="#"
+                  href={`editarTurma/${id}`}
                   className="block px-4 py-2 font-Montserrat text-sm font-medium"
                 >
                   Editar

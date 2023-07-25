@@ -4,6 +4,7 @@ export interface TFormData {
   horaInicial: string;
   nomeTurma: string;
   vagas: string;
+  genero: string;
   professor: TProfessor[];
   modalidade: TModalidade[];
   categoria: Tcategoria[];
