@@ -162,11 +162,7 @@ export default function CriarTurma({
           progress: undefined,
           theme: "dark",
         });
-        setTimeout(() => {
-          // Executar ação após 20 segundos
-          // Por exemplo, redirecionar para uma página específica
-          router.back();
-        }, 3000); // 20 segundos
+        router.back();
       } else {
         toast.error("Erro ao criar turma, corriga os campos", {
           position: "top-center",
@@ -196,16 +192,11 @@ export default function CriarTurma({
     setGenero(event.target.value);
   }
 
-  const [isChecked, setIsChecked] = useState(true);
-
   const searchDay = (day: string) => {
     const dias = turma.dias.split(",");
     return dias.includes(day);
   };
 
-  const handleCheckboxClick = () => {
-    setIsChecked(!searchDay("quinta-feira")); // Inverte o valor do isChecked quando o checkbox é clicado
-  };
   // Função para lidar com a marcação dos dias
 
   const modalidadeDaTurma = modalidades.find(
@@ -646,8 +637,7 @@ export default function CriarTurma({
                 {...register("dias")}
                 id="quinta-feira "
                 type="checkbox"
-                checked={isChecked}
-                onClick={handleCheckboxClick}
+                checked={searchDay("quinta-feira ")}
                 name="dias"
                 value="quinta-feira "
                 className="h-5 w-5 rounded border-2 accent-green-300 outline-green-300 focus:accent-green-300 dark:accent-green-300"
