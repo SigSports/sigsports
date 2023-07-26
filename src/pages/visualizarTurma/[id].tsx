@@ -335,13 +335,13 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
   const { id } = context.query;
   const response = await fetch(
-    `https://sigsport.pythonanywhere.com/api/v1/gerenciarTurmaId/${id}`
+    `http://52.70.138.147/api/v1/gerenciarTurmaId/${id}`
   );
   const response1 = await fetch(
-    `https://sigsport.pythonanywhere.com/api/v1/listarMatriculas/${id}`
+    `http://52.70.138.147/api/v1/listarMatriculas/${id}`
   );
   const response2 = await fetch(
-    `https://sigsport.pythonanywhere.com/api/v1/vagasDeTurmas/${id}`
+    `http://52.70.138.147/api/v1/vagasDeTurmas/${id}`
   );
   const turma = await response.json();
   const alunos = await response1.json();

@@ -196,12 +196,8 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
       },
     };
   }
-  const response = await fetch(
-    "https://sigsport.pythonanywhere.com/api/v1/listarTurmas/"
-  );
-  const response2 = await fetch(
-    `https://sigsport.pythonanywhere.com/api/v1/vagasDeTurmas`
-  );
+  const response = await fetch("http://52.70.138.147/api/v1/listarTurmas/");
+  const response2 = await fetch(`http://52.70.138.147/api/v1/vagasDeTurmas`);
 
   const turmas = await response.json();
   const vagas = await response2.json();

@@ -17,7 +17,7 @@ import {
   Tcategoria,
 } from "@/utils/typeTurma";
 
-const url = "https://sigsport.pythonanywhere.com/api";
+const url = "http://52.70.138.147/api";
 const schema = yup
   .object()
   .shape({
@@ -93,7 +93,7 @@ export default function CriarTurma({
   const createSolicitation = useMutation(async (data: TFormData) => {
     try {
       const response = await fetch(
-        `https://sigsport.pythonanywhere.com/api/v1/gerenciarTurmaId/${turma.id}/`,
+        `http://52.70.138.147/api/v1/gerenciarTurmaId/${turma.id}/`,
         {
           method: "PUT",
           headers: {
@@ -698,7 +698,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
     };
   }
-  const response = await fetch(`${url}/v1/listarCaterogias`);
+  const response = await fetch(`${url}/v1/listarCategorias/`);
   const response1 = await fetch(`${url}/v1/listarModalidades`);
   const response2 = await fetch(`${url}/v1/listarProfessores/`);
   const response3 = await fetch(`${url}/v1/gerenciarTurmaId/${id}/`);

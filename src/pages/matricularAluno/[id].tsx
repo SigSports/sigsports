@@ -57,7 +57,7 @@ export default function Index() {
 
   const createSolicitation = useMutation(async (data: TFormData) => {
     const response = await fetch(
-      `https://sigsport.pythonanywhere.com/api/v1/criarMatricula/${id}`,
+      `http://52.70.138.147/api/v1/criarMatricula/${id}`,
       {
         method: "POST",
         body: data as any,
