@@ -57,7 +57,7 @@ export default function Card({
     setShowModal(false);
     try {
       const resp = await fetch(
-        `http://52.70.138.147/api/v1/gerenciarTurmaId/${id}/`,
+        `https://sigsport.pythonanywhere.com/api/v1/gerenciarTurmaId/${id}/`,
         {
           method: "DELETE",
           headers: {

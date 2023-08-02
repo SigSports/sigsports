@@ -30,7 +30,7 @@ export default function Index({
   const handleDelete = async () => {
     setShowModal(false);
     const response = await fetch(
-      `http://52.70.138.147/api/v1/matriculas/${id}`,
+      `https://sigsport.pythonanywhere.com/api/v1/matriculas/${id}`,
       {
         method: "DELETE",
         headers: {

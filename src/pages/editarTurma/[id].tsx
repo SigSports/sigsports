@@ -17,7 +17,7 @@ import {
   Tcategoria,
 } from "@/utils/typeTurma";
 
-const url = "http://52.70.138.147/api";
+const url = "https://sigsport.pythonanywhere.com/api";
 const schema = yup
   .object()
   .shape({
@@ -93,7 +93,7 @@ export default function CriarTurma({
   const createSolicitation = useMutation(async (data: TFormData) => {
     try {
       const response = await fetch(
-        `http://52.70.138.147/api/v1/gerenciarTurmaId/${turma.id}/`,
+        `https://sigsport.pythonanywhere.com/api/v1/gerenciarTurmaId/${turma.id}/`,
         {
           method: "PUT",
           headers: {
