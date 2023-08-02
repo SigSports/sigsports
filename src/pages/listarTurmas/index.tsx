@@ -6,7 +6,6 @@ import Card from "@/components/Card";
 
 type AlunosVagasType = {
   turma_id: number;
-
   vagas_restantes: number;
 };
 
