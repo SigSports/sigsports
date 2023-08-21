@@ -303,7 +303,7 @@ const VisualizarTurma: NextPage<{
           </div>
         </div>
 
-        <div className=" mt-12 flex w-full flex-col ">
+        <div className=" mt-12 flex h-96 w-full flex-col overflow-y-auto">
           {filteredTurmas.map((aluno) => (
             <CardStudent
               key={aluno.id}

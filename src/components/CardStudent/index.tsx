@@ -77,16 +77,16 @@ export default function Index({
     setIsDropdownOpen(!isDropdownOpen);
   };
   return (
-    <div className="flex h-16 w-full items-center justify-between   text-white-default shadow-md hover:cursor-pointer hover:border-2 hover:border-green-200">
-      <div className="ml-[18px] mr-8 flex gap-x-2">
+    <div className="mb-8 flex h-full w-full items-center justify-between  gap-x-4 text-white-default shadow-md hover:cursor-pointer hover:border-2 hover:border-green-200 md:h-16 xl:w-[80%] 2xl:w-9/12">
+      <div className="flex h-full w-[33.3%] flex-wrap items-center gap-x-4">
         <Image src="/people.svg" alt="people" width={16} height={16} />
         <span className="font-Montserrat text-lg font-medium">{nomeAluno}</span>
       </div>
-      <div className="mr-[50px] flex w-[379px] gap-x-2">
+      <div className="flex h-full w-[33.3%] flex-col gap-x-4 md:flex-row md:items-center">
         <Image src="/school.svg" alt="course" width={24} height={24} />
         <span className="font-Montserrat text-lg font-medium">{curso}</span>
       </div>
-      <div className="mr-28 flex gap-x-2">
+      <div className="flex h-full w-[33.3%] flex-wrap items-center gap-x-4">
         <Image src="/card.svg" alt="card" width={24} height={24} />
         <span className="font-Montserrat text-lg font-medium">{matricula}</span>
       </div>
@@ -114,7 +114,7 @@ export default function Index({
           />
         </svg>
         {isDropdownOpen && (
-          <div className="absolute left-0 top-12 z-10 w-[10rem] rounded-md bg-green-200 px-4 py-2 shadow-md">
+          <div className="absolute right-4  top-12 w-[10rem]  rounded-md bg-green-200 px-4 py-2 shadow-md xl:left-0">
             <div className="flex items-center justify-center rounded  text-white-default hover:bg-green-300">
               <Link href={`/editarAluno/${id}`}>
                 <svg

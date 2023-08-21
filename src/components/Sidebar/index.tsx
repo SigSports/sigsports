@@ -15,7 +15,7 @@ export default function Sidebar() {
       <input type="checkbox" id="menu-open" className="hidden" />
 
       <header
-        className="flex w-full justify-between bg-green-bg text-gray-100 md:hidden"
+        className="flex w-screen justify-between bg-green-bg text-gray-100 md:hidden"
         data-dev-hint="mobile menu bar"
       >
         <div className="flex w-full">

@@ -17,7 +17,7 @@ import {
   Tcategoria,
 } from "@/utils/typeTurma";
 
-const url = "http://52.70.138.147/api";
+const url = "https://sigsport.pythonanywhere.com/api";
 const schema = yup
   .object()
   .shape({
@@ -611,7 +611,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
       },
     };
   }
-  const response = await fetch(`${url}/v1/listarCategorias/`);
+  const response = await fetch(`${url}/v1/listarCaterogias/`);
   const response1 = await fetch(`${url}/v1/listarModalidades`);
   const response2 = await fetch(`${url}/v1/listarProfessores/`);
   const categorias = await response.json();
