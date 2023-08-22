@@ -2,7 +2,7 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import { GetServerSideProps } from "next";
 import React from "react";
-import { useForm } from "react-hook-form";
+import { Resolver, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import InputMask from "react-input-mask";
@@ -52,7 +52,7 @@ export default function Index() {
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(schema) as Resolver<FormData>,
   });
 
   const createSolicitation = useMutation(async (data: TFormData) => {

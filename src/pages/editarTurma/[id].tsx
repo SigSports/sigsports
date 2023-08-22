@@ -1,6 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import { useState, ChangeEvent } from "react";
-import { useForm } from "react-hook-form";
+import { Resolver, useForm } from "react-hook-form";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -79,7 +79,7 @@ export default function CriarTurma({
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(schema) as Resolver<FormData>,
     defaultValues: {
       nomeTurma: turma.nomeTurma,
       horaInicial: turma.horarioInicial,
@@ -698,7 +698,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
     };
   }
-  const response = await fetch(`${url}/v1/listarCategorias/`);
+  const response = await fetch(`${url}/v1/listarCaterogias/`);
   const response1 = await fetch(`${url}/v1/listarModalidades`);
   const response2 = await fetch(`${url}/v1/listarProfessores/`);
   const response3 = await fetch(`${url}/v1/gerenciarTurmaId/${id}/`);

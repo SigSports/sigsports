@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@hookform/resolvers": "^3.1.0",
+    "@hookform/resolvers": "^3.3.0",
     "@types/node": "18.15.11",
     "@types/react": "18.0.35",
     "@types/react-dom": "18.0.11",
@@ -26,14 +26,14 @@
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "18.2.0",
-    "react-hook-form": "^7.43.9",
+    "react-hook-form": "^7.45.4",
     "react-input-mask": "^2.0.4",
     "react-query": "^3.39.3",
     "react-toastify": "^9.1.2",
     "remask": "^1.2.2",
     "tailwindcss": "3.3.1",
     "typescript": "5.0.4",
-    "yup": "^1.1.1"
+    "yup": "^1.2.0"
   },
   "devDependencies": {
     "@types/chart.js": "^2.9.37",

@@ -3,7 +3,7 @@
 import { GetServerSideProps, NextPage } from "next";
 import React from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useForm } from "react-hook-form";
+import { Resolver, useForm } from "react-hook-form";
 import { useRouter } from "next/router";
 import * as yup from "yup";
 import InputMask from "react-input-mask";
@@ -50,7 +50,7 @@ const editarAluno: NextPage<{ aluno: AlunoType }> = ({ aluno }) => {
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(schema) as Resolver<FormData>,
   });
   const router = useRouter();
   const updateSolicitation = async (data: AlunoType) => {

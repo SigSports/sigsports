@@ -1,6 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import { useState, ChangeEvent } from "react";
-import { useForm } from "react-hook-form";
+import { Resolver, useForm } from "react-hook-form";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -28,6 +28,7 @@ const schema = yup
     vagas: yup.string().required("Digite a quantidade de vagas"),
     dias: yup
       .array()
+      .of(yup.string())
       .min(1, "Selecione pelo menos uma opção")
       .required("Selecione uma opção"),
     horaInicial: yup.string().required("Digite um horário válido"),
@@ -39,6 +40,8 @@ const schema = yup
   .required();
 
 type FormData = yup.InferType<typeof schema>;
+
+//
 
 export default function CriarTurma({
   categorias,
@@ -62,7 +65,7 @@ export default function CriarTurma({
 
     formState: { errors },
   } = useForm<FormData>({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(schema) as Resolver<FormData>,
   });
 
   const createSolicitation = useMutation(async (data: TFormData) => {
@@ -462,7 +465,11 @@ export default function CriarTurma({
               placeholder="06:30"
               value={horaInicio}
               onChange={horaInicial}
-              className="text-white ml-2 h-14 w-[5.5rem] rounded-lg border-2 border-green-200 pl-4 font-Montserrat text-base font-medium placeholder:text-textGray focus:border-transparent focus:outline-none focus:ring-2 focus:ring-green-100"
+              className={`border-2 ${
+                errors.horaInicial
+                  ? "border-red-500 focus:border-red-600"
+                  : "border-green-200 focus:border-transparent focus:ring-green-100"
+              }text-white ml-2 h-14 w-[5.5rem] rounded-lg  pl-4 font-Montserrat text-base font-medium placeholder:text-textGray focus:border-transparent focus:outline-none focus:ring-2 focus:ring-green-100`}
             />
             {errors.horaInicial &&
               (horaInicio.length === 0 || horaInicio.length < 5) && (
@@ -486,7 +493,11 @@ export default function CriarTurma({
               onChange={(e) => horaFinal(e)}
               name="horaFinal"
               placeholder="17:30"
-              className="text-white ml-2 h-14 w-[5.5rem] rounded-lg border-2 border-green-200 pl-4 font-Montserrat text-base font-medium placeholder:text-textGray focus:border-transparent focus:outline-none focus:ring-2 focus:ring-green-100"
+              className={`border-2 ${
+                errors.horaFinal
+                  ? "border-red-500 focus:border-red-600"
+                  : "border-green-200 focus:border-transparent focus:ring-green-100"
+              }text-white ml-2 h-14 w-[5.5rem] rounded-lg pl-4 font-Montserrat text-base font-medium placeholder:text-textGray focus:border-transparent focus:outline-none focus:ring-2 focus:ring-green-100`}
             />
             {errors.horaFinal &&
               (horaFim.length === 0 || horaFim.length < 5) && (
@@ -612,7 +623,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
     };
   }
   const response = await fetch(`${url}/v1/listarCaterogias/`);
-  const response1 = await fetch(`${url}/v1/listarModalidades`);
+  const response1 = await fetch(`${url}/v1/listarModalidades/`);
   const response2 = await fetch(`${url}/v1/listarProfessores/`);
   const categorias = await response.json();
   const modalidades = await response1.json();
