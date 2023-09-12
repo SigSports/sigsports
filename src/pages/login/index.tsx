@@ -12,10 +12,10 @@ const schema = yup
   .object({
     username: yup
       .string()
+      .required("Matricula obrigatória")
       .matches(/^\d+$/, "A matrícula deve conter apenas números")
-      .min(4, "A matrícula deve ter no mínimo 4 dígitos")
-      .max(14, "A matrícula deve ter máximo 14 dígitos")
-      .required("Digite uma matrícula válida"),
+      .min(14, "Matricula Invalida")
+      .max(14, "A matrícula deve ter máximo 14 dígitos"),
     password: yup.string().required("Senha obrigatória"),
   })
   .required();
@@ -25,6 +25,7 @@ export default function Login() {
   const { signIn } = useContext(AuthContext);
 
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [errorRequest, setErrorRequest] = useState(false);
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -39,8 +40,10 @@ export default function Login() {
   });
   const onSubmit = async (data: FormData) => {
     const response = await signIn(data);
+    setIsLoading(true);
     if (response) {
       setErrorRequest(true);
+      setIsLoading(false);
     }
   };
 
@@ -58,7 +61,7 @@ export default function Login() {
             <div className="mt-7 w-72 lg:w-96">
               <div className="flex w-full flex-col">
                 <label
-                  htmlFor="username "
+                  htmlFor="username"
                   className="w-full font-Montserrat text-lg font-medium leading-6 text-white-default"
                 >
                   {" "}
@@ -84,7 +87,7 @@ export default function Login() {
               </div>
               <div className="py-2">
                 <label
-                  htmlFor="senha"
+                  htmlFor="password"
                   className="w-full font-Montserrat text-lg font-medium leading-6 text-white-default"
                 >
                   {" "}
@@ -138,20 +141,17 @@ export default function Login() {
                   </span>
                 )}
               </div>
-              <div>
-                <a
-                  href="#"
-                  className="font-Montserrat text-base font-medium leading-5 text-green-200 underline"
-                >
-                  Recuperar senha
-                </a>
-              </div>
               <div className="mt-2 flex w-full justify-end text-white-default">
                 <button
                   type="submit"
-                  className="h-[57.6px] w-[144px] rounded-sm bg-green-200 font-Montserrat text-base font-bold leading-5"
+                  className={`h-[57.6px] w-[144px] rounded-sm font-Montserrat text-base font-bold leading-5 ${
+                    isLoading
+                      ? "cursor-wait bg-green-400 text-2xl"
+                      : "bg-green-200"
+                  }`}
+                  disabled={isLoading}
                 >
-                  ENTRAR
+                  {isLoading ? "AGUARDE..." : "ENTRAR"}
                 </button>
               </div>
             </div>

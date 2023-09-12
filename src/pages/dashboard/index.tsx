@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-shadow */
-/* eslint-disable @typescript-eslint/naming-convention */
 import React, { useEffect, useState } from "react";
 import {
   Chart as ChartJS,
@@ -216,13 +215,22 @@ const IndexPage = ({
     ],
   };
   const options: any = {
-    indexAxis: "x", // Usar o eixo y para exibir as barras
+    indexAxis: "x",
     scales: {
       y: {
-        display: false, // Ocultar o eixo x
+        display: false, // Ocultar o eixo y
+      },
+      x: {
+        ticks: {
+          color: "#fff",
+          font: {
+            size: 18,
+          },
+        },
       },
     },
   };
+
   return (
     <Layout>
       <div className="flex h-full w-full flex-col items-center pl-4 lg:items-start lg:pl-12">
@@ -311,7 +319,7 @@ const IndexPage = ({
             </p>
           </div>
 
-          <div className="flex w-[19.875rem] flex-col justify-between">
+          <div className="flex w-[19.875rem] flex-col justify-between gap-y-4">
             <Link
               href="/criarTurma"
               className="flex h-[69px] w-full items-center justify-center rounded bg-green-200 font-Montserrat text-lg font-bold text-white-default shadow-md transition-colors duration-300 hover:scale-105 hover:cursor-pointer hover:bg-green-300"
@@ -336,7 +344,7 @@ const IndexPage = ({
           <h1 className="flex h-20 items-center justify-center border-none bg-green-200 text-center font-Montserrat text-2xl font-bold uppercase text-white-default">
             Quantidade de alunos por esporte
           </h1>
-          <div className="flex justify-center">
+          <div className="mb-4 flex justify-center text-white-default">
             <div className="mr-24 flex items-center text-white-default">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -350,7 +358,7 @@ const IndexPage = ({
                   fill="#058C42"
                 />
               </svg>
-              <span>Vagas Preenchidas</span>
+              <span className="text-lg">Vagas Preenchidas</span>
             </div>
             <div className="flex items-center text-white-default">
               <svg
@@ -365,7 +373,7 @@ const IndexPage = ({
                   fill="#AAAAAA"
                 />
               </svg>
-              <span>Vagas Totais</span>
+              <span className="text-lg">Vagas Totais</span>
             </div>
           </div>
           <div className="flex h-[400px] w-full justify-center">

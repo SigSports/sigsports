@@ -1,6 +1,6 @@
-/* eslint-disable @next/next/no-img-element */
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function LayoutInicial({
   children,
@@ -22,7 +22,7 @@ export default function LayoutInicial({
               <div className="flex justify-between">
                 <div className="flex space-x-7 duration-300 ease-in-out">
                   <div>
-                    <a href="#" className="flex items-center px-2 py-4">
+                    <Link href="/" className="flex items-center px-2 py-4">
                       <Image
                         src="/mascote.svg"
                         alt="Logo"
@@ -33,7 +33,7 @@ export default function LayoutInicial({
                       <span className="text-2xl font-semibold text-green-200">
                         SIG SPORTS
                       </span>
-                    </a>
+                    </Link>
                   </div>
                   <div className="dropShadow-100 hidden items-center space-x-1 text-xl text-white-default md:flex">
                     <a

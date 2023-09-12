@@ -33,7 +33,7 @@ module.exports = {
           100: "#92E6A7",
           200: "#058C42",
           300: "#16DB65",
-
+          400: "#50B170",
           bg: "#04471C",
         },
         white: { ligth: "#FCFFFC80", default: "#FCFFFC" },
