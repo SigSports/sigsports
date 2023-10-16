@@ -150,7 +150,7 @@ const editarAluno: NextPage<{ aluno: AlunoType }> = ({ aluno }) => {
               </defs>
             </svg>
           </Link>
-          <h1 className="mb mr-auto pl-3 font-Raleway text-3xl  font-semibold leading-10 text-green-bg dark:text-white-default">
+          <h1 className="mb mr-auto pl-3 font-Raleway text-3xl  font-semibold leading-10 text-green-bg">
             Editar Aluno (a){" "}
           </h1>
         </div>
@@ -163,7 +163,7 @@ const editarAluno: NextPage<{ aluno: AlunoType }> = ({ aluno }) => {
           <div className="my-6 flex w-full flex-col pl-4">
             <label
               htmlFor="nomeAluno"
-              className="ml-2 w-full font-Raleway text-base font-medium text-textGray dark:text-gray-300"
+              className="ml-2 w-full font-Raleway text-base font-medium text-green-bg"
             >
               Nome completo{}
             </label>
@@ -187,7 +187,7 @@ const editarAluno: NextPage<{ aluno: AlunoType }> = ({ aluno }) => {
           <div className="my-6 flex w-full flex-col pl-4">
             <label
               htmlFor="curso"
-              className="ml-2 w-full font-Raleway text-base font-medium text-textGray dark:text-gray-300"
+              className="ml-2 w-full font-Raleway text-base font-medium text-green-bg"
             >
               Curso {}
             </label>
@@ -211,7 +211,7 @@ const editarAluno: NextPage<{ aluno: AlunoType }> = ({ aluno }) => {
           <div className="my-6 flex w-full flex-col pl-4">
             <label
               htmlFor="matricula"
-              className="ml-2 w-full font-Raleway text-base font-medium text-textGray dark:text-gray-300"
+              className="ml-2 w-full font-Raleway text-base font-medium text-green-bg"
             >
               Matricula{}
             </label>
@@ -234,7 +234,7 @@ const editarAluno: NextPage<{ aluno: AlunoType }> = ({ aluno }) => {
           <div className="my-6 flex w-full flex-col pl-4">
             <label
               htmlFor="contato"
-              className="ml-2 w-full font-Raleway text-base font-medium text-textGray dark:text-gray-300"
+              className="ml-2 w-full font-Raleway text-base font-medium text-green-bg"
             >
               Número para contato{}
             </label>

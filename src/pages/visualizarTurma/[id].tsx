@@ -16,12 +16,13 @@ export type TurmaType = {
   modalidade: number;
   categoria: number;
   vagas: number;
-  professor: string;
+  professor: "string";
   genero: "string";
   dias: "string";
   horarioInicial: "string";
   horarioFinal: "string";
   turno: "string";
+  espaco: "string";
 };
 
 type AlunosVagasType = {
@@ -109,14 +110,14 @@ const VisualizarTurma: NextPage<{
               </defs>
             </svg>
           </Link>
-          <h1 className="leading-[ 37.57px] font-Raleway text-3xl font-semibold text-green-bg dark:text-white-default">
+          <h1 className="leading-[ 37.57px] font-Raleway text-3xl font-semibold text-green-bg">
             {turma.nomeTurma} {turma.genero}
           </h1>
         </div>
 
         <div className="mt-10 flex w-full  items-center rounded border-[3px] border-green-200 py-4 pl-14 pr-10">
           <div className="flex w-full flex-col items-center font-Montserrat  tablet:flex-row">
-            <div className="flex h-full w-full flex-col items-center justify-center py-2 font-medium text-white-default md:w-1/4 md:py-0  ">
+            <div className="flex h-full w-full flex-col items-center justify-center py-2 font-medium text-green-bg md:w-1/4 md:py-0  ">
               <h1 className="text-6xl md:text-[4.695rem]">{turma.vagas}</h1>
               <p className="flex text-center tablet:w-[50px]">
                 Capacidade Total
@@ -131,21 +132,17 @@ const VisualizarTurma: NextPage<{
                   height={16}
                   className="h-4 w-4"
                 />
-                <span className="ml-4 font-Montserrat font-medium text-white-default">
+                <span className="ml-4 font-Montserrat font-medium text-green-bg">
                   Profª {turma.professor}
                 </span>
               </div>
               <div className="mt-4 flex w-full items-center">
                 <Image src="/peoples.svg" alt="people" width={24} height={24} />
-                {vagasAlunos > 1 ? (
-                  <span className="ml-2 font-Montserrat font-medium text-white-default">
-                    {vagasAlunos} Alunos matriculados
-                  </span>
-                ) : (
-                  <span className="ml-2 font-Montserrat font-medium text-white-default">
-                    {vagasAlunos} Aluno matriculado
-                  </span>
-                )}
+                <span className="ml-2 font-Montserrat font-medium text-green-bg">
+                  {vagasAlunos > 1
+                    ? `${vagasAlunos} Alunos matriculados`
+                    : `${vagasAlunos} Aluno matriculado`}
+                </span>
               </div>
               <div className="mt-[17px] flex w-full items-center">
                 <Image
@@ -155,11 +152,11 @@ const VisualizarTurma: NextPage<{
                   height={24}
                 />
                 {vagas?.vagas_restantes ? (
-                  <span className="ml-2 font-Montserrat font-medium text-white-default">
+                  <span className="ml-2 font-Montserrat font-medium text-green-bg">
                     {vagas?.vagas_restantes} Vagas disponíveis
                   </span>
                 ) : (
-                  <span className="ml-2 font-Montserrat font-medium text-white-default">
+                  <span className="ml-2 font-Montserrat font-medium text-green-bg">
                     {turma.vagas} Vagas disponíveis
                   </span>
                 )}
@@ -175,8 +172,8 @@ const VisualizarTurma: NextPage<{
                   width={24}
                   height={24}
                 />
-                <span className="ml-2 font-Montserrat font-medium text-white-default">
-                  Ginásio principal
+                <span className="ml-2 font-Montserrat font-medium text-green-bg">
+                  {turma.espaco || "Ginásio de esportes"}
                 </span>
               </div>
               <div className="mt-4 flex w-full items-center">
@@ -187,7 +184,7 @@ const VisualizarTurma: NextPage<{
                   height={17}
                   className="ml-1"
                 />
-                <span className="ml-3 font-Montserrat font-medium text-white-default">
+                <span className="ml-3 font-Montserrat font-medium text-green-bg">
                   {turma.horarioInicial} às {turma.horarioFinal}
                 </span>
               </div>
@@ -198,7 +195,7 @@ const VisualizarTurma: NextPage<{
                   width={24}
                   height={24}
                 />
-                <span className="ml-2 font-Montserrat font-medium text-white-default">
+                <span className="ml-2 font-Montserrat font-medium text-green-bg">
                   {formatarDiasSemana(turma.dias)}
                 </span>
               </div>
@@ -231,7 +228,7 @@ const VisualizarTurma: NextPage<{
           <div className="flex flex-col justify-center">
             <label
               htmlFor="search"
-              className="font-Montserrat text-lg font-medium text-[#FFF]"
+              className="font-Montserrat text-lg font-medium text-green-bg"
             >
               Buscar aluno (a) {}
             </label>

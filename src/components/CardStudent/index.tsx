@@ -77,7 +77,7 @@ export default function Index({
     setIsDropdownOpen(!isDropdownOpen);
   };
   return (
-    <div className="mb-8 flex h-full w-full items-center justify-between  gap-x-4 text-white-default shadow-md hover:cursor-pointer hover:border-2 hover:border-green-200 md:h-16 xl:w-[80%] 2xl:w-9/12">
+    <div className="mb-8 flex h-full w-full items-center justify-between  gap-x-4 text-green-bg shadow-md hover:cursor-pointer hover:border-2 hover:border-green-200 md:h-16 xl:w-[80%] 2xl:w-9/12">
       <div className="flex h-full w-[33.3%] flex-wrap items-center gap-x-4">
         <Image src="/people.svg" alt="people" width={16} height={16} />
         <span className="font-Montserrat text-lg font-medium">{nomeAluno}</span>
@@ -102,15 +102,15 @@ export default function Index({
         >
           <path
             d="M14.25 12C14.25 10.7574 13.2426 9.75 12 9.75C10.7574 9.75 9.75 10.7574 9.75 12C9.75 13.2426 10.7574 14.25 12 14.25C13.2426 14.25 14.25 13.2426 14.25 12Z"
-            fill="white"
+            fill="black"
           />
           <path
             d="M14.25 4.5C14.25 3.25736 13.2426 2.25 12 2.25C10.7574 2.25 9.75 3.25736 9.75 4.5C9.75 5.74264 10.7574 6.75 12 6.75C13.2426 6.75 14.25 5.74264 14.25 4.5Z"
-            fill="white"
+            fill="black"
           />
           <path
             d="M14.25 19.5C14.25 18.2574 13.2426 17.25 12 17.25C10.7574 17.25 9.75 18.2574 9.75 19.5C9.75 20.7426 10.7574 21.75 12 21.75C13.2426 21.75 14.25 20.7426 14.25 19.5Z"
-            fill="white"
+            fill="black"
           />
         </svg>
         {isDropdownOpen && (

@@ -85,7 +85,7 @@ export default function ListarTurmas({
               </defs>
             </svg>
           </Link>
-          <h1 className="mr-auto font-Raleway text-3xl font-semibold leading-[37.57px] text-green-bg dark:text-white-default">
+          <h1 className="mr-auto font-Raleway text-3xl font-semibold leading-[37.57px] text-green-bg ">
             Listar turmas
           </h1>
         </div>

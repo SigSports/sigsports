@@ -5,12 +5,12 @@
 <path d="M8.50195 4.24902V8.50257L11.5049 11.5059" stroke="black" stroke-width="2.83333" stroke-linecap="round" stroke-linejoin="round"/>
 </mask>
 <g mask="url(#mask0_1450_1923)">
-<path d="M0 -0.00195312H17V16.998H0V-0.00195312Z" fill="white"/>
+<path d="M0 -0.00195312H17V16.998H0V-0.00195312Z" fill="black"/>
 </g>
 </g>
 <defs>
 <clipPath id="clip0_1450_1923">
-<rect width="17" height="17" fill="white"/>
+<rect width="17" height="17" fill="black"/>
 </clipPath>
 </defs>
 </svg>

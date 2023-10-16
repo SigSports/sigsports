@@ -148,7 +148,7 @@ export default function Index() {
               </defs>
             </svg>
           </Link>
-          <h1 className="mr-auto pl-3 font-Raleway text-3xl  font-semibold leading-10 text-green-bg dark:text-white-default">
+          <h1 className="mr-auto pl-3 font-Raleway text-3xl  font-semibold leading-10 text-green-bg">
             Matricular aluno (a){" "}
           </h1>
         </div>
@@ -162,7 +162,7 @@ export default function Index() {
           <div className="my-6 flex w-full flex-col pl-4">
             <label
               htmlFor="nomeAluno"
-              className="ml-2 w-full font-Raleway text-base font-medium text-textGray dark:text-gray-300"
+              className="ml-2 w-full font-Raleway text-base font-medium text-green-bg"
             >
               Nome completo
             </label>
@@ -185,7 +185,7 @@ export default function Index() {
           <div className="my-6 flex w-full flex-col pl-4">
             <label
               htmlFor="curso"
-              className="ml-2 w-full font-Raleway text-base font-medium text-textGray dark:text-gray-300"
+              className="ml-2 w-full font-Raleway text-base font-medium text-green-bg"
             >
               Curso
             </label>
@@ -206,7 +206,7 @@ export default function Index() {
             </p>
           </div>
           <div className="my-6 flex w-full flex-col pl-4">
-            <label className="ml-2 w-full font-Raleway text-base font-medium text-textGray dark:text-gray-300">
+            <label className="ml-2 w-full font-Raleway text-base font-medium text-green-bg">
               Matricula{" "}
             </label>
 
@@ -225,7 +225,7 @@ export default function Index() {
             </p>
           </div>
           <div className="my-6 flex w-full flex-col pl-4">
-            <label className="ml-2 w-full font-Raleway text-base font-medium text-textGray dark:text-gray-300">
+            <label className="ml-2 w-full font-Raleway text-base font-medium text-green-bg">
               Número para contato
             </label>
 

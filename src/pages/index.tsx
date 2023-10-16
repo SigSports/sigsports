@@ -5,7 +5,7 @@ import LayoutInicial from "@/components/LayoutInicial";
 export default function Home() {
   return (
     <LayoutInicial>
-      <div className="flex flex-col justify-around lg:p-0">
+      <div className="flex flex-col lg:p-0">
         <div className="flex flex-col p-8 font-Raleway text-[1.375rem] font-semibold leading-[50px] text-white-ligth ">
           <h1>Para iniciar faça seu login</h1>
           <h1>ou acesse nossos esportes disponíveis.</h1>

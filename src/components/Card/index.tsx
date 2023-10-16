@@ -185,7 +185,7 @@ export default function Card({
           )}
         </span>
       </div>
-      <div className="ml-5 mt-4 flex flex-col justify-center gap-y-4 font-Montserrat text-sm font-medium text-white-default ">
+      <div className="ml-5 mt-4 flex flex-col justify-center gap-y-4 font-Montserrat text-sm font-medium ">
         <div className="flex items-center">
           <Image
             src="/user.svg"
@@ -234,7 +234,7 @@ export default function Card({
         </div>
 
         <span
-          className={`mb-6 flex h-8 w-[6.688rem] items-center justify-center font-Poppins text-base font-normal ${
+          className={`mb-6 flex h-8 w-[6.688rem] items-center justify-center font-Poppins text-base font-normal text-white-default ${
             sexo === "Misto"
               ? "bg-yellow text-orange"
               : sexo === "Feminino"

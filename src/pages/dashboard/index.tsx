@@ -218,11 +218,17 @@ const IndexPage = ({
     indexAxis: "x",
     scales: {
       y: {
-        display: false, // Ocultar o eixo y
+        display: true,
+        ticks: {
+          color: "black",
+          font: {
+            size: 18,
+          },
+        },
       },
       x: {
         ticks: {
-          color: "#fff",
+          color: "black",
           font: {
             size: 18,
           },
@@ -236,13 +242,13 @@ const IndexPage = ({
       <div className="flex h-full w-full flex-col items-center pl-4 lg:items-start lg:pl-12">
         <div className="mt-4 flex w-full flex-col items-center justify-between gap-y-4 pr-8  md:mt-16 2xl:flex-row">
           <div className="flex h-[16.813rem] w-full flex-col items-center rounded border border-green-200 py-8 shadow-md 2xl:w-[35.063rem] ">
-            <h2 className="font-Montserrat text-lg font-bold text-white-default">
+            <h2 className="font-Montserrat text-lg font-bold">
               Esportes mais procurados
             </h2>
             <div className="flex h-full w-full items-center justify-around px-4">
               <div className="flex h-4/5 flex-col justify-around">
                 {alunos[0]?.modalidade && (
-                  <div className="flex items-center text-white-default">
+                  <div className="flex items-center">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="36"
@@ -259,7 +265,7 @@ const IndexPage = ({
                   </div>
                 )}
                 {alunos[1]?.modalidade && (
-                  <div className="flex items-center text-white-default">
+                  <div className="flex items-center">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="36"
@@ -276,7 +282,7 @@ const IndexPage = ({
                   </div>
                 )}
                 {alunos[2]?.modalidade && (
-                  <div className="flex items-center text-white-default">
+                  <div className="flex items-center">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="36"
@@ -299,15 +305,13 @@ const IndexPage = ({
               </div>
             </div>
             <div className="flex h-full items-center">
-              <span className="mr-4 font-Poppins text-3xl font-bold text-white-default">
+              <span className="mr-4 font-Poppins text-3xl font-bold ">
                 {totalAlunos}
               </span>
-              <span className="font-Poppins text-base font-medium text-textGray">
-                Alunos
-              </span>
+              <span className="font-Poppins text-base font-medium">Alunos</span>
             </div>
           </div>
-          <div className="flex w-full flex-col items-center justify-evenly rounded border border-green-200 text-white-default shadow-md 2xl:w-[18.188rem] ">
+          <div className="flex h-[16.813rem] w-full flex-col items-center justify-evenly rounded border border-green-200  shadow-md 2xl:w-[18.188rem] ">
             <h1 className="font-Montserrat text-[22px] font-bold">
               VAGAS DISPONIVEIS
             </h1>
@@ -319,7 +323,7 @@ const IndexPage = ({
             </p>
           </div>
 
-          <div className="flex w-[19.875rem] flex-col justify-between gap-y-4">
+          <div className="flex w-full flex-col justify-between gap-y-4 2xl:w-[19.875rem]">
             <Link
               href="/criarTurma"
               className="flex h-[69px] w-full items-center justify-center rounded bg-green-200 font-Montserrat text-lg font-bold text-white-default shadow-md transition-colors duration-300 hover:scale-105 hover:cursor-pointer hover:bg-green-300"
@@ -328,13 +332,13 @@ const IndexPage = ({
             </Link>
             <Link
               href="/listarTurmas"
-              className="flex h-[69px] w-full items-center justify-center rounded border border-green-200 font-Montserrat text-lg font-bold text-white-default shadow-md transition-colors duration-300 hover:scale-105 hover:cursor-pointer"
+              className="flex h-[69px] w-full items-center justify-center rounded border border-green-200 font-Montserrat text-lg font-bold  shadow-md transition-colors duration-300 hover:scale-105 hover:cursor-pointer"
             >
               LISTAR TURMAS
             </Link>
             <button
               type="button"
-              className="flex h-[69px] w-full items-center justify-center rounded border border-green-200 font-Montserrat text-lg font-bold text-white-default shadow-md transition-colors duration-300 hover:scale-105 hover:cursor-pointer"
+              className="flex h-[69px] w-full items-center justify-center rounded border border-green-200 font-Montserrat text-lg font-bold shadow-md transition-colors duration-300 hover:scale-105 hover:cursor-pointer"
             >
               EMPRÉSTIMOS
             </button>
@@ -344,8 +348,8 @@ const IndexPage = ({
           <h1 className="flex h-20 items-center justify-center border-none bg-green-200 text-center font-Montserrat text-2xl font-bold uppercase text-white-default">
             Quantidade de alunos por esporte
           </h1>
-          <div className="mb-4 flex justify-center text-white-default">
-            <div className="mr-24 flex items-center text-white-default">
+          <div className="mb-4 flex justify-center">
+            <div className="mr-24 flex items-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="36"
@@ -360,7 +364,7 @@ const IndexPage = ({
               </svg>
               <span className="text-lg">Vagas Preenchidas</span>
             </div>
-            <div className="flex items-center text-white-default">
+            <div className="flex items-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="36"

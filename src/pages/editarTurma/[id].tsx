@@ -265,7 +265,7 @@ export default function CriarTurma({
               </defs>
             </svg>
           </Link>
-          <h1 className="leading-[ 37.57px] mr-auto pl-3 font-Raleway text-3xl font-semibold text-green-bg dark:text-white-default">
+          <h1 className="leading-[ 37.57px] mr-auto pl-3 font-Raleway text-3xl font-semibold text-green-bg">
             Criar turma
           </h1>
         </div>
@@ -276,7 +276,7 @@ export default function CriarTurma({
           <div className="my-6 flex w-full flex-col pl-4">
             <label
               htmlFor="nome_aluno"
-              className="ml-2 w-full font-Raleway text-base font-medium text-textGray dark:text-gray-300"
+              className="ml-2 w-full font-Raleway text-base font-medium text-green-bg"
             >
               Nome da turma{" "}
             </label>
@@ -299,7 +299,7 @@ export default function CriarTurma({
           <div className="my-4 flex w-full flex-col pl-4">
             <label
               htmlFor="modalidadde_id"
-              className=" font-Raleway text-base font-medium text-textGray dark:text-gray-300"
+              className=" font-Raleway text-base font-medium text-green-bg"
             >
               Modalidade{" "}
             </label>
@@ -321,7 +321,7 @@ export default function CriarTurma({
           <div className="my-4 flex w-full flex-col pl-4">
             <label
               htmlFor="categoria_id"
-              className=" font-Raleway text-base font-medium text-textGray dark:text-gray-300"
+              className=" font-Raleway text-base font-medium text-green-bg"
             >
               Categoria{" "}
             </label>
@@ -343,7 +343,7 @@ export default function CriarTurma({
           <div className="my-4 flex w-full flex-col pl-4">
             <label
               htmlFor="professor_id"
-              className=" font-Raleway text-base font-medium text-textGray dark:text-gray-300"
+              className=" font-Raleway text-base font-medium text-green-bg"
             >
               Professor{" "}
             </label>
@@ -362,7 +362,7 @@ export default function CriarTurma({
               ))}
             </select>
           </div>
-          <span className="ml-4 mt-4 h-full w-full font-Raleway text-base font-medium text-textGray dark:text-gray-300">
+          <span className="ml-4 mt-4 h-full w-full font-Raleway text-base font-medium text-green-bg">
             Informe o tipo da turma
           </span>
           <div className="w-full pl-4">
@@ -380,7 +380,7 @@ export default function CriarTurma({
               />
               <button
                 type="button"
-                className="ml-2 font-Raleway text-base font-medium text-textGray "
+                className="ml-2 font-Raleway text-base font-medium text-green-bg"
                 onClick={() => handleButtonClicked("Masculino")}
               >
                 Masculino
@@ -400,7 +400,7 @@ export default function CriarTurma({
               />
               <button
                 type="button"
-                className="ml-2 font-Raleway text-base font-medium text-textGray "
+                className="ml-2 font-Raleway text-base font-medium text-green-bg"
                 onClick={() => handleButtonClicked("Feminino")}
               >
                 Feminino
@@ -420,7 +420,7 @@ export default function CriarTurma({
 
               <button
                 type="button"
-                className="ml-2 font-Raleway text-base font-medium text-textGray "
+                className="ml-2 font-Raleway text-base font-medium text-green-bg"
                 onClick={() => handleButtonClicked("Misto")}
               >
                 Misto
@@ -435,7 +435,7 @@ export default function CriarTurma({
           <div className="my-6 flex w-full flex-col pl-4">
             <label
               htmlFor="vagas"
-              className="ml-2 w-full font-Raleway text-base font-medium text-textGray dark:text-gray-300"
+              className="ml-2 w-full font-Raleway text-base font-medium text-green-bg"
             >
               Vagas{" "}
             </label>
@@ -459,7 +459,7 @@ export default function CriarTurma({
             )}
           </div>
 
-          <span className="ml-4 mt-4 h-full w-full font-Raleway text-base font-medium text-textGray dark:text-gray-300">
+          <span className="ml-4 mt-4 h-full w-full font-Raleway text-base font-medium text-green-bg">
             Informe um turno para a turma
           </span>
           <div className="w-full pl-4">
@@ -476,7 +476,7 @@ export default function CriarTurma({
               />
               <button
                 type="button"
-                className="ml-2 font-Raleway text-base font-medium text-textGray "
+                className="ml-2 font-Raleway text-base font-medium text-green-bg"
                 onClick={() => handleButtonClicked("Matutino")}
               >
                 Matutino
@@ -496,7 +496,7 @@ export default function CriarTurma({
               />
               <button
                 type="button"
-                className="ml-2 font-Raleway text-base font-medium text-textGray "
+                className="ml-2 font-Raleway text-base font-medium text-green-bg"
                 onClick={() => handleButtonClicked("Vespertino")}
               >
                 Vespertino
@@ -516,7 +516,7 @@ export default function CriarTurma({
 
               <button
                 type="button"
-                className="ml-2 font-Raleway text-base font-medium text-textGray "
+                className="ml-2 font-Raleway text-base font-medium text-green-bg"
                 onClick={() => handleButtonClicked("Noturno")}
               >
                 Noturno
@@ -531,7 +531,7 @@ export default function CriarTurma({
           <div className="my-6 flex w-full flex-col pl-4">
             <label
               htmlFor="horaInicial"
-              className="w-full font-Raleway text-lg font-medium text-textGray dark:text-gray-300"
+              className="w-full font-Raleway text-lg font-medium text-green-bg"
             >
               Que horário deseja iniciar?{" "}
             </label>
@@ -555,7 +555,7 @@ export default function CriarTurma({
           <div className="my-6 flex w-full flex-col pl-4">
             <label
               htmlFor="horaFinal"
-              className="w-full font-Raleway text-lg font-medium text-textGray dark:text-gray-300"
+              className="w-full font-Raleway text-lg font-medium text-green-bg"
             >
               Que horário deseja encerrar?{" "}
             </label>
@@ -577,7 +577,7 @@ export default function CriarTurma({
               )}
           </div>
 
-          <span className="ml-4 mt-8 h-full w-full font-Raleway text-base font-medium text-textGray dark:text-gray-300">
+          <span className="ml-4 mt-8 h-full w-full font-Raleway text-base font-medium text-green-bg">
             Informe os dias da semana
           </span>
           <div className="w-full pl-6">
@@ -593,7 +593,7 @@ export default function CriarTurma({
               />
               <label
                 htmlFor="default-checkbox"
-                className="ml-2 font-Raleway text-base font-medium text-textGray dark:text-gray-300"
+                className="ml-2 font-Raleway text-base font-medium text-green-bg"
               >
                 Segunda{" "}
               </label>
@@ -610,7 +610,7 @@ export default function CriarTurma({
               />
               <label
                 htmlFor="default-checkbox"
-                className="ml-2 font-Raleway text-base font-medium text-textGray dark:text-gray-300"
+                className="ml-2 font-Raleway text-base font-medium text-green-bg"
               >
                 Terça{" "}
               </label>
@@ -627,7 +627,7 @@ export default function CriarTurma({
               />
               <label
                 htmlFor="default-checkbox"
-                className="ml-2 font-Raleway text-base font-medium text-textGray dark:text-gray-300"
+                className="ml-2 font-Raleway text-base font-medium text-green-bg"
               >
                 Quarta{" "}
               </label>
@@ -644,7 +644,7 @@ export default function CriarTurma({
               />
               <label
                 htmlFor="default-checkbox"
-                className="ml-2 font-Raleway text-base font-medium text-textGray dark:text-gray-300"
+                className="ml-2 font-Raleway text-base font-medium text-green-bg"
               >
                 Quinta{" "}
               </label>
@@ -661,7 +661,7 @@ export default function CriarTurma({
               />
               <label
                 htmlFor="default-checkbox"
-                className="ml-2 font-Raleway text-base font-medium text-textGray dark:text-gray-300"
+                className="ml-2 font-Raleway text-base font-medium text-green-bg"
               >
                 Sexta{" "}
               </label>

@@ -14,9 +14,9 @@ export default function LayoutInicial({
   };
 
   return (
-    <div className="flex h-full w-screen">
-      <div className="flex h-full w-full flex-col lg:justify-between">
-        <div className="mt-[50px] flex w-full justify-center">
+    <div className="flex h-screen w-screen bg-bgGray">
+      <div className="flex h-full w-full flex-col lg:justify-between ">
+        <div className="mt-[50px] flex w-full justify-center ">
           <nav className="z-50">
             <div className="mx-auto max-w-6xl px-4">
               <div className="flex justify-between">
@@ -147,7 +147,7 @@ export default function LayoutInicial({
             )}
           </nav>
         </div>
-        <div className="flex w-screen items-center justify-center tablet:w-full">
+        <div className="mt-52 flex h-full w-screen justify-center tablet:w-full">
           {children}
         </div>
       </div>
