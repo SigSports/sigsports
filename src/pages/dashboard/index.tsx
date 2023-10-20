@@ -1,5 +1,8 @@
+/* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable import/first */
 /* eslint-disable @typescript-eslint/no-shadow */
 import React, { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
 import {
   Chart as ChartJS,
   ArcElement,
@@ -8,7 +11,16 @@ import {
   LinearScale,
   BarElement,
 } from "chart.js";
-import { Bar, Doughnut } from "react-chartjs-2";
+
+const Pie = dynamic(() => import("@ant-design/plots").then(({ Pie }) => Pie), {
+  ssr: false,
+});
+const Column = dynamic(
+  () => import("@ant-design/plots").then(({ Column }) => Column),
+  {
+    ssr: false,
+  }
+);
 import Link from "next/link";
 import { GetServerSideProps } from "next";
 import axios from "axios";
@@ -176,67 +188,156 @@ const IndexPage = ({
     fetchVagasRestantesData();
     graficBar();
   }, []);
-  const data = {
-    labels: [
-      alunos[0]?.modalidade,
-      alunos[1]?.modalidade,
-      alunos[2]?.modalidade,
-    ],
-    datasets: [
+  const data = [
+    {
+      type: alunos[0]?.modalidade,
+      value: alunos[0]?.quantidadeAlunos || 0,
+    },
+    {
+      type: alunos[1]?.modalidade,
+      value: alunos[1]?.quantidadeAlunos || 0,
+    },
+    {
+      type: alunos[2]?.modalidade,
+      value: alunos[2]?.quantidadeAlunos || 0,
+    },
+  ];
+  const customColors = ["#34DAFF", "#8BFFBA", "#058C42"];
+  const config: any = {
+    appendPadding: 16,
+    data,
+    angleField: "value",
+    colorField: "type",
+    radius: 0.9,
+    innerRadius: 0.7,
+    color: customColors,
+    interactions: [
       {
-        data: [
-          alunos[0]?.quantidadeAlunos || 0,
-          alunos[1]?.quantidadeAlunos || 0,
-          alunos[2]?.quantidadeAlunos || 0,
-        ],
-        backgroundColor: ["#34DAFF", "#8BFFBA", "#058C42"],
-        borderWidth: 2,
-        barThickness: 20,
-      },
-    ],
-  };
-  const data1 = {
-    labels: modalidades,
-    datasets: [
-      {
-        label: "Vagas Preenchidas",
-        data: vagas, // Quantidade de vagas preenchidas por esporte
-        backgroundColor: "#058C42",
-        borderWidth: 1,
-        barThickness: 25,
+        type: "element-selected",
       },
       {
-        label: "Vagas Totais",
-        data: vagasTotais, // Quantidade de vagas totais por esporte
-        backgroundColor: "#AAAAAA",
-        borderWidth: 1,
-        barThickness: 25,
+        type: "element-active",
       },
     ],
-  };
-  const options: any = {
-    indexAxis: "x",
-    scales: {
-      y: {
-        display: true,
-        ticks: {
-          color: "black",
-          font: {
-            size: 18,
-          },
+    statistic: {
+      title: false,
+      content: {
+        style: {
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          fontSize: 20,
         },
+        content: `${totalAlunos} \nAlunos`,
       },
-      x: {
-        ticks: {
-          color: "black",
-          font: {
-            size: 18,
-          },
+    },
+    legend: {
+      itemName: {
+        style: {
+          fontSize: 16,
+          marginRight: 40,
         },
       },
     },
   };
+  const data1: any = [];
+  modalidades.forEach((el, i) => {
+    data1.push(
+      {
+        name: "Vagas Preenchidas",
+        titulo: el,
+        value: vagas[i],
+      },
+      {
+        name: "Vagas Totais",
+        titulo: el,
+        value: vagasTotais[i],
+      }
+    );
+  });
 
+  //   {
+  //     name: "Vagas Preenchidas",
+  //     titulo: modalidades,
+  //     value: vagas,
+  //   },
+  //   {
+  //     name: "Vagas Totais",
+  //     titulo: modalidades,
+  //     value: vagasTotais,
+  //   },
+  // ];
+  // const data1 = {
+  //   labels: modalidades,
+  //   datasets: [
+  //     {
+  //       label: "Vagas Preenchidas",
+  //       data: vagas, // Quantidade de vagas preenchidas por esporte
+  //       backgroundColor: "#058C42",
+  //       borderWidth: 1,
+  //       barThickness: 25,
+  //     },
+  //     {
+  //       label: "Vagas Totais",
+  //       data: vagasTotais, // Quantidade de vagas totais por esporte
+  //       backgroundColor: "#AAAAAA",
+  //       borderWidth: 1,
+  //       barThickness: 25,
+  //     },
+  //   ],
+  // };
+  // const options: any = {
+  //   indexAxis: "x",
+  //   scales: {
+  //     y: {
+  //       display: true,
+  //       ticks: {
+  //         color: "black",
+  //         font: {
+  //           size: 18,
+  //         },
+  //       },
+  //     },
+  //     x: {
+  //       ticks: {
+  //         color: "black",
+  //         font: {
+  //           size: 18,
+  //         },
+  //       },
+  //     },
+  //   },
+  // };
+
+  const config1: any = {
+    data: data1, // Seu conjunto de dados
+    xField: "titulo", // Campo X (eixo horizontal)
+    yField: "value", // Campo Y (eixo vertical)
+    isGroup: true,
+    seriesField: "name", // Campo de série (para agrupar)
+    color: ["#058C42", "#AAAAAA"],
+    label: {
+      position: "large",
+      layout: [
+        {
+          type: "interval-adjust-position",
+        },
+        {
+          type: "interval-hide-overlap",
+        },
+        {
+          type: "adjust-color",
+        },
+      ],
+    },
+    legend: {
+      position: "top", // Posição da legenda
+      itemName: {
+        style: {
+          fontSize: 18,
+        },
+      },
+    },
+  };
   return (
     <Layout>
       <div className="flex h-full w-full flex-col items-center pl-4 lg:items-start lg:pl-12">
@@ -246,7 +347,7 @@ const IndexPage = ({
               Esportes mais procurados
             </h2>
             <div className="flex h-full w-full items-center justify-around px-4">
-              <div className="flex h-4/5 flex-col justify-around">
+              {/* <div className="flex h-4/5 flex-col justify-around">
                 {alunos[0]?.modalidade && (
                   <div className="flex items-center">
                     <svg
@@ -298,17 +399,11 @@ const IndexPage = ({
                     <span>{alunos[2]?.modalidade}</span>
                   </div>
                 )}
-              </div>
+              </div> */}
 
-              <div className="h-40 w-40">
-                <Doughnut data={data} className="w-10" />
+              <div className="flex h-56 w-full flex-row-reverse justify-center">
+                <Pie {...config} className="w-full" />
               </div>
-            </div>
-            <div className="flex h-full items-center">
-              <span className="mr-4 font-Poppins text-3xl font-bold ">
-                {totalAlunos}
-              </span>
-              <span className="font-Poppins text-base font-medium">Alunos</span>
             </div>
           </div>
           <div className="flex h-[16.813rem] w-full flex-col items-center justify-evenly rounded border border-green-200  shadow-md 2xl:w-[18.188rem] ">
@@ -349,7 +444,7 @@ const IndexPage = ({
             Quantidade de alunos por esporte
           </h1>
           <div className="mb-4 flex justify-center">
-            <div className="mr-24 flex items-center">
+            {/* <div className="mr-24 flex items-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="36"
@@ -378,10 +473,10 @@ const IndexPage = ({
                 />
               </svg>
               <span className="text-lg">Vagas Totais</span>
-            </div>
+            </div> */}
           </div>
           <div className="flex h-[400px] w-full justify-center">
-            <Bar data={data1} options={options} />
+            <Column {...config1} className="w-full lg:w-[60%]" />
           </div>
         </div>
       </div>
