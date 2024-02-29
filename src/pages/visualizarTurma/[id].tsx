@@ -6,9 +6,17 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/router";
+import { Quicksand } from "next/font/google";
 import Layout from "@/components/Layout";
 import CardStudent from "@/components/CardStudent";
 import { pdfTurma } from "@/utils/pdfTurma";
+import { api } from "@/services/api";
+
+const quicksand = Quicksand({
+  weight: "500",
+  style: "normal",
+  subsets: ["latin"],
+});
 
 export type TurmaType = {
   id: number;
@@ -110,15 +118,21 @@ const VisualizarTurma: NextPage<{
               </defs>
             </svg>
           </Link>
-          <h1 className="leading-[ 37.57px] font-Raleway text-3xl font-semibold text-green-bg">
+          <h1
+            className={`${quicksand.className} leading-[ 37.57px] text-3xl font-semibold text-green-bg`}
+          >
             {turma.nomeTurma} {turma.genero}
           </h1>
         </div>
 
-        <div className="mt-10 flex w-full  items-center rounded border-[3px] border-green-200 py-4 pl-14 pr-10">
+        <div className="mt-10 flex w-full  items-center  rounded-md border-[3px] border-green-200 py-2 pl-14 pr-10">
           <div className="flex w-full flex-col items-center font-Montserrat  tablet:flex-row">
-            <div className="flex h-full w-full flex-col items-center justify-center py-2 font-medium text-green-bg md:w-1/4 md:py-0  ">
-              <h1 className="text-6xl md:text-[4.695rem]">{turma.vagas}</h1>
+            <div className="flex h-full w-full flex-col items-center justify-center py-1 font-medium text-green-bg md:w-1/4 md:py-0  ">
+              <h1
+                className={`${quicksand.className} text-6xl md:text-[4.695rem]`}
+              >
+                {turma.vagas}
+              </h1>
               <p className="flex text-center tablet:w-[50px]">
                 Capacidade Total
               </p>
@@ -132,13 +146,17 @@ const VisualizarTurma: NextPage<{
                   height={16}
                   className="h-4 w-4"
                 />
-                <span className="ml-4 font-Montserrat font-medium text-green-bg">
+                <span
+                  className={`${quicksand.className} ml-4 font-medium text-green-bg `}
+                >
                   Profª {turma.professor}
                 </span>
               </div>
               <div className="mt-4 flex w-full items-center">
                 <Image src="/peoples.svg" alt="people" width={24} height={24} />
-                <span className="ml-2 font-Montserrat font-medium text-green-bg">
+                <span
+                  className={`${quicksand.className} ml-2  font-medium text-green-bg`}
+                >
                   {vagasAlunos > 1
                     ? `${vagasAlunos} Alunos matriculados`
                     : `${vagasAlunos} Aluno matriculado`}
@@ -152,7 +170,9 @@ const VisualizarTurma: NextPage<{
                   height={24}
                 />
                 {vagas?.vagas_restantes ? (
-                  <span className="ml-2 font-Montserrat font-medium text-green-bg">
+                  <span
+                    className={`${quicksand.className} ml-2  font-medium text-green-bg`}
+                  >
                     {vagas?.vagas_restantes} Vagas disponíveis
                   </span>
                 ) : (
@@ -172,7 +192,9 @@ const VisualizarTurma: NextPage<{
                   width={24}
                   height={24}
                 />
-                <span className="ml-2 font-Montserrat font-medium text-green-bg">
+                <span
+                  className={`${quicksand.className} ml-2 font-medium text-green-bg`}
+                >
                   {turma.espaco || "Ginásio de esportes"}
                 </span>
               </div>
@@ -184,7 +206,9 @@ const VisualizarTurma: NextPage<{
                   height={17}
                   className="ml-1"
                 />
-                <span className="ml-3 font-Montserrat font-medium text-green-bg">
+                <span
+                  className={`${quicksand.className} ml-3  font-medium text-green-bg`}
+                >
                   {turma.horarioInicial} às {turma.horarioFinal}
                 </span>
               </div>
@@ -195,7 +219,9 @@ const VisualizarTurma: NextPage<{
                   width={24}
                   height={24}
                 />
-                <span className="ml-2 font-Montserrat font-medium text-green-bg">
+                <span
+                  className={`${quicksand.className} ml-2  font-medium text-green-bg`}
+                >
                   {formatarDiasSemana(turma.dias)}
                 </span>
               </div>
@@ -219,7 +245,12 @@ const VisualizarTurma: NextPage<{
                 />
               </svg>
 
-              <span onClick={() => pdfTurma(turma, alunos)}>EXPORTAR</span>
+              <span
+                className={`${quicksand.className}`}
+                onClick={() => pdfTurma(turma, alunos)}
+              >
+                EXPORTAR
+              </span>
             </button>
           </div>
         </div>
@@ -228,7 +259,7 @@ const VisualizarTurma: NextPage<{
           <div className="flex flex-col justify-center">
             <label
               htmlFor="search"
-              className="font-Montserrat text-lg font-medium text-green-bg"
+              className={`${quicksand.className}  text-lg font-medium text-green-bg`}
             >
               Buscar aluno (a) {}
             </label>
@@ -238,7 +269,7 @@ const VisualizarTurma: NextPage<{
                   type="text"
                   name="search"
                   placeholder="Digite"
-                  className="h-14 w-52 rounded-l border-y-2 border-l-2 border-green-200 bg-white-default pl-12 pr-6 font-Quicksand text-base font-medium text-textGray placeholder:text-textGray focus:border-green-200 xl:w-[500px] tablet:w-[800px] 3xl:w-[55rem]"
+                  className={`${quicksand.className} h-14 w-52 rounded-sm border-y-2 border-l-2 border-green-200 bg-white-default pl-12 pr-6  text-base font-medium text-textGray placeholder:text-textGray focus:border-green-200 xl:w-[500px] tablet:w-[800px] 3xl:w-[55rem]`}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   onKeyPress={handleKeyPress}
@@ -262,7 +293,7 @@ const VisualizarTurma: NextPage<{
               <button
                 type="button"
                 onClick={handleSearch}
-                className="flex h-14 w-20 items-center justify-center rounded-r-sm  bg-green-200 font-Montserrat text-[17.28px] font-bold text-white-default md:w-36"
+                className={`${quicksand.className} flex h-14 w-20 items-center justify-center rounded-r-md  bg-green-200 text-[17.28px] font-bold text-white-default md:w-36`}
               >
                 Buscar
               </button>
@@ -272,7 +303,7 @@ const VisualizarTurma: NextPage<{
             <div className="relative hover:cursor-pointer">
               <Link
                 href={`/matricularAluno/${id}`}
-                className="ml-4 mt-4 flex h-14 w-12 items-center justify-center rounded-r-sm bg-green-200 font-Montserrat text-[17.28px] font-bold leading-normal text-transparent md:mt-7 3xl:w-[21.5rem] 3xl:text-white-default"
+                className={`${quicksand.className} ml-4 mt-4 flex h-14 w-12 items-center justify-center rounded-md bg-green-200 text-[17.28px] font-bold leading-normal text-transparent md:mt-7 3xl:w-[21.5rem] 3xl:text-white-default`}
               >
                 MATRICULAR ALUNO (A)
               </Link>
@@ -300,7 +331,9 @@ const VisualizarTurma: NextPage<{
           </div>
         </div>
 
-        <div className=" mt-12 flex h-96 w-full flex-col overflow-y-auto">
+        <div
+          className={`${quicksand.className} mt-12 flex h-96 w-full flex-col overflow-y-auto p-2`}
+        >
           {filteredTurmas.map((aluno) => (
             <CardStudent
               key={aluno.id}
@@ -331,18 +364,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
   const { id } = context.query;
-  const response = await fetch(
-    `https://sigsport.pythonanywhere.com/api/v1/gerenciarTurmaId/${id}`
-  );
-  const response1 = await fetch(
-    `https://sigsport.pythonanywhere.com/api/v1/listarMatriculas/${id}`
-  );
-  const response2 = await fetch(
-    `https://sigsport.pythonanywhere.com/api/v1/vagasDeTurmas/${id}`
-  );
-  const turma = await response.json();
-  const alunos = await response1.json();
-  const vagas = await response2.json();
+  const response = await api.get(`aluno/turma/${id}`);
+  const response1 = await api.get(`aluno/listaMatriculas/${id}`);
+  const response2 = await api.get(`aluno/vagasDeTurmas/${id}`);
+  const turma = await response.data;
+  const alunos = await response1.data;
+  const vagas = await response2.data;
   return {
     props: {
       turma,

@@ -9,6 +9,8 @@ import { mask } from "remask";
 import { toast } from "react-toastify";
 import { useMutation } from "react-query";
 import Link from "next/link";
+import { Quicksand } from "next/font/google";
+import { api } from "@/services/api";
 import Layout from "@/components/Layout";
 import {
   TFormData,
@@ -17,7 +19,14 @@ import {
   Tcategoria,
 } from "@/utils/typeTurma";
 
-const url = "https://sigsport.pythonanywhere.com/api";
+const quicksand = Quicksand({
+  weight: "400",
+  style: "normal",
+  subsets: ["latin"],
+});
+
+// const url = "https://sigsport.pythonanywhere.com/api";
+// const url = "http://40.76.188.129:8008/api";
 const schema = yup
   .object()
   .shape({
@@ -93,7 +102,7 @@ export default function CriarTurma({
   const createSolicitation = useMutation(async (data: TFormData) => {
     try {
       const response = await fetch(
-        `https://sigsport.pythonanywhere.com/api/v1/gerenciarTurmaId/${turma.id}/`,
+        `http://40.76.188.129:8008/api/aluno/turma/${turma.id}`,
         {
           method: "PUT",
           headers: {
@@ -130,7 +139,7 @@ export default function CriarTurma({
   const onSubmit = async (data: TFormData | any) => {
     if (turno === "" && turma.turno.toString() === "") {
       setErrrorTurno(true);
-    } else if (genero === "" && turma.genero.toString() === "") {
+    } else if (genero === "" && turma.genero?.toString() === "") {
       setErrorGenero(true);
     } else {
       setErrrorTurno(false);
@@ -152,7 +161,7 @@ export default function CriarTurma({
       const response = await createSolicitation.mutateAsync(data1);
 
       if (response.modalidade) {
-        toast.success("Turma Criada com sucesso", {
+        toast.success("Turma editada com sucesso", {
           position: "top-center",
           autoClose: 5000,
           hideProgressBar: false,
@@ -265,20 +274,24 @@ export default function CriarTurma({
               </defs>
             </svg>
           </Link>
-          <h1 className="leading-[ 37.57px] mr-auto pl-3 font-Raleway text-3xl font-semibold text-green-bg">
-            Criar turma
+          <h1
+            className={`${quicksand.className} mr-auto text-3xl font-semibold leading-[37.57px] text-green-bg`}
+          >
+            Editar turma
           </h1>
         </div>
-        <h2 className="mt-4 px-4 font-Raleway text-2xl font-semibold leading-9 text-green-bg dark:text-green-300 lg:w-[505px]">
-          Insira as informações necessárias para a formação de uma turma:
+        <h2
+          className={`${quicksand.className}  px-4 font-semibold  leading-9 text-green-bg dark:text-green-300 lg:w-[505px]`}
+        >
+          Edite as informações necessárias:
         </h2>
         <form onSubmit={handleSubmit(onSubmit)} className="w-full">
-          <div className="my-6 flex w-full flex-col pl-4">
+          <div className="my-2 flex w-full flex-col pl-4">
             <label
               htmlFor="nome_aluno"
-              className="ml-2 w-full font-Raleway text-base font-medium text-green-bg"
+              className={`${quicksand.className} w-full text-base font-medium text-green-bg`}
             >
-              Nome da turma{" "}
+              <b>Nome da turma</b>{" "}
             </label>
 
             <input
@@ -289,8 +302,10 @@ export default function CriarTurma({
               className={`border-2 ${
                 errors.nomeTurma
                   ? "border-red-500 focus:border-red-600"
-                  : "border-green-200 focus:border-transparent focus:ring-green-100"
-              } text-white h-14 w-80 rounded-lg pl-4 font-Montserrat text-base font-medium placeholder:text-textGray focus:border-transparent focus:outline-none focus:ring-2`}
+                  : "border-green-300 focus:border-transparent focus:ring-green-100"
+              } ${
+                quicksand.className
+              }  text-white h-14 w-80 rounded-lg pl-4  text-base font-medium placeholder:text-textGray focus:border-transparent focus:outline-none focus:ring-2`}
             />
             <p className="mt-2 pl-6 text-base font-medium text-red-500">
               {errors.nomeTurma?.message}
@@ -299,19 +314,19 @@ export default function CriarTurma({
           <div className="my-4 flex w-full flex-col pl-4">
             <label
               htmlFor="modalidadde_id"
-              className=" font-Raleway text-base font-medium text-green-bg"
+              className={`${quicksand.className} text-base font-medium text-green-bg`}
             >
-              Modalidade{" "}
+              <b>Modalidade</b>{" "}
             </label>
             <select
-              className="focus:shadow-outline h-14 w-60 border-2 border-green-300 bg-white-default pl-4 align-bottom font-Quicksand text-xl font-medium text-textGray hover:border-gray-500"
+              className={`${quicksand.className} focus:shadow-outline h-14 w-80 rounded-lg border-2 border-green-300 bg-white-default pl-3 align-bottom font-medium hover:border-gray-500`}
               {...register("modalidade")}
             >
               {modalidadesWithTurmaFirst.map((modalidade) => (
                 <option
                   key={modalidade?.id}
                   value={modalidade?.id}
-                  className="h-14 w-80 rounded-sm border-2 border-green-200 pl-4 font-Quicksand text-base font-medium text-textGray focus:border-transparent focus:outline-none focus:ring-2 focus:ring-green-100"
+                  className={`${quicksand.className} h-14 w-80 rounded-sm border-2 border-green-200 pl-4 font-Quicksand text-base font-medium text-textGray focus:border-transparent focus:outline-none focus:ring-2 focus:ring-green-100`}
                 >
                   {modalidade?.nomeModalidade}
                 </option>
@@ -321,19 +336,19 @@ export default function CriarTurma({
           <div className="my-4 flex w-full flex-col pl-4">
             <label
               htmlFor="categoria_id"
-              className=" font-Raleway text-base font-medium text-green-bg"
+              className={`${quicksand.className} text-base font-medium text-green-bg`}
             >
-              Categoria{" "}
+              <b>Categoria</b>{" "}
             </label>
             <select
-              className="focus:shadow-outline h-14 w-60 border-2 border-green-300 bg-white-default pl-4 align-bottom font-Quicksand text-xl font-medium text-textGray hover:border-gray-500"
+              className={`${quicksand.className} focus:shadow-outline h-14 w-80 rounded-lg border-2 border-green-300 bg-white-default pl-3 align-bottom  font-medium  hover:border-gray-500`}
               {...register("categoria")}
             >
               {categoriasWithTurmaFirst.map((categoria) => (
                 <option
                   key={categoria?.id}
                   value={categoria?.id}
-                  className="h-14 w-80 rounded-sm border-2 border-green-200 pl-4 font-Quicksand text-base font-medium text-textGray focus:border-transparent focus:outline-none focus:ring-2 focus:ring-green-100"
+                  className={`${quicksand.className} h-14 w-80 rounded-sm border-2 border-green-200 pl-4 font-Quicksand text-base font-medium text-textGray focus:border-transparent focus:outline-none focus:ring-2 focus:ring-green-100`}
                 >
                   {categoria?.categoria}
                 </option>
@@ -343,12 +358,12 @@ export default function CriarTurma({
           <div className="my-4 flex w-full flex-col pl-4">
             <label
               htmlFor="professor_id"
-              className=" font-Raleway text-base font-medium text-green-bg"
+              className={`${quicksand.className}  text-base font-medium text-green-bg`}
             >
-              Professor{" "}
+              <b>Professor </b>{" "}
             </label>
             <select
-              className="focus:shadow-outline h-14 w-60 border-2 border-green-300 bg-white-default pl-4 align-bottom font-Quicksand text-xl font-medium text-textGray hover:border-gray-500"
+              className={`${quicksand.className} focus:shadow-outline h-14 w-80 rounded-lg border-2 border-green-300 bg-white-default pl-3 align-bottom font-medium  hover:border-gray-500`}
               {...register("professor")}
             >
               {professoresWithTurmaFirst.map((professor) => (
@@ -362,11 +377,13 @@ export default function CriarTurma({
               ))}
             </select>
           </div>
-          <span className="ml-4 mt-4 h-full w-full font-Raleway text-base font-medium text-green-bg">
-            Informe o tipo da turma
+          <span
+            className={`${quicksand.className} ml-4 mt-4 h-full w-full text-base font-medium text-green-bg`}
+          >
+            <b>Informe o tipo da turma:</b>
           </span>
           <div className="w-full pl-4">
-            <div className="mb-4 mt-8 flex items-center">
+            <div className="mb-4 mt-3 flex items-center">
               <input
                 type="radio"
                 name="genero"
@@ -380,7 +397,7 @@ export default function CriarTurma({
               />
               <button
                 type="button"
-                className="ml-2 font-Raleway text-base font-medium text-green-bg"
+                className={`${quicksand.className} ml-2 text-base font-medium text-green-bg`}
                 onClick={() => handleButtonClicked("Masculino")}
               >
                 Masculino
@@ -400,7 +417,7 @@ export default function CriarTurma({
               />
               <button
                 type="button"
-                className="ml-2 font-Raleway text-base font-medium text-green-bg"
+                className={`${quicksand.className} ml-2 text-base font-medium text-green-bg`}
                 onClick={() => handleButtonClicked("Feminino")}
               >
                 Feminino
@@ -420,7 +437,7 @@ export default function CriarTurma({
 
               <button
                 type="button"
-                className="ml-2 font-Raleway text-base font-medium text-green-bg"
+                className={`${quicksand.className} ml-2 text-base font-medium text-green-bg`}
                 onClick={() => handleButtonClicked("Misto")}
               >
                 Misto
@@ -435,9 +452,9 @@ export default function CriarTurma({
           <div className="my-6 flex w-full flex-col pl-4">
             <label
               htmlFor="vagas"
-              className="ml-2 w-full font-Raleway text-base font-medium text-green-bg"
+              className={`${quicksand.className} ml-2 w-full font-Raleway text-base font-medium text-green-bg`}
             >
-              Vagas{" "}
+              <b>Vagas:</b>{" "}
             </label>
 
             <input
@@ -450,20 +467,24 @@ export default function CriarTurma({
                 errors.vagas
                   ? "border-red-500 focus:border-red-600"
                   : "border-green-200 focus:border-transparent focus:ring-green-100"
-              } text-white h-14 w-60 rounded-lg pl-4 font-Montserrat text-base font-medium placeholder:text-textGray focus:border-transparent focus:outline-none focus:ring-2`}
+              } text-white h-14 w-[5.5rem] rounded-lg  text-center  text-base font-medium placeholder:text-textGray focus:border-transparent focus:outline-none focus:ring-2`}
             />
             {errors?.vagas && (
-              <p className="mt-2 pl-6 text-base font-medium text-red-500">
+              <p
+                className={`${quicksand.className} mt-2 pl-6 text-base font-medium text-red-500`}
+              >
                 {errors.vagas?.message}
               </p>
             )}
           </div>
 
-          <span className="ml-4 mt-4 h-full w-full font-Raleway text-base font-medium text-green-bg">
-            Informe um turno para a turma
+          <span
+            className={`${quicksand.className} ml-4 mt-4 h-full w-full font-Raleway text-base font-medium text-green-bg`}
+          >
+            <b>Informe um turno para a turma:</b>
           </span>
           <div className="w-full pl-4">
-            <div className="mb-4 mt-8 flex items-center">
+            <div className="mb-4 mt-2 flex items-center">
               <input
                 type="radio"
                 name="turno"
@@ -476,7 +497,7 @@ export default function CriarTurma({
               />
               <button
                 type="button"
-                className="ml-2 font-Raleway text-base font-medium text-green-bg"
+                className={`${quicksand.className} ml-2 text-base font-medium text-green-bg`}
                 onClick={() => handleButtonClicked("Matutino")}
               >
                 Matutino
@@ -496,7 +517,7 @@ export default function CriarTurma({
               />
               <button
                 type="button"
-                className="ml-2 font-Raleway text-base font-medium text-green-bg"
+                className={`${quicksand.className} ml-2 text-base font-medium text-green-bg`}
                 onClick={() => handleButtonClicked("Vespertino")}
               >
                 Vespertino
@@ -516,7 +537,7 @@ export default function CriarTurma({
 
               <button
                 type="button"
-                className="ml-2 font-Raleway text-base font-medium text-green-bg"
+                className={`${quicksand.className} ml-2 text-base font-medium text-green-bg`}
                 onClick={() => handleButtonClicked("Noturno")}
               >
                 Noturno
@@ -531,9 +552,9 @@ export default function CriarTurma({
           <div className="my-6 flex w-full flex-col pl-4">
             <label
               htmlFor="horaInicial"
-              className="w-full font-Raleway text-lg font-medium text-green-bg"
+              className={`${quicksand.className} w-full font-Raleway font-medium text-green-bg`}
             >
-              Que horário deseja iniciar?{" "}
+              <b>Que horário deseja iniciar?</b>{" "}
             </label>
 
             <input
@@ -543,7 +564,7 @@ export default function CriarTurma({
               placeholder="06:30"
               value={horaInicio}
               onChange={horaInicial}
-              className="text-white ml-2 h-14 w-[5.5rem] rounded-lg border-2 border-green-200 pl-4 font-Montserrat text-base font-medium placeholder:text-textGray focus:border-transparent focus:outline-none focus:ring-2 focus:ring-green-100"
+              className={`${quicksand.className} text-white mt-2 h-14 w-[5.5rem] rounded-lg border-2 border-green-200 text-center text-base font-medium placeholder:text-textGray focus:border-transparent focus:outline-none focus:ring-2 focus:ring-green-100`}
             />
             {errors.horaInicial &&
               (horaInicio.length === 0 || horaInicio.length < 5) && (
@@ -555,9 +576,9 @@ export default function CriarTurma({
           <div className="my-6 flex w-full flex-col pl-4">
             <label
               htmlFor="horaFinal"
-              className="w-full font-Raleway text-lg font-medium text-green-bg"
+              className={`${quicksand.className} w-full font-Raleway  font-medium text-green-bg`}
             >
-              Que horário deseja encerrar?{" "}
+              <b>Que horário deseja encerrar?</b>{" "}
             </label>
 
             <input
@@ -567,7 +588,7 @@ export default function CriarTurma({
               onChange={(e) => horaFinal(e)}
               name="horaFinal"
               placeholder="17:30"
-              className="text-white ml-2 h-14 w-[5.5rem] rounded-lg border-2 border-green-200 pl-4 font-Montserrat text-base font-medium placeholder:text-textGray focus:border-transparent focus:outline-none focus:ring-2 focus:ring-green-100"
+              className={`${quicksand.className} text-white mt-2 h-14 w-[5.5rem] rounded-lg border-2 border-green-200 text-center text-base font-medium placeholder:text-textGray focus:border-transparent focus:outline-none focus:ring-2 focus:ring-green-100`}
             />
             {errors.horaFinal &&
               (horaFim.length === 0 || horaFim.length < 5) && (
@@ -577,8 +598,10 @@ export default function CriarTurma({
               )}
           </div>
 
-          <span className="ml-4 mt-8 h-full w-full font-Raleway text-base font-medium text-green-bg">
-            Informe os dias da semana
+          <span
+            className={`${quicksand.className} ml-4 mt-8 h-full w-full font-Raleway text-base text-green-bg`}
+          >
+            <b>Informe os dias da semana:</b>
           </span>
           <div className="w-full pl-6">
             <div className="mb-4 mt-2 flex items-center">
@@ -593,7 +616,7 @@ export default function CriarTurma({
               />
               <label
                 htmlFor="default-checkbox"
-                className="ml-2 font-Raleway text-base font-medium text-green-bg"
+                className={`${quicksand.className} ml-2 text-base font-medium text-green-bg`}
               >
                 Segunda{" "}
               </label>
@@ -610,7 +633,7 @@ export default function CriarTurma({
               />
               <label
                 htmlFor="default-checkbox"
-                className="ml-2 font-Raleway text-base font-medium text-green-bg"
+                className={`${quicksand.className} ml-2 text-base font-medium text-green-bg`}
               >
                 Terça{" "}
               </label>
@@ -627,7 +650,7 @@ export default function CriarTurma({
               />
               <label
                 htmlFor="default-checkbox"
-                className="ml-2 font-Raleway text-base font-medium text-green-bg"
+                className={`${quicksand.className} ml-2 text-base font-medium text-green-bg`}
               >
                 Quarta{" "}
               </label>
@@ -644,7 +667,7 @@ export default function CriarTurma({
               />
               <label
                 htmlFor="default-checkbox"
-                className="ml-2 font-Raleway text-base font-medium text-green-bg"
+                className={`${quicksand.className} ml-2 text-base font-medium text-green-bg`}
               >
                 Quinta{" "}
               </label>
@@ -661,7 +684,7 @@ export default function CriarTurma({
               />
               <label
                 htmlFor="default-checkbox"
-                className="ml-2 font-Raleway text-base font-medium text-green-bg"
+                className={`${quicksand.className} ml-2 text-base font-medium text-green-bg`}
               >
                 Sexta{" "}
               </label>
@@ -677,9 +700,9 @@ export default function CriarTurma({
 
           <button
             type="submit"
-            className="mb-4 ml-4 mt-12 h-14 w-[11.375rem] bg-green-200 font-Montserrat text-base font-bold text-white-default"
+            className={`${quicksand.className} mb-4 ml-4 mt-12 h-14 w-[11.375rem] rounded-lg bg-green-200 font-Montserrat text-base font-bold text-white-default`}
           >
-            CRIAR TURMA
+            Salvar ✓
           </button>
         </form>
       </div>
@@ -698,14 +721,14 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
     };
   }
-  const response = await fetch(`${url}/v1/listarCaterogias/`);
-  const response1 = await fetch(`${url}/v1/listarModalidades`);
-  const response2 = await fetch(`${url}/v1/listarProfessores/`);
-  const response3 = await fetch(`${url}/v1/gerenciarTurmaId/${id}/`);
-  const turma = await response3.json();
-  const categorias = await response.json();
-  const modalidades = await response1.json();
-  const professores = await response2.json();
+  const response = await api.get("esporte/listaCategorias");
+  const response1 = await api.get(`esporte/listaModalidades`);
+  const response2 = await api.get(`administracao/professores`);
+  const response3 = await api.get(`aluno/turma/${id}`);
+  const turma = await response3.data;
+  const categorias = await response.data;
+  const modalidades = await response1.data;
+  const professores = await response2.data;
   return {
     props: {
       categorias,

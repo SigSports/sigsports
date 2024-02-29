@@ -1,8 +1,28 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable no-console */
 import { GetServerSideProps } from "next";
 import { useState } from "react";
+import { Montserrat, Quicksand } from "next/font/google";
 import Link from "next/link";
+import { CiImport } from "react-icons/ci";
+import { IoMdClose } from "react-icons/io";
 import Layout from "@/components/Layout";
 import Card from "@/components/Card";
+import { api } from "@/services/api";
+import ImportFile from "@/components/Excel";
+
+const quicksand = Quicksand({
+  weight: "400",
+  style: "normal",
+  subsets: ["latin"],
+});
+
+const montserrat = Montserrat({
+  weight: "400",
+  style: "normal",
+  subsets: ["latin"],
+});
 
 type AlunosVagasType = {
   turma_id: number;
@@ -32,7 +52,7 @@ export default function ListarTurmas({
 }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredTurmas, setFilteredTurmas] = useState(turmas);
-
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const handleSearch = () => {
     const filtered = turmas.filter((turma) =>
       turma.nomeTurma.toLowerCase().includes(searchTerm.toLowerCase())
@@ -85,11 +105,13 @@ export default function ListarTurmas({
               </defs>
             </svg>
           </Link>
-          <h1 className="mr-auto font-Raleway text-3xl font-semibold leading-[37.57px] text-green-bg ">
+          <h1
+            className={`${quicksand.className} mr-auto text-3xl font-semibold leading-[37.57px] text-green-bg `}
+          >
             Listar turmas
           </h1>
         </div>
-        <div className="mt-10 flex h-full w-full flex-wrap items-center">
+        <div className="mt-5 flex h-full w-full flex-wrap items-center">
           <div className="flex flex-col justify-center">
             <label
               htmlFor="search"
@@ -103,7 +125,7 @@ export default function ListarTurmas({
                   type="text"
                   name="search"
                   placeholder="Digite o nome da turma"
-                  className="h-14 w-52 rounded-l border-y-2 border-l-2 border-green-200 bg-white-default pl-12 pr-6 font-Quicksand text-base font-medium text-textGray placeholder:text-textGray focus:border-green-200 xl:w-[500px] tablet:w-[800px] 3xl:w-[55rem]"
+                  className={`${quicksand.className} h-14 w-1/4 rounded-l-lg border-y-2 border-l-2 border-green-200 bg-white-default pl-12 pr-6  text-base  italic text-textGray placeholder:text-textGray focus:border-green-200 xl:w-[30rem] tablet:w-[35rem] 3xl:w-[45rem]`}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   onKeyPress={handleKeyPress}
@@ -126,22 +148,27 @@ export default function ListarTurmas({
 
               <button
                 type="button"
-                className="flex h-14 w-20 items-center justify-center rounded-r-sm bg-green-200 font-Montserrat text-[17.28px] font-bold text-white-default md:w-36"
+                className={`${quicksand.className} flex h-14 w-20 items-center justify-center rounded-r-lg bg-gradient-to-br from-green-200 to-green-500  text-[17.28px] font-bold text-white-default md:w-36`}
                 onClick={handleSearch}
               >
-                Buscar
+                <b>Buscar </b>
               </button>
             </div>
           </div>
-          <div className="mt-3 flex sm:mt-0 3xl:ml-auto">
-            <div className="relative hover:cursor-pointer">
-              <Link
-                href="criarTurma"
+          <div className="relative ml-2 mt-3 flex sm:mt-0">
+            <div
+              className="relative hover:cursor-pointer"
+              onClick={() => {
+                console.log("click");
+                setIsDropdownOpen(!isDropdownOpen);
+              }}
+            >
+              <button
                 type="button"
-                className=" ml-4 mt-4 flex h-14 w-12 items-center justify-center rounded-r-sm bg-green-200  font-Montserrat text-[17.28px] font-bold leading-normal text-transparent md:mt-7 3xl:w-[21.5rem] 3xl:text-white-default	"
+                className={`${quicksand.className}  mt-4 flex h-14 w-60 items-center justify-center rounded-lg bg-gradient-to-br from-cyan-400 to-cyan-700  text-[17.28px] font-bold leading-normal text-transparent sm:w-[5rem] md:mt-7 3xl:w-[21.5rem] 3xl:text-white-default	`}
               >
-                CRIAR NOVA TURMA
-              </Link>
+                <b> CRIAR NOVA TURMA </b>
+              </button>
 
               <div className="3lx:left-12 absolute inset-y-0 left-5 top-6 md:top-9">
                 <svg
@@ -161,9 +188,57 @@ export default function ListarTurmas({
                 </svg>
               </div>
             </div>
+            {isDropdownOpen && (
+              <div className="relative">
+                <div className="absolute left-full top-0 w-[15rem] rounded-md bg-green-200 px-4 py-2 shadow-md xl:left-0">
+                  {/* Conteúdo do dropdown */}
+                  <div className="flex items-center justify-center rounded text-white-default hover:bg-green-300">
+                    <Link href="/criarTurma/">
+                      <svg
+                        width="44"
+                        height="44"
+                        viewBox="0 0 44 44"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M21.9993 9.16602V34.8327M9.16602 21.9993H34.8327"
+                          stroke="white"
+                          strokeWidth="2.75"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    </Link>
+                    <Link
+                      href="/criarTurma/"
+                      className={`block px-4 py-2 ${montserrat.className} text-sm font-medium`}
+                    >
+                      Criar Turma Manualmente
+                    </Link>
+                  </div>
+                  <div className="flex cursor-pointer items-center justify-center rounded text-white-default hover:bg-green-300">
+                    <Link href="/criarTurma/">
+                      <CiImport size={44} />
+                    </Link>
+                    <ImportFile />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setIsDropdownOpen(false)}
+                    className="absolute right-0 top-0 mr-1 mt-1 cursor-pointer pl-10 text-white-default hover:text-white-default"
+                  >
+                    <IoMdClose size={30} />
+                  </button>
+                </div>
+                {/* Botão de fechar */}
+              </div>
+            )}
           </div>
         </div>
-        <div className="mr-auto mt-14 grid gap-x-20 gap-y-10 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div
+          className={`${quicksand.className} mr-auto mt-14 grid gap-x-12 gap-y-10 rounded-lg md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3`}
+        >
           {filteredTurmas.map((turma) => (
             <Card
               key={turma.id}
@@ -195,15 +270,11 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
       },
     };
   }
-  const response = await fetch(
-    "https://sigsport.pythonanywhere.com/api/v1/listarTurmas/"
-  );
-  const response2 = await fetch(
-    `https://sigsport.pythonanywhere.com/api/v1/vagasDeTurmas`
-  );
+  const response = await api.get("aluno/listaTurmas");
+  const response2 = await api.get(`aluno/vagasDeTurmas`);
 
-  const turmas = await response.json();
-  const vagas = await response2.json();
+  const turmas = await response.data;
+  const vagas = await response2.data;
   return {
     props: {
       turmas,
