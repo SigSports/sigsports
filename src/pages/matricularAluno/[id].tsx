@@ -10,7 +10,14 @@ import Link from "next/link";
 import { toast } from "react-toastify";
 import { useMutation } from "react-query";
 import { useRouter } from "next/router";
+import { Quicksand } from "next/font/google";
 import Layout from "@/components/Layout";
+
+const quicksand = Quicksand({
+  weight: "500",
+  style: "normal",
+  subsets: ["latin"],
+});
 
 export type TFormData = {
   nomeAluno: string;
@@ -57,7 +64,7 @@ export default function Index() {
 
   const createSolicitation = useMutation(async (data: TFormData) => {
     const response = await fetch(
-      `https://sigsport.pythonanywhere.com/api/v1/criarMatricula/${id}`,
+      `http://40.76.188.129:8008/api/aluno/matricula/${id}`,
       {
         method: "POST",
         body: data as any,
@@ -148,21 +155,24 @@ export default function Index() {
               </defs>
             </svg>
           </Link>
-          <h1 className="mr-auto pl-3 font-Raleway text-3xl  font-semibold leading-10 text-green-bg">
-            Matricular aluno (a){" "}
+          <h1
+            className={`${quicksand.className} mr-auto pl-1 font-Raleway text-3xl  font-semibold leading-10 text-green-bg`}
+          >
+            Matricular aluno(a){" "}
           </h1>
         </div>
 
-        <h2 className="mt-4 px-4 font-Raleway text-2xl font-semibold leading-9 text-green-bg dark:text-green-300 lg:w-[505px]">
-          Insira as informações necessárias para matricular o(a) aluno(a) nesta
-          turma:{" "}
+        <h2
+          className={`${quicksand.className} mt-4 px-4 text-sm font-semibold leading-9 text-green-bg dark:text-green-300 lg:w-[505px]`}
+        >
+          Insira as informações necessárias para matricular o(a) aluno(a):{" "}
         </h2>
 
         <form onSubmit={handleSubmit(onSubmit)} className="w-full">
           <div className="my-6 flex w-full flex-col pl-4">
             <label
               htmlFor="nomeAluno"
-              className="ml-2 w-full font-Raleway text-base font-medium text-green-bg"
+              className={`${quicksand.className} ml-2 w-full font-Raleway text-base font-medium text-green-bg`}
             >
               Nome completo
             </label>
@@ -176,7 +186,7 @@ export default function Index() {
                 errors.nomeAluno
                   ? "border-red-500 focus:border-red-600"
                   : "border-green-200 focus:border-transparent focus:ring-green-100"
-              } text-white h-14 w-80 rounded-lg pl-4 font-Montserrat text-base font-medium placeholder:text-textGray focus:border-transparent focus:outline-none focus:ring-2`}
+              } text-white h-14 w-80 rounded-lg pl-4 font-Montserrat text-base font-medium italic placeholder:text-textGray focus:border-transparent focus:outline-none focus:ring-2`}
             />
             <p className="mt-2 pl-6 text-base font-medium text-red-500">
               {errors.nomeAluno?.message}
@@ -185,7 +195,7 @@ export default function Index() {
           <div className="my-6 flex w-full flex-col pl-4">
             <label
               htmlFor="curso"
-              className="ml-2 w-full font-Raleway text-base font-medium text-green-bg"
+              className={`${quicksand.className}  ml-2 w-full font-Raleway text-base font-medium text-green-bg`}
             >
               Curso
             </label>
@@ -199,14 +209,16 @@ export default function Index() {
                 errors.curso
                   ? "border-red-500 focus:border-red-600"
                   : "border-green-200 focus:border-transparent focus:ring-green-100"
-              } text-white h-14 w-80 rounded-lg pl-4 font-Montserrat text-base font-medium placeholder:text-textGray focus:border-transparent focus:outline-none focus:ring-2`}
+              } text-white h-14 w-80 rounded-lg pl-4 font-Montserrat text-base font-medium italic placeholder:text-textGray focus:border-transparent focus:outline-none focus:ring-2`}
             />
             <p className="mt-2 pl-6 text-base font-medium text-red-500">
               {errors.curso?.message}
             </p>
           </div>
           <div className="my-6 flex w-full flex-col pl-4">
-            <label className="ml-2 w-full font-Raleway text-base font-medium text-green-bg">
+            <label
+              className={`${quicksand.className} ml-2 w-full font-Raleway text-base font-medium text-green-bg`}
+            >
               Matricula{" "}
             </label>
 
@@ -218,14 +230,16 @@ export default function Index() {
                 errors.matricula
                   ? "border-red-500 focus:border-red-600"
                   : "border-green-200 focus:border-transparent focus:ring-green-100"
-              } text-white h-14 w-80 rounded-lg pl-4 font-Montserrat text-base font-medium placeholder:text-textGray focus:border-transparent focus:outline-none focus:ring-2`}
+              } text-white h-14 w-80 rounded-lg pl-4 font-Montserrat text-base font-medium italic placeholder:text-textGray focus:border-transparent focus:outline-none focus:ring-2`}
             />
             <p className="mt-2 pl-6 text-base font-medium text-red-500">
               {errors.matricula?.message}
             </p>
           </div>
           <div className="my-6 flex w-full flex-col pl-4">
-            <label className="ml-2 w-full font-Raleway text-base font-medium text-green-bg">
+            <label
+              className={`${quicksand.className} ml-2 w-full font-Raleway text-base font-medium text-green-bg`}
+            >
               Número para contato
             </label>
 
@@ -237,7 +251,7 @@ export default function Index() {
                 errors.contato
                   ? "border-red-500 focus:border-red-600"
                   : "border-green-200 focus:border-transparent focus:ring-green-100"
-              } text-white h-14 w-80 rounded-lg pl-4 font-Montserrat text-base font-medium placeholder:text-textGray focus:border-transparent focus:outline-none focus:ring-2`}
+              } text-white h-14 w-80 rounded-lg pl-4 font-Montserrat text-base font-medium italic placeholder:text-textGray focus:border-transparent focus:outline-none focus:ring-2`}
             />
             <p className="mt-2 pl-6 text-base font-medium text-red-500">
               {errors.contato?.message}
@@ -247,7 +261,7 @@ export default function Index() {
             <input
               type="submit"
               value="Matricular"
-              className="h-14 w-36 rounded-sm bg-green-200 font-Montserrat text-base font-bold text-white-default transition-colors duration-300 hover:cursor-pointer hover:bg-green-300 hover:text-white-default focus:border-transparent focus:outline-none focus:ring-2 focus:ring-green-100"
+              className={`${quicksand.className} h-14 w-36 rounded-md bg-green-200 font-Montserrat text-base font-bold text-white-default transition-colors duration-300 hover:cursor-pointer hover:bg-green-300 hover:text-white-default focus:border-transparent focus:outline-none focus:ring-2 focus:ring-green-100`}
             />
           </div>
         </form>

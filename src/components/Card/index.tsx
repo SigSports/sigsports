@@ -8,6 +8,13 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
+import { Quicksand } from "next/font/google";
+
+const quicksand = Quicksand({
+  weight: "400",
+  style: "normal",
+  subsets: ["latin"],
+});
 
 export default function Card({
   turma,
@@ -30,10 +37,119 @@ export default function Card({
 }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [nomeTurma] = useState(turma.toLocaleUpperCase().split(" "));
+
   const router = useRouter();
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
+
+  function backgroundComNomeDaTurma(nome: Array<string>) {
+    if (nome.includes("FUTEBOL")) {
+      return "from-green-200 to-green-500";
+    }
+
+    if (nome.includes("VOLEI")) {
+      return "from-violet-200 to-violet-500";
+    }
+
+    if (nome.includes("VÔLEI")) {
+      return "from-violet-200 to-violet-500";
+    }
+
+    if (nome.includes("VOLEIBOL")) {
+      return "from-violet-200 to-violet-500";
+    }
+
+    if (nome.includes("NATAÇÃO")) {
+      return "from-blue-200 to-blue-500";
+    }
+
+    if (nome.includes("ATLETISMO")) {
+      return "from-orange-200 to-orange-500";
+    }
+
+    if (nome.includes("BASQUETE")) {
+      return "from-red-200 to-red-500";
+    }
+
+    if (nome.includes("BASKET")) {
+      return "from-red-200 to-red-500";
+    }
+
+    if (nome.includes("XADREZ")) {
+      return "from-pink-200 to-pink-500";
+    }
+
+    if (nome.includes("FUTSAL")) {
+      return "from-green-200 to-green-500";
+    }
+
+    if (nome.includes("KARATÊ")) {
+      return "from-amber-300 to-amber-600";
+    }
+
+    if (nome.includes("JUDÔ")) {
+      return "from-amber-300 to-amber-600";
+    }
+
+    return "from-blue-200 to-blue-500";
+  }
+
+  function backgroundComNomeDaTurma2(nome: Array<string>) {
+    if (nome.includes("FUTEBOL")) {
+      return "bg-green-500";
+    }
+
+    if (nome.includes("VOLEI")) {
+      return "bg-violet-500";
+    }
+
+    if (nome.includes("VÔLEI")) {
+      return "bg-violet-500";
+    }
+
+    if (nome.includes("VOLEIBOL")) {
+      return "bg-violet-500";
+    }
+
+    if (nome.includes("NATAÇÃO")) {
+      return "bg-blue-500 ";
+    }
+
+    if (nome.includes("ATLETISMO")) {
+      return "bg-orange-500 ";
+    }
+
+    if (nome.includes("BASQUETE")) {
+      return "bg-red-500 ";
+    }
+
+    if (nome.includes("BASKET")) {
+      return "bg-red-500 ";
+    }
+
+    if (nome.includes("XADREZ")) {
+      return "bg-pink-500 ";
+    }
+
+    if (nome.includes("FUTSAL")) {
+      return "bg-green-500 ";
+    }
+
+    if (nome.includes("KARATÊ")) {
+      return "bg-amber-600 ";
+    }
+
+    if (nome.includes("JUDÔ")) {
+      return "bg-amber-600 ";
+    }
+
+    return "bg-blue-500 ";
+  }
+
+  // console.log(backgroundComNomeDaTurma(nomeTurma));
+
   function formatarDiasSemana(diasSemana: string) {
     const diasArray = diasSemana.split(",");
 
@@ -57,7 +173,7 @@ export default function Card({
     setShowModal(false);
     try {
       const resp = await fetch(
-        `https://sigsport.pythonanywhere.com/api/v1/gerenciarTurmaId/${id}/`,
+        `http://40.76.188.129:8008/api/aluno/turma/${id}`,
         {
           method: "DELETE",
           headers: {
@@ -105,15 +221,23 @@ export default function Card({
   }
 
   return (
-    <div className="shadow-bottom bg-custom w-[14.375rem] rounded border-2 border-green-200">
+    <div className="shadow-bottom bg-custom w-[14.375rem] rounded-lg border-2 border-green-200">
       <div className="flex w-full">
         <h1
-          className="flex h-[51px] w-full items-center justify-center bg-green-200 font-Montserrat text-[17.28px] font-bold text-white-default hover:cursor-pointer"
+          className={`${
+            quicksand.className
+          } flex h-[51px] w-full items-center justify-center bg-gradient-to-r ${backgroundComNomeDaTurma(
+            nomeTurma
+          )} font-Montserrat text-[17.28px] font-bold text-white-default hover:cursor-pointer`}
           onClick={() => handleRedirect(id)}
         >
-          {turma}
+          <b>{turma} </b>
         </h1>
-        <span className="relative flex items-center bg-green-200 hover:cursor-pointer">
+        <span
+          className={`relative flex items-center ${backgroundComNomeDaTurma2(
+            nomeTurma
+          )} hover:cursor-pointer`}
+        >
           <svg
             width="24"
             height="24"
@@ -137,7 +261,7 @@ export default function Card({
             />
           </svg>
           {isDropdownOpen && (
-            <div className="absolute left-2 top-12 z-10 w-[8.188rem] rounded-md bg-green-200 py-2 shadow-md">
+            <div className="absolute left-2 top-12 z-10 w-[8.188rem] rounded-lg bg-green-200 py-2 shadow-md">
               <div className="flex items-center justify-center border-2 border-green-300 text-white-default hover:bg-green-300">
                 <svg
                   width="24"
@@ -154,7 +278,7 @@ export default function Card({
 
                 <Link
                   href={`editarTurma/${id}`}
-                  className="block px-4 py-2 font-Montserrat text-sm font-medium"
+                  className={`${quicksand.className} block px-4 py-2  text-sm font-medium`}
                 >
                   Editar
                 </Link>
@@ -176,7 +300,7 @@ export default function Card({
                 <button
                   type="button"
                   onClick={() => setShowModal(true)}
-                  className="block px-4 py-2 font-Montserrat text-sm font-medium"
+                  className={`${quicksand.className} block px-4 py-2 font-Montserrat text-sm font-medium`}
                 >
                   Excluir
                 </button>
@@ -194,7 +318,7 @@ export default function Card({
             alt="user"
             className=""
           />
-          <span>Profª {prof}</span>
+          <span className={`${quicksand.className}`}>Profª {prof}</span>
         </div>
         <div className="flex items-center">
           <Image
@@ -204,7 +328,7 @@ export default function Card({
             alt="user"
             className="ml-1 mr-1"
           />
-          <span>
+          <span className={`${quicksand.className}`}>
             {horaInicial} ás {horaFinal}
           </span>
         </div>
@@ -216,25 +340,33 @@ export default function Card({
             alt="user"
             className="mr-1"
           />
-          <span>{formatarDiasSemana(dias)}</span>
+          <span className={`${quicksand.className}`}>
+            {formatarDiasSemana(dias)}
+          </span>
         </div>
         <div className="flex items-center">
           <Image
-            src="/people.svg"
+            src="/peoples.svg"
             width={24}
             height={24}
             alt="user"
             className="mr-1"
           />
           {vagasRestantes > 1 ? (
-            <span>{vagasRestantes} Alunos</span>
+            <span className={`${quicksand.className}`}>
+              {vagasRestantes} Alunos
+            </span>
           ) : (
-            <span>{vagasRestantes} Aluno</span>
+            <span className={`${quicksand.className}`}>
+              {vagasRestantes} Aluno
+            </span>
           )}
         </div>
 
         <span
-          className={`mb-6 flex h-8 w-[6.688rem] items-center justify-center font-Poppins text-base font-normal text-white-default ${
+          className={`${
+            quicksand.className
+          } mb-6 flex h-8 w-[90%] items-center justify-center rounded-md text-center text-base font-normal text-white-default ${
             sexo === "Misto"
               ? "bg-yellow text-orange"
               : sexo === "Feminino"

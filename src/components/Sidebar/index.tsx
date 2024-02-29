@@ -1,15 +1,48 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable jsx-a11y/label-has-associated-control */
+
 import Link from "next/link";
-import Router from "next/router";
+import Router, { useRouter } from "next/router";
 import { destroyCookie } from "nookies";
+import { Quicksand } from "next/font/google";
+import { useEffect, useState } from "react";
+
+const quicksand = Quicksand({
+  weight: "600",
+  style: "normal",
+  subsets: ["latin"],
+});
 
 export default function Sidebar() {
+  const router = useRouter();
+  const [rota, setRota] = useState("");
+
+  // useEffect(() => {
+  //   const handleRota = () => {
+  //     setRota(Router.asPath);
+  //     console.log(rota);
+  //   };
+
+  //   handleRota();
+  // }, [Router]);
+
   function handleLogout() {
     destroyCookie(null, "sig-token");
     destroyCookie(null, "sig-refreshToken");
     Router.push("/login");
   }
+
+  function QuestionPage() {
+    const { asPath } = router;
+
+    setRota(asPath);
+  }
+
+  useEffect(() => {
+    QuestionPage();
+    // console.log("ROTA:", rota);
+  }, []);
+
   return (
     <>
       <input type="checkbox" id="menu-open" className="hidden" />
@@ -21,9 +54,9 @@ export default function Sidebar() {
         <div className="flex w-full">
           <Link
             href="/dashboard"
-            className="text-white block truncate whitespace-nowrap p-4 font-bold"
+            className={`${quicksand.className} t text-white block truncate whitespace-nowrap p-4 `}
           >
-            SIG SPORTS
+            Sig Sports
           </Link>
         </div>
 
@@ -67,7 +100,7 @@ export default function Sidebar() {
 
       <aside
         id="sidebar"
-        className="absolute inset-y-0 left-0 z-50 w-3/4 transform space-y-6 overflow-y-auto bg-green-200 px-0 pt-6 text-gray-100 transition duration-200 ease-in-out md:relative md:flex md:w-64 md:translate-x-0 md:flex-col md:justify-between"
+        className={`${quicksand.className} absolute inset-y-0 left-0 z-50 w-3/4 min-w-[13%] transform space-y-6 overflow-y-auto  bg-gradient-to-tl from-green-300 to-green-900  px-0 pt-6 text-gray-100 transition duration-200 ease-in-out md:relative md:flex md:w-64 md:translate-x-0 md:flex-col md:justify-between `}
         data-dev-hint="sidebar; px-0 for frameless; px-2 for visually inset the navigation"
       >
         <div
@@ -79,8 +112,8 @@ export default function Sidebar() {
             className="text-white flex items-center space-x-2 px-4"
           >
             {/* <img src="{% static 'assets/mascote.svg'%}" alt="" /> */}
-            <span className="truncate whitespace-nowrap font-Raleway text-2xl font-extrabold">
-              SIG SPORTS
+            <span className="truncate whitespace-nowrap text-2xl font-extrabold text-green-50">
+              SIG SPORTS.
             </span>
           </Link>
 
@@ -90,7 +123,9 @@ export default function Sidebar() {
           >
             <Link
               href="/dashboard"
-              className="hover:text-white flex items-center space-x-2 px-3 py-2 transition duration-200 hover:bg-green-300"
+              className={`${
+                rota.includes("dashboard") ? ` bg-green-300 ` : ` `
+              } hover:text-white flex items-center space-x-2 px-3 py-2 transition duration-200 hover:bg-green-300`}
             >
               <svg
                 width="22"
@@ -115,12 +150,14 @@ export default function Sidebar() {
                 />
               </svg>
 
-              <span className="font-Raleway">Inicio</span>
+              <span className="">Inicio</span>
             </Link>
 
             <Link
               href="/criarTurma"
-              className="hover:text-white flex items-center space-x-2 px-4 py-2 transition duration-200 hover:bg-green-300"
+              className={`${
+                rota.includes("criarTurma") ? ` bg-green-300 ` : ` `
+              } hover:text-white  flex items-center space-x-2 px-4 py-2 transition duration-200 hover:bg-green-300`}
             >
               <svg
                 width="16"
@@ -137,11 +174,13 @@ export default function Sidebar() {
                 />
               </svg>
 
-              <span className="font-Raleway">Criar Turma</span>
+              <span className="">Criar Turma</span>
             </Link>
             <Link
               href="/listarTurmas"
-              className="hover:text-white group flex items-center space-x-2 px-3 py-2 transition duration-200 hover:bg-green-300"
+              className={`${
+                rota.includes("listarTurmas") ? ` bg-green-300 ` : ` `
+              } hover:text-white group flex items-center space-x-2 px-3 py-2 transition duration-200 hover:bg-green-300`}
             >
               <svg
                 width="22"
@@ -173,7 +212,7 @@ export default function Sidebar() {
                 />
               </svg>
 
-              <span className="font-Raleway">Listar Turmas</span>
+              <span className="">Listar Turmas</span>
             </Link>
             <Link
               href="/emprestimos"
@@ -214,7 +253,7 @@ export default function Sidebar() {
                 />
               </svg>
 
-              <span className="pl-1 font-Raleway">Empréstimos</span>
+              <span className="pl-1">Empréstimos</span>
             </Link>
 
             <button
@@ -262,7 +301,7 @@ export default function Sidebar() {
                 </g>
               </svg>
 
-              <span>Sair</span>
+              <span className={`${quicksand.className}`}>Sair</span>
             </button>
           </nav>
         </div>

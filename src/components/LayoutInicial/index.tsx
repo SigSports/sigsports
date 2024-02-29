@@ -1,6 +1,30 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable no-unused-vars */
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import {
+  FaInstagram,
+  FaLinkedin,
+  FaTwitter,
+  FaYoutube,
+  FaFacebookSquare,
+} from "react-icons/fa";
+
+import { Quicksand, Bebas_Neue } from "next/font/google";
+
+const quicksand = Quicksand({
+  weight: "400",
+  style: "normal",
+  subsets: ["latin"],
+});
+
+const bebas_neue = Bebas_Neue({
+  weight: "400",
+  style: "normal",
+  subsets: ["latin"],
+});
 
 export default function LayoutInicial({
   children,
@@ -14,13 +38,13 @@ export default function LayoutInicial({
   };
 
   return (
-    <div className="flex h-screen w-screen bg-bgGray">
+    <div className={`${quicksand.className} flex h-screen w-screen `}>
       <div className="flex h-full w-full flex-col lg:justify-between ">
-        <div className="mt-[50px] flex w-full justify-center ">
-          <nav className="z-50">
-            <div className="mx-auto max-w-6xl px-4">
-              <div className="flex justify-between">
-                <div className="flex space-x-7 duration-300 ease-in-out">
+        <div className="fixed z-50 flex w-screen bg-bgGray shadow-2xl">
+          <nav className="z-50 w-full">
+            <div className=" w-full px-4">
+              <div className="flex w-full">
+                <div className="flex w-full justify-between">
                   <div>
                     <Link href="/" className="flex items-center px-2 py-4">
                       <Image
@@ -30,34 +54,99 @@ export default function LayoutInicial({
                         width={32}
                         height={32}
                       />
-                      <span className="text-2xl font-semibold text-green-200">
-                        SIG SPORTS
-                      </span>
                     </Link>
                   </div>
-                  <div className="dropShadow-100 hidden items-center space-x-1 text-xl text-white-default md:flex">
+                  <div
+                    className={`${bebas_neue.className} dropShadow-100 hidden items-center gap-x-14 space-x-1 text-xl text-white-default md:flex`}
+                  >
                     <a
                       href=""
-                      className="px-2 py-4 font-semibold transition duration-300 hover:border-b-4 hover:border-green-500"
+                      className="flex items-center  transition duration-300 hover:border-b-4 hover:border-green-500"
                     >
                       MODALIDADES
+                      <span className="ml-1">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          viewBox="0 0 16 16"
+                          fill="none"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            clipRule="evenodd"
+                            d="M7.99816 11.3125L13.5588 5.75184L12.4982 4.69118L7.99816 9.19118L3.49816 4.69118L2.4375 5.75184L7.99816 11.3125Z"
+                            fill="white"
+                          />
+                        </svg>
+                      </span>
                     </a>
                     <a
                       href=""
-                      className="px-2 py-4 font-semibold transition duration-300 hover:border-b-4 hover:border-green-500"
+                      className="flex items-center transition duration-300 hover:border-b-4 hover:border-green-500"
                     >
                       HORARIOS
+                      <span className="ml-1">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          viewBox="0 0 16 16"
+                          fill="none"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            clipRule="evenodd"
+                            d="M7.99816 11.3125L13.5588 5.75184L12.4982 4.69118L7.99816 9.19118L3.49816 4.69118L2.4375 5.75184L7.99816 11.3125Z"
+                            fill="white"
+                          />
+                        </svg>
+                      </span>
                     </a>
                     <a
                       href=""
-                      className="px-2 py-4 font-semibold transition duration-300 hover:border-b-4 hover:border-green-500"
+                      className="flex items-center transition duration-300 hover:border-b-4 hover:border-green-500"
                     >
                       EQUIPES
+                      <span className="ml-1">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          viewBox="0 0 16 16"
+                          fill="none"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            clipRule="evenodd"
+                            d="M7.99816 11.3125L13.5588 5.75184L12.4982 4.69118L7.99816 9.19118L3.49816 4.69118L2.4375 5.75184L7.99816 11.3125Z"
+                            fill="white"
+                          />
+                        </svg>
+                      </span>
                     </a>
+                    <Link
+                      href="/login"
+                      className="flex items-center transition duration-300 hover:border-b-4 hover:border-green-500"
+                    >
+                      LOGIN
+                    </Link>
+                  </div>
+                  <div className="mr-24 hidden items-center gap-x-4 text-white-default md:flex">
+                    <FaInstagram size={24} />
+                    <FaLinkedin size={24} />
+
+                    <FaTwitter size={24} />
+                    <FaYoutube size={24} />
+                    <FaFacebookSquare size={24} />
                   </div>
                 </div>
 
-                <div className="flex items-center md:hidden">
+                <div
+                  className={`${
+                    showMenu ? "hidden" : "flex"
+                  } flex items-center md:hidden`}
+                >
                   <button
                     type="button"
                     className="mobile-menu-button outline-none"
@@ -151,14 +240,14 @@ export default function LayoutInicial({
           {children}
         </div>
       </div>
-      <div className="invisible flex w-0 flex-row-reverse flex-wrap justify-between overflow-hidden lg:w-2/4 tablet:visible">
+      <div className="invisible mt-10 flex w-0 flex-row-reverse flex-wrap justify-between overflow-hidden lg:w-2/4 tablet:visible">
         <img
           src="/background.svg"
           alt="Logo"
           className="absolute top-0 h-full overflow-hidden"
         />
         <img src="/text.svg" alt="Logo" className="absolute h-full" />
-        <div className="invisible absolute flex h-full flex-wrap items-center justify-center tablet:visible">
+        <div className="invisible absolute mt-10 flex  w-full flex-wrap items-center justify-end tablet:visible">
           <img src="/women.svg" alt="Logo" className="h-full" />
         </div>
       </div>

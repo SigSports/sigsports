@@ -9,7 +9,7 @@ import { GetServerSideProps } from "next";
 import Layout from "@/components/Layout";
 import { TCategory, TFormData, TModality } from "../../utils/typeSolicitar";
 
-const url = "https://sigsport.pythonanywhere.com/api/";
+const url = "http://40.76.188.129:8008/api/";
 const schema = yup
   .object()
   .shape({

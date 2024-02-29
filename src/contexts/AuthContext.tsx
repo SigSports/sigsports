@@ -4,7 +4,7 @@
 import { setCookie } from "nookies";
 import { createContext, useState } from "react";
 import Router from "next/router";
-import { api } from "@/services/api";
+import { apiSuap } from "@/services/api";
 
 type AuthContextType = {
   isAuthenticated: boolean;
@@ -23,7 +23,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const isAuthenticated = !!token;
   async function signIn({ username, password }: SignInCredentials) {
     try {
-      const response = await api.post("autenticacao/token/", {
+      const response = await apiSuap.post("autenticacao/token/", {
         username,
         password,
       });

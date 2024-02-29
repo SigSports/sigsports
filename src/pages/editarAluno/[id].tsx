@@ -10,6 +10,7 @@ import InputMask from "react-input-mask";
 import { toast } from "react-toastify";
 import Link from "next/link";
 import Layout from "@/components/Layout";
+import { api } from "@/services/api";
 
 export type AlunoType = {
   id?: number;
@@ -56,7 +57,7 @@ const editarAluno: NextPage<{ aluno: AlunoType }> = ({ aluno }) => {
   const updateSolicitation = async (data: AlunoType) => {
     try {
       const response = await fetch(
-        `https://sigsport.pythonanywhere.com/api/v1/matriculas/${aluno.id}`,
+        `http://40.76.188.129:8008/api/aluno/matriculas/${aluno.id}`,
         {
           method: "PATCH",
           headers: {
@@ -280,10 +281,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
   const { id } = context.query;
-  const response = await fetch(
-    `https://sigsport.pythonanywhere.com/api/v1/matriculas/${id}`
-  );
-  const aluno = await response.json();
+  const response = await api.get(`aluno/matriculas/${id}`);
+  const aluno = await response.data;
   return {
     props: {
       aluno,

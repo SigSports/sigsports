@@ -1,5 +1,6 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
+import { Quicksand } from "next/font/google";
 import Link from "next/link";
 import Image from "next/image";
 import React, { useState } from "react";
@@ -7,6 +8,12 @@ import { toast } from "react-toastify";
 // eslint-disable-next-line import/newline-after-import
 import { useRouter } from "next/router";
 import { declaracao } from "@/utils/declaracaoAluno";
+
+const quicksand = Quicksand({
+  weight: "500",
+  style: "normal",
+  subsets: ["latin"],
+});
 
 export default function Index({
   id,
@@ -30,7 +37,7 @@ export default function Index({
   const handleDelete = async () => {
     setShowModal(false);
     const response = await fetch(
-      `https://sigsport.pythonanywhere.com/api/v1/matriculas/${id}`,
+      `http://40.76.188.129:8008/api/aluno/matriculas/${id}`,
       {
         method: "DELETE",
         headers: {
@@ -77,18 +84,26 @@ export default function Index({
     setIsDropdownOpen(!isDropdownOpen);
   };
   return (
-    <div className="mb-8 flex h-full w-full items-center justify-between  gap-x-4 text-green-bg shadow-md hover:cursor-pointer hover:border-2 hover:border-green-200 md:h-16 xl:w-[80%] 2xl:w-9/12">
-      <div className="flex h-full w-[33.3%] flex-wrap items-center gap-x-4">
+    <div className="mb-8 flex h-full w-full items-center justify-between gap-x-4  rounded-md text-green-bg shadow-md hover:cursor-pointer hover:border-2 hover:border-green-200 md:h-16 xl:w-[80%] 2xl:w-9/12">
+      <div className="flex h-full w-[33.3%] flex-wrap items-center gap-x-4 p-3">
         <Image src="/people.svg" alt="people" width={16} height={16} />
-        <span className="font-Montserrat text-lg font-medium">{nomeAluno}</span>
+        <span
+          className={`${quicksand.className} font-Montserrat text-lg font-medium`}
+        >
+          {nomeAluno}
+        </span>
       </div>
       <div className="flex h-full w-[33.3%] flex-col gap-x-4 md:flex-row md:items-center">
         <Image src="/school.svg" alt="course" width={24} height={24} />
-        <span className="font-Montserrat text-lg font-medium">{curso}</span>
+        <span className={`${quicksand.className}  text-lg font-medium`}>
+          {curso}
+        </span>
       </div>
       <div className="flex h-full w-[33.3%] flex-wrap items-center gap-x-4">
         <Image src="/card.svg" alt="card" width={24} height={24} />
-        <span className="font-Montserrat text-lg font-medium">{matricula}</span>
+        <span className={`${quicksand.className}  text-lg font-medium`}>
+          {matricula}
+        </span>
       </div>
       <span className="relative mr-4 flex items-center hover:cursor-pointer">
         <svg

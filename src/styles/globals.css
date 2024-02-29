@@ -24,7 +24,7 @@
   display: block;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1068px) {
   #sidebar {
     --tw-translate-x: 0;
   }
