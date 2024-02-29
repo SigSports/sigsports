@@ -87,7 +87,7 @@ export default function Home({
     try {
       const promises = turmas.map(async (turma) => {
         const response = await axios.get(
-          `${api}aluno/vagasDeTurmas/${turma.id}`
+          `${api}v1/vagasDeTurmas/${turma.id}`
         );
         const turmaData = response.data;
 
@@ -118,7 +118,7 @@ export default function Home({
     try {
       const promises = turmas.map(async (turma) => {
         const response = await axios.get(
-          `${api}aluno/vagasDeTurmas/${turma.id}`
+          `${api}v1/vagasDeTurmas/${turma.id}`
         );
         const turmaData = response.data;
 
@@ -635,8 +635,8 @@ export default function Home({
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const response = await api.get(`aluno/listaTurmas`);
-  const resp1 = await api.get(`aluno/vagasDeTurmas`);
+  const response = await api.get(`v1/listarTurmas`);
+  const resp1 = await api.get(`v1/vagasDeTurmas`);
   const turmas = await response.data;
   const alunosT = await resp1.data;
   return {

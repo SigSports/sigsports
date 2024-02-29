@@ -75,7 +75,7 @@ export default function CriarTurma({
     resolver: yupResolver(schema) as Resolver<FormData>,
   });
   const createSolicitation = useMutation(async (data: TFormData) => {
-    const response = await fetch(`http://40.76.188.129:8008/api/aluno/turma`, {
+    const response = await fetch(`https://sigsport.pythonanywhere.com/api/v1/CriarTurma/`, {
       method: "POST",
       body: data as any,
       headers: {
@@ -646,9 +646,9 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
       },
     };
   }
-  const response = await api.get("esporte/listaCategorias");
-  const response1 = await api.get("esporte/listaModalidades");
-  const response2 = await api.get("administracao/professores");
+  const response = await api.get("v1/listarCaterogias");
+  const response1 = await api.get("v1/listarModalidades");
+  const response2 = await api.get("v1/listarProfessores/");
   const categorias = await response.data;
   const modalidades = await response1.data;
   const professores = await response2.data;

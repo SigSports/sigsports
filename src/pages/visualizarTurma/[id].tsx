@@ -364,9 +364,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
   const { id } = context.query;
-  const response = await api.get(`aluno/turma/${id}`);
-  const response1 = await api.get(`aluno/listaMatriculas/${id}`);
-  const response2 = await api.get(`aluno/vagasDeTurmas/${id}`);
+  const response = await api.get(`v1/gerenciarTurmaId/${id}`);
+  const response1 = await api.get(`v1/listarMatriculas/${id}`);
+  const response2 = await api.get(`v1/vagasDeTurmas/${id}`);
   const turma = await response.data;
   const alunos = await response1.data;
   const vagas = await response2.data;

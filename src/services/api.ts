@@ -5,5 +5,5 @@ export const apiSuap = axios.create({
 });
 
 export const api = axios.create({
-  baseURL: "http://40.76.188.129:8008/api/",
+  baseURL: "https://sigsport.pythonanywhere.com/api/",
 });

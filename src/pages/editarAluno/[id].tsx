@@ -57,7 +57,7 @@ const editarAluno: NextPage<{ aluno: AlunoType }> = ({ aluno }) => {
   const updateSolicitation = async (data: AlunoType) => {
     try {
       const response = await fetch(
-        `http://40.76.188.129:8008/api/aluno/matriculas/${aluno.id}`,
+        `https://sigsport.pythonanywhere.com/api/v1/matriculas/${aluno.id}`,
         {
           method: "PATCH",
           headers: {
@@ -281,7 +281,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
   const { id } = context.query;
-  const response = await api.get(`aluno/matriculas/${id}`);
+  const response = await api.get(`v1/matriculas/${id}`);
   const aluno = await response.data;
   return {
     props: {

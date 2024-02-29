@@ -102,7 +102,7 @@ export default function CriarTurma({
   const createSolicitation = useMutation(async (data: TFormData) => {
     try {
       const response = await fetch(
-        `http://40.76.188.129:8008/api/aluno/turma/${turma.id}`,
+        `https://sigsport.pythonanywhere.com/api/v1/gerenciarTurmaId/${turma.id}`,
         {
           method: "PUT",
           headers: {
@@ -721,10 +721,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
     };
   }
-  const response = await api.get("esporte/listaCategorias");
-  const response1 = await api.get(`esporte/listaModalidades`);
-  const response2 = await api.get(`administracao/professores`);
-  const response3 = await api.get(`aluno/turma/${id}`);
+  const response = await api.get("v1/listarCaterogias");
+  const response1 = await api.get(`v1/listarModalidades`);
+  const response2 = await api.get(`v1/listarProfessores`);
+  const response3 = await api.get(`v1/gerenciarTurmaId/${id}`);
   const turma = await response3.data;
   const categorias = await response.data;
   const modalidades = await response1.data;

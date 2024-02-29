@@ -75,7 +75,7 @@ const IndexPage = ({
   const fetchTurmaAlunos = async (turmas: Turma[]): Promise<AlunoTurma[]> => {
     try {
       const promises = turmas.map(async (turma) => {
-        const response = await api.get(`aluno/vagasDeTurmas/${turma.id}`);
+        const response = await api.get(`v1/vagasDeTurmas/${turma.id}`);
         const turmaData = response.data;
         const vagasRestantes = turma.vagas - turmaData.vagas_restantes;
 
@@ -103,7 +103,7 @@ const IndexPage = ({
   const fetchTotalAlunos = async (turmas: Turma[]): Promise<number> => {
     try {
       const promises = turmas.map(async (turma) => {
-        const response = await api.get(`aluno/vagasDeTurmas/${turma.id}`);
+        const response = await api.get(`v1/vagasDeTurmas/${turma.id}`);
         const turmaData = response.data;
 
         const quantidadeAlunos = turma.vagas - turmaData.vagas_restantes;
@@ -126,7 +126,7 @@ const IndexPage = ({
   };
   const fetchVagasRestantes = async () => {
     try {
-      const response = await api.get(`aluno/vagasDeTurmas`);
+      const response = await api.get(`v1/vagasDeTurmas`);
       const { data } = response;
 
       // Calcular o total de vagas restantes
@@ -399,8 +399,8 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
       },
     };
   }
-  const response = await api.get("aluno/listaTurmas");
-  const resp1 = await api.get(`aluno/vagasDeTurmas`);
+  const response = await api.get("v1/listarTurmas");
+  const resp1 = await api.get(`v1/vagasDeTurmas`);
   const turmas = await response.data;
   const alunosT = await resp1.data;
   return {

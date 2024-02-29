@@ -270,8 +270,8 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
       },
     };
   }
-  const response = await api.get("aluno/listaTurmas");
-  const response2 = await api.get(`aluno/vagasDeTurmas`);
+  const response = await api.get("v1/listarTurmas");
+  const response2 = await api.get(`v1/vagasDeTurmas`);
 
   const turmas = await response.data;
   const vagas = await response2.data;
