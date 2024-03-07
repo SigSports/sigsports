@@ -75,16 +75,19 @@ export default function CriarTurma({
     resolver: yupResolver(schema) as Resolver<FormData>,
   });
   const createSolicitation = useMutation(async (data: TFormData) => {
-    const response = await fetch(`https://sigsport.pythonanywhere.com/api/v1/CriarTurma/`, {
-      method: "POST",
-      body: data as any,
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        "Access-Control-Allow-Origin": "*",
-      },
-      mode: "cors",
-    });
+    const response = await fetch(
+      `https://sigsport.pythonanywhere.com/api/v1/CriarTurma/`,
+      {
+        method: "POST",
+        body: data as any,
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+        mode: "cors",
+      }
+    );
 
     const json = await response.json();
     return json;
