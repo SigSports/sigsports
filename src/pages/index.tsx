@@ -86,9 +86,7 @@ export default function Home({
   const fetchTurmaAlunos = async (turmas: Turma[]): Promise<AlunoTurma[]> => {
     try {
       const promises = turmas.map(async (turma) => {
-        const response = await axios.get(
-          `${api}v1/vagasDeTurmas/${turma.id}`
-        );
+        const response = await axios.get(`${api}v1/vagasDeTurmas/${turma.id}`);
         const turmaData = response.data;
 
         const vagasRestantes = turma.vagas - turmaData.vagas_restantes;
@@ -117,9 +115,7 @@ export default function Home({
   const fetchTotalAlunos = async (turmas: Turma[]): Promise<number> => {
     try {
       const promises = turmas.map(async (turma) => {
-        const response = await axios.get(
-          `${api}v1/vagasDeTurmas/${turma.id}`
-        );
+        const response = await axios.get(`${api}v1/vagasDeTurmas/${turma.id}`);
         const turmaData = response.data;
 
         const quantidadeAlunos = turma.vagas - turmaData.vagas_restantes;
