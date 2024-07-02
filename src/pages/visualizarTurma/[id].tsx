@@ -1,19 +1,30 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
+/* eslint-disable object-shorthand */
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable no-unsafe-optional-chaining */
 import { GetServerSideProps, NextPage } from "next";
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
+import { Table, Input, Form, notification, Checkbox, Modal } from "antd";
+import { useEffect, useState } from "react";
+import { DM_Sans, Quicksand } from "next/font/google";
 import { useRouter } from "next/router";
-import { Quicksand } from "next/font/google";
+import { SlTrash } from "react-icons/sl";
+import FormEdit from "@/components/Forms/editarAluno";
 import Layout from "@/components/Layout";
-import CardStudent from "@/components/CardStudent";
+import ModalAluno from "@/components/Forms/Aluno";
 import { pdfTurma } from "@/utils/pdfTurma";
 import { api } from "@/services/api";
 
 const quicksand = Quicksand({
   weight: "500",
+  style: "normal",
+  subsets: ["latin"],
+});
+const dm = DM_Sans({
+  weight: "400",
   style: "normal",
   subsets: ["latin"],
 });
@@ -51,8 +62,157 @@ const VisualizarTurma: NextPage<{
   alunos: AlunosType[];
   vagas: AlunosVagasType;
 }> = ({ turma, alunos, vagas }) => {
-  const router = useRouter();
-  const id = router.query?.id;
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false);
+  const [selectedUsers, setSelectedUsers] = useState<number[]>([]);
+  const [filteredTurmas, setFilteredTurmas] = useState(alunos);
+  const [selectAll, setSelectAll] = useState<boolean>(false);
+  const [loading, setLoading] = useState(false);
+  const [alunoId, setId] = useState<number>();
+  const handleSearch = () => {
+    const filtered = alunos.filter((aluno) =>
+      aluno.nomeAluno.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredTurmas(filtered);
+  };
+
+  console.log(selectedUsers);
+
+  const alunosFilter = filteredTurmas.map((aluno) => ({
+    id: aluno.id,
+    nome: aluno.nomeAluno,
+    curso: aluno.curso,
+    matricula: aluno.matricula,
+  }));
+
+  const toggleSelectAll = () => {
+    setSelectAll(!selectAll);
+    if (!selectAll) {
+      const allUserIds = alunosFilter.map((user: any) => user.id);
+      setSelectedUsers(allUserIds);
+    } else {
+      setSelectedUsers([]);
+    }
+  };
+
+  const deleteUser = async (id: number) => {
+    try {
+      await api.delete(`v1/matriculas/${id}`);
+      notification.success({
+        message: `Aluno deletado com sucesso ${id}`,
+      });
+      setFilteredTurmas(filteredTurmas.filter((aluno) => aluno.id !== id));
+      setIsModalDeleteOpen(false);
+    } catch (error) {
+      notification.error({
+        message: "Erro ao deletar aluno",
+      });
+    }
+  };
+
+  const deleteUsers = async () => {
+    if (selectedUsers.length === 0) {
+      notification.error({
+        message: "Escolha pelo menos 1 aluno para excluir",
+      });
+    } else {
+      setLoading(true);
+      try {
+        await Promise.all(
+          selectedUsers.map((id) => api.delete(`v1/matriculas/${id}`))
+        );
+
+        notification.success({
+          message: "Alunos deletados com sucesso",
+        });
+
+        setFilteredTurmas(
+          filteredTurmas.filter((aluno) => !selectedUsers.includes(aluno.id))
+        );
+        setIsModalDeleteOpen(false);
+        setSelectedUsers([]);
+      } catch (error) {
+        notification.error({
+          message: "Erro ao deletar alunos",
+        });
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
+  const toggleUserSelection = (userId: number) => {
+    const isSelected = selectedUsers.includes(userId);
+    if (isSelected) {
+      setSelectedUsers(selectedUsers.filter((id) => id !== userId));
+    } else {
+      setSelectedUsers([...selectedUsers, userId]);
+    }
+  };
+
+  const columns = [
+    {
+      title: (
+        <div className="flex items-center">
+          <Checkbox onChange={toggleSelectAll} checked={selectAll} />
+          <button
+            type="button"
+            onClick={() => {
+              if (selectedUsers.length === 0) {
+                notification.error({
+                  message: "Escolha pelo menos 1 aluno para excluir",
+                });
+              } else {
+                setIsModalDeleteOpen(true);
+              }
+            }}
+            className={`ml-4 flex h-[28.62px] w-[98px] items-center justify-center rounded-[32px] bg-emerald-950 text-base font-normal text-white-default ${dm.className}`}
+          >
+            DELETAR
+          </button>
+        </div>
+      ),
+      key: "checkbox",
+      render: (text: any, record: any) => (
+        <Checkbox
+          onChange={() => toggleUserSelection(record.id)}
+          checked={selectedUsers.includes(record.id)}
+        />
+      ),
+    },
+    {
+      title: "nome",
+      dataIndex: "nome",
+      key: "name",
+    },
+    {
+      title: "curso",
+      dataIndex: "curso",
+      key: "age",
+    },
+    {
+      title: "matricula",
+      dataIndex: "matricula",
+      key: "address",
+    },
+    {
+      title: "Ações",
+      dataIndex: "actions",
+      key: "actions",
+      render: (text: any, record: any) => (
+        <div className="flex gap-x-4">
+          <FormEdit quicksand={quicksand} id={record.id} />
+          <SlTrash
+            className="h-[22px] w-5 text-[#616161] hover:cursor-pointer"
+            onClick={() => {
+              setIsModalDeleteOpen(true);
+              setId(record.id);
+            }}
+          />
+        </div>
+      ),
+    },
+  ];
 
   function formatarDiasSemana(diasSemana: string) {
     const diasArray = diasSemana.split(",");
@@ -70,284 +230,305 @@ const VisualizarTurma: NextPage<{
     return `${diasFormatados} e ${ultimoDia?.replace("-feira", "")}`;
   }
 
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filteredTurmas, setFilteredTurmas] = useState(alunos);
-
-  const handleSearch = () => {
-    const filtered = alunos.filter((aluno) =>
-      aluno.nomeAluno.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredTurmas(filtered);
-  };
-
   const handleKeyPress = (event: { key: string }) => {
     if (event.key === "Enter") {
       handleSearch();
     }
   };
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(3);
+  const [form] = Form.useForm();
+  const router = useRouter();
+  const id: any = router.query?.id;
   const vagasAlunos = turma.vagas - vagas.vagas_restantes;
-  return (
-    <Layout>
-      <div className="flex h-full w-full flex-col items-center justify-center pl-4 md:w-4/5 md:pl-16 ">
-        <div className="mt-4 flex h-full w-full items-center md:mt-16">
-          <Link href="/listarTurmas" className="mr-6 hover:cursor-pointer">
-            <svg
-              width="30"
-              height="30"
-              viewBox="0 0 30 30"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <rect width="30" height="30" rx="5" fill="#16DB65" />
-              <g clipPath="url(#clip0_1450_3668)">
-                <path
-                  d="M13.9023 15.0004L18.543 10.3598L17.2173 9.03418L11.2511 15.0004L17.2173 20.9667L18.543 19.6411L13.9023 15.0004Z"
-                  fill="white"
-                />
-              </g>
-              <defs>
-                <clipPath id="clip0_1450_3668">
-                  <rect
-                    width="22.5"
-                    height="22.5"
-                    fill="white"
-                    transform="matrix(-1 0 0 1 26.25 3.75)"
-                  />
-                </clipPath>
-              </defs>
-            </svg>
-          </Link>
-          <h1
-            className={`${quicksand.className} leading-[ 37.57px] text-3xl font-semibold text-green-bg`}
-          >
-            {turma.nomeTurma} {turma.genero}
-          </h1>
-        </div>
+  const handleTableChange = (pagination: any) => {
+    setCurrentPage(pagination.current);
+    setPageSize(pagination.pageSize);
+  };
 
-        <div className="mt-10 flex w-full  items-center  rounded-md border-[3px] border-green-200 py-2 pl-14 pr-10">
-          <div className="flex w-full flex-col items-center font-Montserrat  tablet:flex-row">
-            <div className="flex h-full w-full flex-col items-center justify-center py-1 font-medium text-green-bg md:w-1/4 md:py-0  ">
-              <h1
-                className={`${quicksand.className} text-6xl md:text-[4.695rem]`}
-              >
-                {turma.vagas}
-              </h1>
-              <p className="flex text-center tablet:w-[50px]">
-                Capacidade Total
-              </p>
-            </div>
-            <div className="h-full md:w-1/4">
-              <div className="flex w-full items-center">
-                <Image
-                  src="/people.svg"
-                  alt="people"
-                  width={16}
-                  height={16}
-                  className="h-4 w-4"
-                />
-                <span
-                  className={`${quicksand.className} ml-4 font-medium text-green-bg `}
-                >
-                  Profª {turma.professor}
-                </span>
-              </div>
-              <div className="mt-4 flex w-full items-center">
-                <Image src="/peoples.svg" alt="people" width={24} height={24} />
-                <span
-                  className={`${quicksand.className} ml-2  font-medium text-green-bg`}
-                >
-                  {vagasAlunos > 1
-                    ? `${vagasAlunos} Alunos matriculados`
-                    : `${vagasAlunos} Aluno matriculado`}
-                </span>
-              </div>
-              <div className="mt-[17px] flex w-full items-center">
-                <Image
-                  src="/person-available.svg"
-                  alt="people"
-                  width={24}
-                  height={24}
-                />
-                {vagas?.vagas_restantes ? (
-                  <span
-                    className={`${quicksand.className} ml-2  font-medium text-green-bg`}
-                  >
-                    {vagas?.vagas_restantes} Vagas disponíveis
-                  </span>
-                ) : (
-                  <span className="ml-2 font-Montserrat font-medium text-green-bg">
-                    {turma.vagas} Vagas disponíveis
-                  </span>
-                )}
-              </div>
-              <div />
-              <div />
-            </div>
-            <div className="h-full py-2 md:w-1/4">
-              <div className="flex w-full items-center">
-                <Image
-                  src="/location.svg"
-                  alt="location"
-                  width={24}
-                  height={24}
-                />
-                <span
-                  className={`${quicksand.className} ml-2 font-medium text-green-bg`}
-                >
-                  {turma.espaco || "Ginásio de esportes"}
-                </span>
-              </div>
-              <div className="mt-4 flex w-full items-center">
-                <Image
-                  src="/clock.svg"
-                  alt="clock"
-                  width={17}
-                  height={17}
-                  className="ml-1"
-                />
-                <span
-                  className={`${quicksand.className} ml-3  font-medium text-green-bg`}
-                >
-                  {turma.horarioInicial} às {turma.horarioFinal}
-                </span>
-              </div>
-              <div className="mt-[17px] flex w-full items-center">
-                <Image
-                  src="/calendar.svg"
-                  alt="calendar"
-                  width={24}
-                  height={24}
-                />
-                <span
-                  className={`${quicksand.className} ml-2  font-medium text-green-bg`}
-                >
-                  {formatarDiasSemana(turma.dias)}
-                </span>
-              </div>
-              <div />
-              <div />
-            </div>
-            <button
-              type="button"
-              className="flex h-[50px] w-[10.563rem] items-center justify-center space-x-2 rounded bg-green-200 text-white-default"
-            >
+  useEffect(() => {
+    if (vagas?.vagas_restantes === 0) {
+      notification.warning({
+        message: "Turma completa",
+        description: "A turma já atingiu sua capacidade máxima.",
+      });
+    }
+  }, []);
+
+  return (
+    <>
+      <Layout>
+        <div className="flex h-full  flex-col items-center justify-center pl-4 md:w-4/5 md:pl-16 ">
+          <div className="mt-4 flex h-full w-full items-center md:mt-16">
+            <Link href="/listarTurmas" className="mr-6 hover:cursor-pointer">
               <svg
-                width="32"
-                height="32"
-                viewBox="0 0 32 32"
+                width="30"
+                height="30"
+                viewBox="0 0 30 30"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <path
-                  d="M8.00065 26.6668C7.26732 26.6668 6.63932 26.4055 6.11665 25.8828C5.59399 25.3602 5.3331 24.7326 5.33399 24.0002V20.0002H8.00065V24.0002H24.0007V20.0002H26.6673V24.0002C26.6673 24.7335 26.406 25.3615 25.8833 25.8842C25.3607 26.4068 24.7331 26.6677 24.0007 26.6668H8.00065ZM16.0007 21.3335L9.33399 14.6668L11.2007 12.7335L14.6673 16.2002V5.3335H17.334V16.2002L20.8007 12.7335L22.6673 14.6668L16.0007 21.3335Z"
-                  fill="white"
-                />
-              </svg>
-
-              <span
-                className={`${quicksand.className}`}
-                onClick={() => pdfTurma(turma, alunos)}
-              >
-                EXPORTAR
-              </span>
-            </button>
-          </div>
-        </div>
-
-        <div className="mt-10 flex w-full items-center">
-          <div className="flex flex-col justify-center">
-            <label
-              htmlFor="search"
-              className={`${quicksand.className}  text-lg font-medium text-green-bg`}
-            >
-              Buscar aluno (a) {}
-            </label>
-            <div className="flex w-full items-center">
-              <div className="relative ">
-                <input
-                  type="text"
-                  name="search"
-                  placeholder="Digite"
-                  className={`${quicksand.className} h-14 w-52 rounded-sm border-y-2 border-l-2 border-green-200 bg-white-default pl-12 pr-6  text-base font-medium text-textGray placeholder:text-textGray focus:border-green-200 xl:w-[500px] tablet:w-[800px] 3xl:w-[55rem]`}
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  onKeyPress={handleKeyPress}
-                />
-
-                <div className="absolute inset-y-0 left-3 flex items-center">
-                  <svg
-                    className="h-6 w-6 text-green-200"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M21.4073 19.7527L16.9969 15.3422C18.0587 13.9286 18.6319 12.208 18.63 10.44C18.63 5.92406 14.9559 2.25 10.44 2.25C5.92406 2.25 2.25 5.92406 2.25 10.44C2.25 14.9559 5.92406 18.63 10.44 18.63C12.208 18.6319 13.9286 18.0587 15.3422 16.9969L19.7527 21.4073C19.9759 21.6069 20.2671 21.7135 20.5664 21.7051C20.8658 21.6967 21.1506 21.574 21.3623 21.3623C21.574 21.1506 21.6967 20.8658 21.7051 20.5664C21.7135 20.2671 21.6069 19.9759 21.4073 19.7527ZM4.59 10.44C4.59 9.28298 4.9331 8.15194 5.5759 7.18991C6.21871 6.22789 7.13235 5.47808 8.2013 5.03531C9.27025 4.59253 10.4465 4.47668 11.5813 4.70241C12.7161 4.92813 13.7584 5.48529 14.5766 6.30343C15.3947 7.12156 15.9519 8.16393 16.1776 9.29872C16.4033 10.4335 16.2875 11.6098 15.8447 12.6787C15.4019 13.7476 14.6521 14.6613 13.6901 15.3041C12.7281 15.9469 11.597 16.29 10.44 16.29C8.88906 16.2881 7.40217 15.6712 6.30548 14.5745C5.2088 13.4778 4.59186 11.9909 4.59 10.44Z"
-                      fill="#19DB67"
+                <rect width="30" height="30" rx="5" fill="#16DB65" />
+                <g clipPath="url(#clip0_1450_3668)">
+                  <path
+                    d="M13.9023 15.0004L18.543 10.3598L17.2173 9.03418L11.2511 15.0004L17.2173 20.9667L18.543 19.6411L13.9023 15.0004Z"
+                    fill="white"
+                  />
+                </g>
+                <defs>
+                  <clipPath id="clip0_1450_3668">
+                    <rect
+                      width="22.5"
+                      height="22.5"
+                      fill="white"
+                      transform="matrix(-1 0 0 1 26.25 3.75)"
                     />
-                  </svg>
-                </div>
-              </div>
+                  </clipPath>
+                </defs>
+              </svg>
+            </Link>
+            <h1
+              className={`${quicksand.className} leading-[ 37.57px] text-3xl font-semibold text-green-bg`}
+            >
+              {turma.nomeTurma} {turma.genero}
+            </h1>
+          </div>
 
+          <div className="mt-10 flex  w-full items-center  rounded-md border-[3px] border-green-200 py-2 pl-14 pr-10">
+            <div className="flex w-full flex-col items-center font-Montserrat  tablet:flex-row">
+              <div className="flex h-full w-full flex-col items-center justify-center py-1 font-medium text-green-bg md:w-1/4 md:py-0  ">
+                <h1
+                  className={`${quicksand.className} text-6xl md:text-[4.695rem]`}
+                >
+                  {turma.vagas}
+                </h1>
+                <p className="flex text-center tablet:w-[50px]">
+                  Capacidade Total
+                </p>
+              </div>
+              <div className="h-full md:w-1/4">
+                <div className="flex w-full items-center">
+                  <Image
+                    src="/people.svg"
+                    alt="people"
+                    width={16}
+                    height={16}
+                    className="h-4 w-4"
+                  />
+                  <span
+                    className={`${quicksand.className} ml-4 font-medium text-green-bg `}
+                  >
+                    Profª {turma.professor}
+                  </span>
+                </div>
+                <div className="mt-4 flex w-full items-center">
+                  <Image
+                    src="/peoples.svg"
+                    alt="people"
+                    width={24}
+                    height={24}
+                  />
+                  <span
+                    className={`${quicksand.className} ml-2  font-medium text-green-bg`}
+                  >
+                    {vagasAlunos > 1
+                      ? `${vagasAlunos} Alunos matriculados`
+                      : `${vagasAlunos} Aluno matriculado`}
+                  </span>
+                </div>
+                <div className="mt-[17px] flex w-full items-center">
+                  <Image
+                    src="/person-available.svg"
+                    alt="people"
+                    width={24}
+                    height={24}
+                  />
+                  {vagas?.vagas_restantes ? (
+                    <span
+                      className={`${quicksand.className} ml-2  font-medium text-green-bg`}
+                    >
+                      {vagas?.vagas_restantes} Vagas disponíveis
+                    </span>
+                  ) : (
+                    <span className="ml-2 font-Montserrat font-medium text-green-bg">
+                      0 Vagas disponíveis
+                    </span>
+                  )}
+                </div>
+                <div />
+                <div />
+              </div>
+              <div className="h-full py-2 md:w-1/4">
+                <div className="flex w-full items-center">
+                  <Image
+                    src="/location.svg"
+                    alt="location"
+                    width={24}
+                    height={24}
+                  />
+                  <span
+                    className={`${quicksand.className} ml-2 font-medium text-green-bg`}
+                  >
+                    {turma.espaco || "Ginásio de esportes"}
+                  </span>
+                </div>
+                <div className="mt-4 flex w-full items-center">
+                  <Image
+                    src="/clock.svg"
+                    alt="clock"
+                    width={17}
+                    height={17}
+                    className="ml-1"
+                  />
+                  <span
+                    className={`${quicksand.className} ml-3  font-medium text-green-bg`}
+                  >
+                    {turma.horarioInicial} às {turma.horarioFinal}
+                  </span>
+                </div>
+                <div className="mt-[17px] flex w-full items-center">
+                  <Image
+                    src="/calendar.svg"
+                    alt="calendar"
+                    width={24}
+                    height={24}
+                  />
+                  <span
+                    className={`${quicksand.className} ml-2  font-medium text-green-bg`}
+                  >
+                    {formatarDiasSemana(turma.dias)}
+                  </span>
+                </div>
+                <div />
+                <div />
+              </div>
               <button
                 type="button"
-                onClick={handleSearch}
-                className={`${quicksand.className} flex h-14 w-20 items-center justify-center rounded-r-md  bg-green-200 text-[17.28px] font-bold text-white-default md:w-36`}
+                className="flex h-[50px] w-[10.563rem] items-center justify-center space-x-2 rounded bg-green-200 text-white-default"
               >
-                Buscar
+                <svg
+                  width="32"
+                  height="32"
+                  viewBox="0 0 32 32"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M8.00065 26.6668C7.26732 26.6668 6.63932 26.4055 6.11665 25.8828C5.59399 25.3602 5.3331 24.7326 5.33399 24.0002V20.0002H8.00065V24.0002H24.0007V20.0002H26.6673V24.0002C26.6673 24.7335 26.406 25.3615 25.8833 25.8842C25.3607 26.4068 24.7331 26.6677 24.0007 26.6668H8.00065ZM16.0007 21.3335L9.33399 14.6668L11.2007 12.7335L14.6673 16.2002V5.3335H17.334V16.2002L20.8007 12.7335L22.6673 14.6668L16.0007 21.3335Z"
+                    fill="white"
+                  />
+                </svg>
+
+                <span
+                  className={`${quicksand.className}`}
+                  onClick={() => pdfTurma(turma, alunos)}
+                >
+                  EXPORTAR
+                </span>
               </button>
             </div>
           </div>
-          <div className="mt-3 flex sm:mt-0 3xl:ml-auto">
-            <div className="relative hover:cursor-pointer">
-              <Link
-                href={`/matricularAluno/${id}`}
-                className={`${quicksand.className} ml-4 mt-4 flex h-14 w-12 items-center justify-center rounded-md bg-green-200 text-[17.28px] font-bold leading-normal text-transparent md:mt-7 3xl:w-[21.5rem] 3xl:text-white-default`}
-              >
-                MATRICULAR ALUNO (A)
-              </Link>
 
-              <div className="3lx:left-12 absolute inset-y-0 left-5 top-6 md:top-9">
-                <Link href={`/matricularAluno/${id}`}>
-                  <svg
-                    width="44"
-                    height="44"
-                    viewBox="0 0 44 44"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
+          <div className="mt-10 flex w-full flex-col">
+            <Form
+              onFinish={handleSearch}
+              layout="vertical"
+              className="flex w-full flex-col items-center"
+              form={form}
+              name="control-hooks"
+            >
+              <div className="flex w-full flex-col justify-center">
+                <div className="flex w-full flex-col">
+                  <Form.Item
+                    label="Procure por o Nome do aluno"
+                    layout="vertical"
+                    name="nome"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Por favor, insira o nome completo",
+                      },
+                    ]}
+                    className={`${quicksand.className}  text-2xl font-bold text-green-bg`}
                   >
-                    <path
-                      d="M21.9993 9.16602V34.8327M9.16602 21.9993H34.8327"
-                      stroke="white"
-                      strokeWidth="2.75"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
+                    <Input
+                      name="search"
+                      placeholder="Busque o nome do aluno"
+                      className={`${quicksand.className} h-14 w-[80%] rounded-l-md border-y-2 border-l-2 border-green-200 bg-white-default pl-6 pr-6  text-base font-medium text-textGray placeholder:text-textGray focus:border-green-200 xl:w-[500px] tablet:w-[800px] 3xl:w-[55rem]`}
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      onKeyPress={handleKeyPress}
                     />
-                  </svg>
-                </Link>
+                  </Form.Item>
+                  <Form.Item className="flex w-full">
+                    <button
+                      type="submit"
+                      className={`${quicksand.className} flex h-14 w-24 items-center justify-center rounded-md  bg-green-200 text-[17.28px] font-bold text-white-default md:w-36`}
+                    >
+                      Buscar Aluno
+                    </button>
+                  </Form.Item>
+                </div>
               </div>
+            </Form>
+
+            <div className="mt-3 flex ">
+              {id && (
+                <ModalAluno
+                  quicksand={quicksand}
+                  id={id}
+                  capacidade={`${turma.vagas} - ${alunos.length}`}
+                />
+              )}
             </div>
           </div>
-        </div>
 
-        <div
-          className={`${quicksand.className} mt-12 flex h-96 w-full flex-col overflow-y-auto p-2`}
-        >
-          {filteredTurmas.map((aluno) => (
-            <CardStudent
-              key={aluno.id}
-              id={aluno.id}
-              nomeAluno={aluno.nomeAluno}
-              curso={aluno.curso}
-              matricula={aluno.matricula}
-              nomeTurma={turma.nomeTurma}
-              turno={turma.turno}
+          <div className={`${quicksand.className} mt-4 w-full`}>
+            <Table
+              dataSource={alunosFilter}
+              locale={{ emptyText: "Nenhum Aluno Matriculado" }}
+              columns={columns}
+              pagination={{
+                current: currentPage,
+                pageSize: pageSize,
+                showSizeChanger: true,
+                pageSizeOptions: ["3", "5", "10", "20", "50"],
+              }}
+              className="even:bg-d9d9d9 odd:bg-aeaeae mt-2 w-full table-auto divide-y divide-gray-200"
+              scroll={{ x: true }}
+              onChange={handleTableChange}
             />
-          ))}
+            ;
+          </div>
         </div>
-      </div>
-    </Layout>
+      </Layout>
+      <Modal
+        title="Deletar Usuário"
+        open={isModalDeleteOpen}
+        okButtonProps={{
+          loading: loading,
+          className: "bg-emerald-950 text-white-default",
+        }} // Estilo para o botão "OK"
+        cancelButtonProps={{ className: "bg-red-500 text-white-default" }}
+        okText="Confirmar" // Texto para o botão "OK"
+        cancelText="Cancelar" // Texto para o botão "Cancelar"
+        onOk={
+          selectedUsers.length === 0 || selectedUsers.length === 1
+            ? () => alunoId && deleteUser(alunoId)
+            : () => deleteUsers()
+        }
+        onCancel={() => setIsModalDeleteOpen(false)}
+      >
+        <div>
+          {selectedUsers.length > 1 &&
+            `Tem certeza que deseja excluir esses usuários?`}
+          {selectedUsers.length === 1 ||
+            (selectedUsers.length === 0 &&
+              `Tem certeza que deseja excluir esse usuário?`)}
+        </div>
+      </Modal>
+    </>
   );
 };
 

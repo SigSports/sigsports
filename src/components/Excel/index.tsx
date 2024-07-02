@@ -215,7 +215,7 @@ const ImportFile: React.FC = () => {
     <>
       <label
         htmlFor="fileInput"
-        className={`${montserrat.className} ml-4 cursor-pointer text-sm font-medium`}
+        className={`${montserrat.className} cursor-pointer text-base font-medium`}
       >
         {" "}
         Escolher arquivo para Importar Turma por CSV

@@ -80,7 +80,7 @@ const IndexPage = ({
         const vagasRestantes = turma.vagas - turmaData.vagas_restantes;
 
         const alunoTurma: AlunoTurma = {
-          modalidade: turma.modalidade,
+          modalidade: turma.nomeTurma,
           quantidadeAlunos: vagasRestantes,
         };
 
@@ -156,7 +156,7 @@ const IndexPage = ({
       );
 
       if (turmaEncontrada) {
-        modalidadesArray.push(`${turma.modalidade} - ${turma.genero}`);
+        modalidadesArray.push(`${turma.nomeTurma}`);
         vagasArray.push(turma.vagas - turmaEncontrada.vagas_restantes);
         vagasTotaisArray.push(turma.vagas);
       }
@@ -171,7 +171,6 @@ const IndexPage = ({
   const [totalVagasRestantes, setTotalVagasRestantes] = useState<number>(0);
 
   const [alunos, setAlunos] = useState<AlunoTurma[]>([]);
-
   useEffect(() => {
     const fetchData = async () => {
       const alunosData = await fetchTurmaAlunos(turmas);
@@ -267,7 +266,6 @@ const IndexPage = ({
     seriesField: "name", // Campo de série (para agrupar)
     color: ["#058C42", "#AAAAAA"],
     label: {
-      position: "large",
       layout: [
         {
           type: "interval-adjust-position",
@@ -379,7 +377,7 @@ const IndexPage = ({
             </div> */}
           </div>
           <div className="flex h-[400px] w-full justify-center">
-            <Column {...config1} className="w-full lg:w-[60%]" />
+            <Column {...config1} className="w-full overflow-x-auto" />
           </div>
         </div>
       </div>

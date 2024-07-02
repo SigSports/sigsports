@@ -37,118 +37,11 @@ export default function Card({
 }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [nomeTurma] = useState(turma.toLocaleUpperCase().split(" "));
 
   const router = useRouter();
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
-
-  function backgroundComNomeDaTurma(nome: Array<string>) {
-    if (nome.includes("FUTEBOL")) {
-      return "from-green-200 to-green-500";
-    }
-
-    if (nome.includes("VOLEI")) {
-      return "from-violet-200 to-violet-500";
-    }
-
-    if (nome.includes("VÔLEI")) {
-      return "from-violet-200 to-violet-500";
-    }
-
-    if (nome.includes("VOLEIBOL")) {
-      return "from-violet-200 to-violet-500";
-    }
-
-    if (nome.includes("NATAÇÃO")) {
-      return "from-blue-200 to-blue-500";
-    }
-
-    if (nome.includes("ATLETISMO")) {
-      return "from-orange-200 to-orange-500";
-    }
-
-    if (nome.includes("BASQUETE")) {
-      return "from-red-200 to-red-500";
-    }
-
-    if (nome.includes("BASKET")) {
-      return "from-red-200 to-red-500";
-    }
-
-    if (nome.includes("XADREZ")) {
-      return "from-pink-200 to-pink-500";
-    }
-
-    if (nome.includes("FUTSAL")) {
-      return "from-green-200 to-green-500";
-    }
-
-    if (nome.includes("KARATÊ")) {
-      return "from-amber-300 to-amber-600";
-    }
-
-    if (nome.includes("JUDÔ")) {
-      return "from-amber-300 to-amber-600";
-    }
-
-    return "from-blue-200 to-blue-500";
-  }
-
-  function backgroundComNomeDaTurma2(nome: Array<string>) {
-    if (nome.includes("FUTEBOL")) {
-      return "bg-green-500";
-    }
-
-    if (nome.includes("VOLEI")) {
-      return "bg-violet-500";
-    }
-
-    if (nome.includes("VÔLEI")) {
-      return "bg-violet-500";
-    }
-
-    if (nome.includes("VOLEIBOL")) {
-      return "bg-violet-500";
-    }
-
-    if (nome.includes("NATAÇÃO")) {
-      return "bg-blue-500 ";
-    }
-
-    if (nome.includes("ATLETISMO")) {
-      return "bg-orange-500 ";
-    }
-
-    if (nome.includes("BASQUETE")) {
-      return "bg-red-500 ";
-    }
-
-    if (nome.includes("BASKET")) {
-      return "bg-red-500 ";
-    }
-
-    if (nome.includes("XADREZ")) {
-      return "bg-pink-500 ";
-    }
-
-    if (nome.includes("FUTSAL")) {
-      return "bg-green-500 ";
-    }
-
-    if (nome.includes("KARATÊ")) {
-      return "bg-amber-600 ";
-    }
-
-    if (nome.includes("JUDÔ")) {
-      return "bg-amber-600 ";
-    }
-
-    return "bg-blue-500 ";
-  }
-
-  // console.log(backgroundComNomeDaTurma(nomeTurma));
 
   function formatarDiasSemana(diasSemana: string) {
     const diasArray = diasSemana.split(",");
@@ -224,20 +117,12 @@ export default function Card({
     <div className="shadow-bottom bg-custom w-[14.375rem] rounded-lg border-2 border-green-200">
       <div className="flex w-full">
         <h1
-          className={`${
-            quicksand.className
-          } flex h-[51px] w-full items-center justify-center bg-gradient-to-r ${backgroundComNomeDaTurma(
-            nomeTurma
-          )} font-Montserrat text-[17.28px] font-bold text-white-default hover:cursor-pointer`}
+          className={`${quicksand.className} flex h-[51px] w-full items-center justify-center bg-green-200 font-Montserrat text-[17.28px] font-bold text-white-default hover:cursor-pointer`}
           onClick={() => handleRedirect(id)}
         >
           <b>{turma} </b>
         </h1>
-        <span
-          className={`relative flex items-center ${backgroundComNomeDaTurma2(
-            nomeTurma
-          )} hover:cursor-pointer`}
-        >
+        <span className="relative flex items-center bg-green-200 hover:cursor-pointer">
           <svg
             width="24"
             height="24"
