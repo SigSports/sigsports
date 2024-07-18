@@ -40,8 +40,8 @@ export default function FormUser({
           router.reload();
         }, 3000); // 20 segundos
       }
-    } catch (e) {
-      console.log(e);
+    } catch (e: any) {
+      toast.error(e.response.data.erro);
     } finally {
       setLoading(false);
     }
