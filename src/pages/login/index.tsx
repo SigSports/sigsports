@@ -3,7 +3,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { useContext, useState } from "react";
 import { GetServerSideProps } from "next";
-import { Button, Form, Input } from "antd";
+import { Button, Form, Input, notification } from "antd";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -53,6 +53,11 @@ export default function Login() {
     if (response) {
       setIsLoading(false);
     }
+    if (response?.mensage) {
+      notification.error({
+        message: response.mensage,
+      });
+    }
   };
 
   return (
@@ -96,7 +101,7 @@ export default function Login() {
             </div>
           </nav>
         </div>
-        <div className="mt-20 flex h-full w-screen justify-center md:mt-52 tablet:w-full">
+        <div className="mt-20 flex h-full w-screen justify-center md:mt-36 tablet:w-full">
           <div className="flex h-full flex-col justify-around lg:p-0">
             <div className="my-auto mt-14  w-[321px] px-8">
               <Image src="/SIGSport.svg" alt="Logo" width={321} height={83} />
