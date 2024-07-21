@@ -385,11 +385,13 @@ export default function Home({
                     fontSize: "20px",
                   }}
                 >
-                  <ul> <span
-                        className={`${bebas_neue.className} flex items-center text-2xl text-white-default transition duration-300 hover:border-b-4 hover:border-green-500`}
-                      >
-                        SigSports
-                      </span>
+                  <ul>
+                    {" "}
+                    <span
+                      className={`${bebas_neue.className} flex items-center text-2xl text-white-default transition duration-300 hover:border-b-4 hover:border-green-500`}
+                    >
+                      SigSports
+                    </span>
                     <div className="flex py-4">
                       <a
                         href="#"
