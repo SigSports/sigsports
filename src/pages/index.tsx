@@ -4,6 +4,7 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
 import Image from "next/image";
+import { Drawer } from "antd";
 import {
   FaInstagram,
   FaLinkedin,
@@ -186,6 +187,9 @@ export default function Home({
   const [allTurmas, setAllTurmas] = useState<boolean>(false);
   const [, setAlunos] = useState<AlunoTurma[]>([]);
 
+  const onClose = () => {
+    setShowMenu(false);
+  };
   useEffect(() => {
     const fetchData = async () => {
       const alunosData = await fetchTurmaAlunos(turmas);
@@ -246,13 +250,19 @@ export default function Home({
                           width={32}
                           height={32}
                         />
+                        <span
+                          className={`${bebas_neue.className} flex items-center text-2xl text-white-default transition duration-300 hover:border-b-4 hover:border-green-500`}
+                        >
+                          SigSports
+                        </span>
                       </Link>
                     </div>
                     <div
                       className={`${bebas_neue.className} dropShadow-100 hidden items-center gap-x-8 space-x-1 text-xl text-white-default md:flex lg:gap-x-14`}
                     >
-                      <a
-                        href=""
+                      <Link
+                        href="/#modalidades"
+                        prefetch={false}
                         className="flex items-center  transition duration-300 hover:border-b-4 hover:border-green-500"
                       >
                         MODALIDADES
@@ -272,7 +282,7 @@ export default function Home({
                             />
                           </svg>
                         </span>
-                      </a>
+                      </Link>
                       <a
                         href=""
                         className="flex items-center transition duration-300 hover:border-b-4 hover:border-green-500"
@@ -345,7 +355,8 @@ export default function Home({
                       onClick={toggleMenu}
                     >
                       <svg
-                        className="h-6 w-6 text-green-100 hover:text-green-500"
+                        className="h-10 w-10
+                         text-green-100 hover:text-green-500"
                         fill="none"
                         strokeLinecap="round"
                         strokeLinejoin="round"
@@ -361,13 +372,29 @@ export default function Home({
               </div>
 
               {showMenu && (
-                <div className="mobile-menu flex">
-                  <ul className="absolute left-0 top-0 h-screen w-[80vw] bg-bgGray text-xl text-white-default">
+                <Drawer
+                  onClose={onClose}
+                  placement="left"
+                  size="large"
+                  open={showMenu}
+                  style={{
+                    backgroundColor: "#058c42",
+                    height: "100vh",
+                    width: "75vw",
+                    color: "white",
+                    fontSize: "20px",
+                  }}
+                >
+                  <ul> <span
+                        className={`${bebas_neue.className} flex items-center text-2xl text-white-default transition duration-300 hover:border-b-4 hover:border-green-500`}
+                      >
+                        SigSports
+                      </span>
                     <div className="flex py-4">
                       <a
                         href="#"
-                        className="text-white flex items-center space-x-2 px-4"
-                        title="Your App is cool"
+                        className="text-white flex flex-col items-center space-x-2 px-4"
+                        title="mascote"
                       >
                         <Image
                           src="/mascote.svg"
@@ -414,25 +441,7 @@ export default function Home({
                       </Link>
                     </li>
                   </ul>
-                  <button
-                    type="button"
-                    className="mobile-menu-button1 animate-pulse outline-none"
-                    onClick={toggleMenu}
-                  >
-                    <svg
-                      className="absolute right-4 top-4 h-10 w-10 text-white-default hover:text-green-500"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <line x1="18" y1="6" x2="6" y2="18" />
-                      <line x1="6" y1="6" x2="18" y2="18" />
-                    </svg>
-                  </button>
-                </div>
+                </Drawer>
               )}
             </nav>
           </div>
@@ -479,7 +488,10 @@ export default function Home({
           </div>
         </div>
       </div>
-      <div className="flex flex-col bg-white-default bg-cover bg-no-repeat lg:bg-[url('/img-fundo1.png')]	xl:h-screen">
+      <div
+        id="about"
+        className="flex flex-col bg-white-default bg-cover bg-no-repeat lg:bg-[url('/img-fundo1.png')]	xl:h-screen"
+      >
         <div
           className={`${bebas_neue.className} flex w-full justify-center text-[53.551px] text-green-200 lg:pt-20`}
         >
@@ -517,7 +529,10 @@ export default function Home({
           </div>
         </div>
       </div>
-      <div className="flex-col  bg-white-default bg-[url('/img-fundo.png')] bg-cover bg-no-repeat md:mt-20	lg:h-screen">
+      <div
+        id="modalidades"
+        className="flex-col  bg-white-default bg-[url('/img-fundo.png')] bg-cover bg-no-repeat md:mt-20	lg:h-screen"
+      >
         <div
           className={`${bebas_neue.className} flex w-full justify-center pt-14 text-[53.551px] uppercase text-green-200`}
         >
@@ -560,7 +575,7 @@ export default function Home({
         </div>
       </div>
       <div className="w-full flex-col lg:h-screen">
-        <div className="flex h-[50vh] w-full items-center bg-bgGray lg:h-[50%]">
+        <div className="flex h-[80vh] w-full items-center bg-bgGray lg:h-[50%]">
           <div className="flex flex-col px-8 lg:ml-24 lg:w-[1065px] lg:px-0">
             <span
               className={`${raleway.className} w-full font-['Raleway'] text-2xl font-medium text-white-default lg:h-[58px]`}
