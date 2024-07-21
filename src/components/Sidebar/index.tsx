@@ -1,7 +1,9 @@
+/* eslint-disable @next/next/no-img-element */
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
 import Link from "next/link";
+import { Spin as Hamburger } from "hamburger-react";
 import Router, { useRouter } from "next/router";
 import { destroyCookie } from "nookies";
 import { Quicksand } from "next/font/google";
@@ -16,6 +18,7 @@ const quicksand = Quicksand({
 export default function Sidebar() {
   const router = useRouter();
   const [rota, setRota] = useState("");
+  const [isOpen, setOpen] = useState(false);
 
   // useEffect(() => {
   //   const handleRota = () => {
@@ -59,49 +62,17 @@ export default function Sidebar() {
             Sig Sports
           </Link>
         </div>
-
-        <label
-          htmlFor="menu-open"
-          id="mobile-menu-button"
-          className="hover:text-white m-2 rounded-md p-2 hover:cursor-pointer focus:outline-none"
-        >
-          <svg
-            id="menu-open-icon"
-            className="h-6 w-6 transition duration-200 ease-in-out"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M4 6h16M4 12h16M4 18h16"
-            />
-          </svg>
-          <svg
-            id="menu-close-icon"
-            className="h-6 w-6 transition duration-200 ease-in-out"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
-        </label>
+        <div className="mr-2">
+          <Hamburger toggled={isOpen} toggle={setOpen} />
+        </div>
       </header>
 
       <aside
-        id="sidebar"
-        className={`${quicksand.className} absolute inset-y-0 left-0 z-50 w-3/4 min-w-[13%] transform space-y-6 overflow-y-auto  bg-gradient-to-tl from-green-300 to-green-900  px-0 pt-6 text-gray-100 transition duration-200 ease-in-out md:relative md:flex md:w-64 md:translate-x-0 md:flex-col md:justify-between `}
-        data-dev-hint="sidebar; px-0 for frameless; px-2 for visually inset the navigation"
+        className={`${
+          quicksand.className
+        } absolute inset-y-0 left-0 z-50 w-3/4 min-w-[13%] transform space-y-6 overflow-y-auto bg-gradient-to-tl from-green-300 to-green-900 px-0 pt-6 text-gray-100 transition duration-200 ease-in-out md:relative md:flex md:w-64 md:translate-x-0 md:flex-col md:justify-between ${
+          isOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
       >
         <div
           className="flex flex-col space-y-6"
@@ -111,8 +82,8 @@ export default function Sidebar() {
             href="/dashboard"
             className="text-white flex items-center space-x-2 px-4"
           >
-            {/* <img src="{% static 'assets/mascote.svg'%}" alt="" /> */}
-            <span className="truncate whitespace-nowrap text-2xl font-extrabold text-green-50">
+            <img src="/mascote.svg" alt="" />
+            <span className="truncate whitespace-nowrap text-xl font-extrabold text-green-50">
               SIG SPORTS.
             </span>
           </Link>
