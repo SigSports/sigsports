@@ -16,6 +16,7 @@ import Link from "next/link";
 import { GetServerSideProps } from "next";
 import Layout from "@/components/Layout";
 import { api } from "@/services/api";
+import CriarTurma from "@/components/Forms/CriarTurma";
 
 const quicksand = Quicksand({
   weight: "600",
@@ -320,12 +321,9 @@ const IndexPage = ({
           <div
             className={`${quicksand.className} flex w-full flex-col justify-between gap-y-4 2xl:w-[19.875rem]`}
           >
-            <Link
-              href="/criarTurma"
-              className="flex h-[69px] w-full items-center justify-center rounded-lg bg-gradient-to-br from-cyan-400 to-cyan-700  text-lg font-bold text-white-default shadow-md transition-colors duration-300 hover:scale-105 hover:cursor-pointer hover:bg-green-300"
-            >
-              CRIAR TURMA
-            </Link>
+            <div className="flex h-[69px] w-full items-center justify-center rounded-lg bg-gradient-to-br from-cyan-400 to-cyan-700  text-lg font-bold text-white-default shadow-md transition-colors duration-300 hover:scale-105 hover:cursor-pointer hover:bg-green-300">
+              <CriarTurma text="CRIAR TURMA" quicksand={quicksand} />
+            </div>
             <Link
               href="/listarTurmas"
               className="flex h-[69px] w-full items-center justify-center rounded-lg border border-cyan-600  text-lg font-bold  shadow-md transition-colors duration-300 hover:scale-105 hover:cursor-pointer"

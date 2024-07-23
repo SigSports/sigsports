@@ -6,6 +6,7 @@ import { useState } from "react";
 import { Montserrat, Quicksand } from "next/font/google";
 import Link from "next/link";
 import { Dropdown, Menu } from "antd";
+import CriarTurma from "@/components/Forms/CriarTurma";
 import Layout from "@/components/Layout";
 import Card from "@/components/Card";
 import { api } from "@/services/api";
@@ -55,13 +56,13 @@ export default function ListarTurmas({
         key="1"
         className="border-b border-[#e8e8e8] hover:scale-105 hover:border-b "
       >
-        <Link href="/criarTurma" className="w-full">
-          <span
+        <div className="w-full">
+          <div
             className={` ${montserrat.className} w-full text-base font-medium `}
           >
-            Criar Turma Manualmente
-          </span>
-        </Link>
+            <CriarTurma quicksand={quicksand} text="Criar Turma Manualmente" />
+          </div>
+        </div>
       </Menu.Item>
 
       <Menu.Item key="2" className=" hover:scale-105">
