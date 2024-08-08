@@ -7,7 +7,7 @@
 import { GetServerSideProps, NextPage } from "next";
 import Link from "next/link";
 import Image from "next/image";
-import { Table, Input, Form, notification, Checkbox, Modal } from "antd";
+import { Tabs, Table, Input, Form, notification, Checkbox, Modal } from "antd";
 import { useEffect, useState } from "react";
 import { DM_Sans, Quicksand } from "next/font/google";
 import { useRouter } from "next/router";
@@ -17,6 +17,8 @@ import Layout from "@/components/Layout";
 import ModalAluno from "@/components/Forms/Aluno";
 import { pdfTurma } from "@/utils/pdfTurma";
 import { api } from "@/services/api";
+
+const { TabPane } = Tabs;
 
 const quicksand = Quicksand({
   weight: "500",
@@ -56,6 +58,7 @@ export type AlunosType = {
   matricula: string;
   contato: string;
   curso: string;
+  matriculado: number;
 };
 const VisualizarTurma: NextPage<{
   turma: TurmaType;
@@ -65,43 +68,65 @@ const VisualizarTurma: NextPage<{
   const [searchTerm, setSearchTerm] = useState("");
   const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false);
   const [selectedUsers, setSelectedUsers] = useState<number[]>([]);
-  const [filteredTurmas, setFilteredTurmas] = useState(alunos);
-  const [selectAll, setSelectAll] = useState<boolean>(false);
+  const [filteredAlunosMatriculados, setFilteredAlunosMatriculados] = useState(
+    alunos.filter((aluno) => aluno.matriculado === 0)
+  );
+  const [filteredAlunosEspera, setFilteredAlunosEspera] = useState(
+    alunos.filter((aluno) => aluno.matriculado === 1)
+  );
+  const [selectAllMatriculados, setSelectAllMatriculados] =
+    useState<boolean>(false);
+  const [selectAllEspera, setSelectAllEspera] = useState<boolean>(false);
   const [loading, setLoading] = useState(false);
   const [alunoId, setId] = useState<number>();
+  const [pageSize, setPageSize] = useState(3);
   const handleSearch = () => {
-    const filtered = alunos.filter((aluno) =>
-      aluno.nomeAluno.toLowerCase().includes(searchTerm.toLowerCase())
+    const alunosMatriculados = alunos.filter(
+      (aluno) =>
+        aluno.matriculado === 0 &&
+        aluno.nomeAluno.toLowerCase().includes(searchTerm.toLowerCase())
     );
-    setFilteredTurmas(filtered);
+    const alunosEspera = alunos.filter(
+      (aluno) =>
+        aluno.matriculado === 1 &&
+        aluno.nomeAluno.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    setFilteredAlunosMatriculados(alunosMatriculados);
+    setFilteredAlunosEspera(alunosEspera);
   };
 
-  console.log(selectedUsers);
-
-  const alunosFilter = filteredTurmas.map((aluno) => ({
-    id: aluno.id,
-    nome: aluno.nomeAluno,
-    curso: aluno.curso,
-    matricula: aluno.matricula,
-  }));
-
-  const toggleSelectAll = () => {
-    setSelectAll(!selectAll);
-    if (!selectAll) {
-      const allUserIds = alunosFilter.map((user: any) => user.id);
+  const toggleSelectAllMatriculados = () => {
+    setSelectAllMatriculados(!selectAllMatriculados);
+    if (!selectAllMatriculados) {
+      const allUserIds = filteredAlunosMatriculados.map((user) => user.id);
       setSelectedUsers(allUserIds);
     } else {
       setSelectedUsers([]);
     }
   };
 
+  const toggleSelectAllEspera = () => {
+    setSelectAllEspera(!selectAllEspera);
+    if (!selectAllEspera) {
+      const allUserIds = filteredAlunosEspera.map((user) => user.id);
+      setSelectedUsers(allUserIds);
+    } else {
+      setSelectedUsers([]);
+    }
+  };
   const deleteUser = async (id: number) => {
     try {
       await api.delete(`v1/matriculas/${id}`);
       notification.success({
         message: `Aluno deletado com sucesso ${id}`,
       });
-      setFilteredTurmas(filteredTurmas.filter((aluno) => aluno.id !== id));
+      setFilteredAlunosMatriculados(
+        filteredAlunosMatriculados.filter((aluno) => aluno.id !== id)
+      );
+      setFilteredAlunosEspera(
+        filteredAlunosEspera.filter((aluno) => aluno.id !== id)
+      );
       setIsModalDeleteOpen(false);
     } catch (error) {
       notification.error({
@@ -126,8 +151,15 @@ const VisualizarTurma: NextPage<{
           message: "Alunos deletados com sucesso",
         });
 
-        setFilteredTurmas(
-          filteredTurmas.filter((aluno) => !selectedUsers.includes(aluno.id))
+        setFilteredAlunosMatriculados(
+          filteredAlunosMatriculados.filter(
+            (aluno) => !selectedUsers.includes(aluno.id)
+          )
+        );
+        setFilteredAlunosEspera(
+          filteredAlunosEspera.filter(
+            (aluno) => !selectedUsers.includes(aluno.id)
+          )
         );
         setIsModalDeleteOpen(false);
         setSelectedUsers([]);
@@ -141,6 +173,7 @@ const VisualizarTurma: NextPage<{
     }
   };
 
+  // Função para alternar a seleção de um aluno
   const toggleUserSelection = (userId: number) => {
     const isSelected = selectedUsers.includes(userId);
     if (isSelected) {
@@ -154,7 +187,10 @@ const VisualizarTurma: NextPage<{
     {
       title: (
         <div className="flex items-center">
-          <Checkbox onChange={toggleSelectAll} checked={selectAll} />
+          <Checkbox
+            onChange={toggleSelectAllMatriculados}
+            checked={selectAllMatriculados}
+          />
           <button
             type="button"
             onClick={() => {
@@ -182,7 +218,7 @@ const VisualizarTurma: NextPage<{
     },
     {
       title: "nome",
-      dataIndex: "nome",
+      dataIndex: "nomeAluno",
       key: "name",
     },
     {
@@ -213,7 +249,72 @@ const VisualizarTurma: NextPage<{
       ),
     },
   ];
-
+  const columns1 = [
+    {
+      title: (
+        <div className="flex items-center">
+          <Checkbox
+            onChange={toggleSelectAllEspera}
+            checked={selectAllEspera}
+          />
+          <button
+            type="button"
+            onClick={() => {
+              if (selectedUsers.length === 0) {
+                notification.error({
+                  message: "Escolha pelo menos 1 aluno para excluir",
+                });
+              } else {
+                setIsModalDeleteOpen(true);
+              }
+            }}
+            className={`ml-4 flex h-[28.62px] w-[98px] items-center justify-center rounded-[32px] bg-emerald-950 text-base font-normal text-white-default ${dm.className}`}
+          >
+            DELETAR
+          </button>
+        </div>
+      ),
+      key: "checkbox",
+      render: (text: any, record: any) => (
+        <Checkbox
+          onChange={() => toggleUserSelection(record.id)}
+          checked={selectedUsers.includes(record.id)}
+        />
+      ),
+    },
+    {
+      title: "nome",
+      dataIndex: "nomeAluno",
+      key: "name",
+    },
+    {
+      title: "curso",
+      dataIndex: "curso",
+      key: "age",
+    },
+    {
+      title: "matricula",
+      dataIndex: "matricula",
+      key: "address",
+    },
+    {
+      title: "Ações",
+      dataIndex: "actions",
+      key: "actions",
+      render: (text: any, record: any) => (
+        <div className="flex gap-x-4">
+          <FormEdit quicksand={quicksand} id={record.id} />
+          <SlTrash
+            className="h-[22px] w-5 text-[#616161] hover:cursor-pointer"
+            onClick={() => {
+              setIsModalDeleteOpen(true);
+              setId(record.id);
+            }}
+          />
+        </div>
+      ),
+    },
+  ];
   function formatarDiasSemana(diasSemana: string) {
     const diasArray = diasSemana.split(",");
 
@@ -237,7 +338,6 @@ const VisualizarTurma: NextPage<{
   };
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(3);
   const [form] = Form.useForm();
   const router = useRouter();
   const id: any = router.query?.id;
@@ -255,7 +355,6 @@ const VisualizarTurma: NextPage<{
       });
     }
   }, []);
-
   return (
     <>
       <Layout>
@@ -472,35 +571,55 @@ const VisualizarTurma: NextPage<{
                 </div>
               </div>
             </Form>
-
-            <div className="mt-3 flex ">
-              {id && (
-                <ModalAluno
-                  quicksand={quicksand}
-                  id={id}
-                  capacidade={`${turma.vagas} - ${alunos.length}`}
+          </div>
+          <Tabs defaultActiveKey="1" className="w-full">
+            <TabPane tab="Alunos Matriculados" key="1">
+              <div className="mt-3 flex w-full">
+                {id && (
+                  <ModalAluno
+                    quicksand={quicksand}
+                    id={id}
+                    capacidade={`${turma.vagas} - ${alunos.length}`}
+                  />
+                )}
+              </div>
+              <div className={`${quicksand.className} mt-4 w-full`}>
+                <Table
+                  dataSource={filteredAlunosMatriculados}
+                  locale={{ emptyText: "Nenhum Aluno Matriculado" }}
+                  columns={columns}
+                  pagination={{
+                    current: currentPage,
+                    pageSize: pageSize,
+                    showSizeChanger: true,
+                    pageSizeOptions: ["3", "5", "10", "20", "50"],
+                  }}
+                  className="even:bg-d9d9d9 odd:bg-aeaeae mt-2 w-full table-auto divide-y divide-gray-200"
+                  scroll={{ x: true }}
+                  onChange={handleTableChange}
                 />
-              )}
-            </div>
-          </div>
-
-          <div className={`${quicksand.className} mt-4 w-full`}>
-            <Table
-              dataSource={alunosFilter}
-              locale={{ emptyText: "Nenhum Aluno Matriculado" }}
-              columns={columns}
-              pagination={{
-                current: currentPage,
-                pageSize: pageSize,
-                showSizeChanger: true,
-                pageSizeOptions: ["3", "5", "10", "20", "50"],
-              }}
-              className="even:bg-d9d9d9 odd:bg-aeaeae mt-2 w-full table-auto divide-y divide-gray-200"
-              scroll={{ x: true }}
-              onChange={handleTableChange}
-            />
-            ;
-          </div>
+              </div>
+            </TabPane>
+            <TabPane tab="Alunos em Espera" key="2">
+              <div className={`${quicksand.className} mt-4 w-full`}>
+                <Table
+                  dataSource={filteredAlunosEspera}
+                  locale={{ emptyText: "Nenhum Aluno Matriculado" }}
+                  columns={columns1}
+                  pagination={{
+                    current: currentPage,
+                    pageSize: pageSize,
+                    showSizeChanger: true,
+                    pageSizeOptions: ["3", "5", "10", "20", "50"],
+                  }}
+                  className="even:bg-d9d9d9 odd:bg-aeaeae mt-2 w-full table-auto divide-y divide-gray-200"
+                  scroll={{ x: true }}
+                  onChange={handleTableChange}
+                />
+              </div>
+            </TabPane>
+            {/* Adicione mais TabPane aqui conforme necessário */}
+          </Tabs>
         </div>
       </Layout>
       <Modal
