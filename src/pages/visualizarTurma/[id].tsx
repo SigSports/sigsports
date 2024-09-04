@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable @typescript-eslint/no-use-before-define */
 /* eslint-disable object-shorthand */
 /* eslint-disable react-hooks/exhaustive-deps */
@@ -7,6 +8,7 @@
 import { GetServerSideProps, NextPage } from "next";
 import Link from "next/link";
 import Image from "next/image";
+import { FilePdfTwoTone } from "@ant-design/icons";
 import { Tabs, Table, Input, Form, notification, Checkbox, Modal } from "antd";
 import { useEffect, useState } from "react";
 import { DM_Sans, Quicksand } from "next/font/google";
@@ -16,6 +18,7 @@ import FormEdit from "@/components/Forms/editarAluno";
 import Layout from "@/components/Layout";
 import ModalAluno from "@/components/Forms/Aluno";
 import { pdfTurma } from "@/utils/pdfTurma";
+import { declaracao } from "@/utils/declaracaoAluno";
 import { api } from "@/services/api";
 
 const { TabPane } = Tabs;
@@ -217,6 +220,11 @@ const VisualizarTurma: NextPage<{
       ),
     },
     {
+      title: "#",
+      dataIndex: "id",
+      key: "id",
+    },
+    {
       title: "nome",
       dataIndex: "nomeAluno",
       key: "name",
@@ -237,12 +245,32 @@ const VisualizarTurma: NextPage<{
       key: "actions",
       render: (text: any, record: any) => (
         <div className="flex gap-x-4">
-          <FormEdit quicksand={quicksand} id={record.id} />
+          <FormEdit
+            quicksand={quicksand}
+            aluno={filteredAlunosMatriculados.filter(
+              (aluno) => aluno.id === record.id
+            )}
+          />
           <SlTrash
             className="h-[22px] w-5 text-[#616161] hover:cursor-pointer"
             onClick={() => {
               setIsModalDeleteOpen(true);
               setId(record.id);
+            }}
+          />
+          <FilePdfTwoTone
+            className="h-[22px] w-5 text-[#616161] hover:cursor-pointer"
+            onClick={() => {
+              const alunoF: any = filteredAlunosMatriculados.find(
+                (aluno) => aluno.id === record.id
+              );
+
+              declaracao(
+                alunoF.nomeAluno,
+                alunoF.matricula,
+                turma.nomeTurma,
+                turma.turno
+              );
             }}
           />
         </div>
@@ -283,6 +311,11 @@ const VisualizarTurma: NextPage<{
       ),
     },
     {
+      title: "#",
+      dataIndex: "id",
+      key: "id",
+    },
+    {
       title: "nome",
       dataIndex: "nomeAluno",
       key: "name",
@@ -303,7 +336,12 @@ const VisualizarTurma: NextPage<{
       key: "actions",
       render: (text: any, record: any) => (
         <div className="flex gap-x-4">
-          <FormEdit quicksand={quicksand} id={record.id} />
+          <FormEdit
+            quicksand={quicksand}
+            aluno={filteredAlunosEspera.filter(
+              (aluno) => aluno.id === record.id
+            )}
+          />
           <SlTrash
             className="h-[22px] w-5 text-[#616161] hover:cursor-pointer"
             onClick={() => {

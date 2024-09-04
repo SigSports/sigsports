@@ -1,12 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Drawer, Button, Form, Input, Spin } from "antd";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import { TbPencil } from "react-icons/tb";
 import { api } from "@/services/api";
 
 type Aluno = {
+  id: number;
   nomeAluno: string;
   matricula: string;
   curso: string;
@@ -15,11 +16,12 @@ type Aluno = {
 
 export default function FormUser({
   quicksand,
-  id,
+  aluno,
 }: {
   quicksand: any;
-  id: number;
+  aluno: Aluno[];
 }) {
+  const [form] = Form.useForm();
   const [open, setOpen] = useState(false);
   const router = useRouter();
   const showDrawer = () => {
@@ -30,34 +32,15 @@ export default function FormUser({
     setOpen(false);
   };
   const [loading, setLoading] = useState(false);
-  const [fetch, setFetch] = useState(false);
-  const [aluno, setAluno] = useState<Aluno>();
-  async function getAluno() {
-    setFetch(true);
-    try {
-      const response = await api.get(`v1/matriculas/${id}`);
-      const alunoR = await response.data;
-      setAluno(alunoR);
-    } catch (e) {
-      console.log(e);
-    } finally {
-      setFetch(false);
-    }
-  }
-
-  useEffect(() => {
-    getAluno();
-  }, []);
-
-  const onFinish = async (values: any) => {
+  const onFinish = async (values: Aluno) => {
+    console.log(values);
+    const { id } = values;
     setLoading(true);
     try {
       await api.put(`v1/matriculas/${id}`, values);
       toast.success("Aluno editado com sucesso");
       setOpen(false);
       setTimeout(() => {
-        // Executar ação após 20 segundos
-        // Por exemplo, redirecionar para uma página específica
         router.reload();
       }, 3000); // 20 segundos
     } catch (e) {
@@ -67,7 +50,6 @@ export default function FormUser({
     }
   };
 
-  const [form] = Form.useForm();
   return (
     <>
       <TbPencil
@@ -82,16 +64,34 @@ export default function FormUser({
           Insira as informações necessárias para editar o(a) aluno(a):{" "}
         </h2>
 
-        {fetch ? (
-          <Spin />
+        {!aluno[0] ? (
+          <div className="mt-14 flex h-full w-full justify-center">
+            <Spin size="large" />
+          </div>
         ) : (
           <Form
             layout="vertical"
             onFinish={onFinish}
-            initialValues={aluno}
+            initialValues={aluno[0]}
             form={form}
             name="control-hooks"
           >
+            <Form.Item
+              label="nome completo"
+              name="id"
+              rules={[
+                {
+                  required: true,
+                  message: "Por favor, insira o nome completo",
+                },
+              ]}
+              className="hidden"
+            >
+              <Input
+                placeholder="Nome do aluno"
+                className="text-white h-10 w-full rounded-lg border-2 border-green-200 pl-4 font-Montserrat text-base font-medium italic placeholder:text-textGray focus:outline-none focus:ring-2 focus:ring-green-100"
+              />
+            </Form.Item>
             <Form.Item
               label="nome completo"
               name="nomeAluno"

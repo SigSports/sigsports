@@ -111,7 +111,6 @@ export default function FormTurma({
       const values1 = { ...values, dias: diasString };
 
       await api.post(`v1/CriarTurma/`, values1);
-      await api.post(`v1/CriarTurma/`, values1);
       toast.success("Matrícula criada com sucesso");
       setTimeout(() => {
         // Executar ação após 20 segundos
@@ -241,7 +240,10 @@ export default function FormTurma({
               name="vagas"
               className="font-Montserrat text-base font-medium italic"
               rules={[
-                { required: true, message: "Por favor, insira a matricula" },
+                {
+                  required: true,
+                  message: "Por favor, insira a quantidade de vagas",
+                },
                 { max: 3, message: "Digite quantidade correta" },
               ]}
             >
@@ -292,7 +294,7 @@ export default function FormTurma({
               rules={[
                 {
                   required: true,
-                  message: "Por favor, insira a hora inicial!",
+                  message: "Por favor, insira a hora final!",
                 },
                 { min: 5, message: "Digite a hora corretamente" },
               ]}
@@ -304,7 +306,13 @@ export default function FormTurma({
                 onChange={handleHourChange("horarioFinal")}
               />
             </Form.Item>
-            <Form.Item label="Informe os dias da semana:" name="dias">
+            <Form.Item
+              label="Informe os dias da semana:"
+              name="dias"
+              rules={[
+                { required: true, message: "Escolha um dos dias da semana" },
+              ]}
+            >
               <Checkbox.Group>
                 <Space direction="vertical">
                   <Checkbox value="segunda">Segunda-feira</Checkbox>
