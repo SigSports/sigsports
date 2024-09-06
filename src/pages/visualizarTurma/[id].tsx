@@ -638,11 +638,11 @@ const VisualizarTurma: NextPage<{
                 />
               </div>
             </TabPane>
-            <TabPane 
-              tab="Alunos em Espera" 
-              key="2" 
+            <TabPane
+              tab="Alunos em Espera"
+              key="2"
               disabled={filteredAlunosEspera.length === 0}
-              >
+            >
               <div className={`${quicksand.className} mt-4 w-full`}>
                 <Table
                   dataSource={filteredAlunosEspera}
