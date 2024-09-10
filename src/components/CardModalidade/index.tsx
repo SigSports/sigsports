@@ -21,13 +21,11 @@ export default function CardModalidade({
   number,
   id,
   turmas,
-  vagas,
 }: {
   title: string;
   number: number;
   id: number;
   turmas: any[];
-  vagas: number;
 }) {
   const [modalVisible, setModalVisible] = useState(false);
   const handleOk = () => {
@@ -35,11 +33,12 @@ export default function CardModalidade({
   };
 
   const turma = turmas.find((turmaM) => turmaM.id === id);
+
   const customTitle = (
     <div
       className={`${quicksand.className} mr-auto text-3xl font-semibold leading-[37.57px] text-green-200`}
     >
-      {turma?.nomeTurma} - {turma?.genero}
+      {turma?.nomeTurma} - {turma.genero}
     </div>
   );
   return (
@@ -64,7 +63,7 @@ export default function CardModalidade({
             {number}
           </text>
           <text x="70" y="60" fill="white" fontSize="24" fontWeight="bold">
-            {title}
+            {`${title}`}
           </text>
         </svg>
       </span>
@@ -114,12 +113,12 @@ export default function CardModalidade({
         >
           Dias: {turma?.dias.replace(" ,", ", ")}
         </p>
-        {vagas > 0 ? (
+        {turma.vagaDisponivel ? (
           <>
             <p
               className={`${quicksand.className} mb-6 w-full text-base font-medium text-green-bg`}
             >
-              Vagas Disponíveis: {vagas}
+              Vagas Disponíveis: {turma.vagasRestantes}
             </p>
             <span
               className={`${raleway.className} w-full font-['Raleway'] text-2xl font-medium text-green-bg lg:h-[58px]`}

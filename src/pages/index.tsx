@@ -13,9 +13,8 @@ import {
   FaFacebookSquare,
 } from "react-icons/fa";
 import { GetServerSideProps } from "next";
-import axios from "axios";
 import { Quicksand, Bebas_Neue, Raleway, Montserrat } from "next/font/google";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { api } from "@/services/api";
 import CardModalidade from "../components/CardModalidade";
 
@@ -56,23 +55,13 @@ type Turma = {
   horarioFinal: string;
   turno: string;
   espaco: string;
-};
-
-type AlunoTurma = {
-  modalidade: string;
-  quantidadeAlunos: number;
+  vagas_restantes: number;
 };
 
 type AlunoType = {
   turma_id: number;
   nome_turma: string;
   vagas_restantes: number;
-};
-
-type modalidades = {
-  id: number;
-  modalidade: string;
-  vagas: number;
 };
 
 export default function Home({
@@ -84,152 +73,58 @@ export default function Home({
   alunosT: AlunoType[];
 }) {
   const [showMenu, setShowMenu] = useState(false);
-  const fetchTurmaAlunos = async (turmas: Turma[]): Promise<AlunoTurma[]> => {
-    try {
-      const promises = turmas.map(async (turma) => {
-        const response = await axios.get(`${api}v1/vagasDeTurmas/${turma.id}`);
-        const turmaData = response.data;
+  const [showButton, setShowButton] = useState(false);
+  const turmasAlunosOrdenadas = alunosT.sort(
+    (a, b) => a.vagas_restantes - b.vagas_restantes
+  );
 
-        const vagasRestantes = turma.vagas - turmaData.vagas_restantes;
+  // Separa os primeiros 6 e todos os turmas
+  const primeirosSeis = turmasAlunosOrdenadas.slice(0, 6);
+  const todos = turmasAlunosOrdenadas;
 
-        const alunoTurma: AlunoTurma = {
-          modalidade: turma.modalidade,
-          quantidadeAlunos: vagasRestantes,
-        };
+  // Função para buscar turmas equivalentes
+  function buscarTurmasEquivalentes(alunosT: AlunoType[], turmas: Turma[]) {
+    return alunosT
+      .map((turmaAluno) => {
+        // Encontra a turma correspondente
+        const turma = turmas.find((turma) => turma.id === turmaAluno.turma_id);
+        if (turma) {
+          // Calcula se há vagas disponíveis
+          return {
+            ...turma,
+            vagasRestantes: turmaAluno.vagas_restantes,
+            vagaDisponivel: turmaAluno.vagas_restantes > 0, // True se há vagas disponíveis
+          };
+        }
+        return null; // Se a turma não for encontrada
+      })
+      .filter((turma) => turma !== null) as Turma[]; // Remove possíveis nulls e garante que o tipo é Turma[]
+  }
 
-        return alunoTurma;
-      });
-
-      const alunos = await Promise.all(promises);
-
-      // Sort the array in descending order based on the number of students
-      const sortedAlunos = alunos.sort(
-        (a, b) => b.quantidadeAlunos - a.quantidadeAlunos
-      );
-
-      return sortedAlunos;
-    } catch (error) {
-      return [];
-    }
-  };
-
-  const fetchTotalAlunos = async (turmas: Turma[]): Promise<number> => {
-    try {
-      const promises = turmas.map(async (turma) => {
-        const response = await axios.get(`${api}v1/vagasDeTurmas/${turma.id}`);
-        const turmaData = response.data;
-
-        const quantidadeAlunos = turma.vagas - turmaData.vagas_restantes;
-
-        return quantidadeAlunos;
-      });
-
-      const alunos = await Promise.all(promises);
-
-      // Calcular o total de alunos
-      const totalAlunos = alunos.reduce(
-        (total, quantidade) => total + quantidade,
-        0
-      );
-
-      return totalAlunos;
-    } catch (error) {
-      return 0;
-    }
-  };
-  const fetchVagasRestantes = async () => {
-    try {
-      const response = await axios.get(`${api}aluno/vagasDeTurmas`);
-      const { data } = response;
-
-      // Calcular o total de vagas restantes
-      const totalVagasRestantes = data.reduce(
-        (total: any, turma: { vagas_restantes: any }) =>
-          total + turma.vagas_restantes,
-        0
-      );
-
-      return totalVagasRestantes;
-    } catch (error) {
-      return 0;
-    }
-  };
-  const [modalidades, setModalidades] = useState<modalidades[]>([]);
-  const [, setVagas] = useState<number[]>([]);
-  const [, setVagasTotais] = useState<number[]>([]);
-  const graficBar = () => {
-    const modalidadesArray: modalidades[] = [];
-    const vagasArray: number[] = [];
-    const vagasTotaisArray: number[] = [];
-
-    turmas.forEach((turma) => {
-      const turmaEncontrada = alunosT.find(
-        (aluno) => aluno.turma_id === turma.id
-      );
-      if (turmaEncontrada) {
-        modalidadesArray.push({
-          id: turma.id,
-          modalidade: `${turma.modalidade} - ${turma.genero} `,
-          vagas: turmaEncontrada.vagas_restantes,
-        });
-        vagasArray.push(turma.vagas - turmaEncontrada.vagas_restantes);
-        vagasTotaisArray.push(turma.vagas);
-      }
-    });
-
-    setModalidades(modalidadesArray);
-    setVagas(vagasArray);
-    setVagasTotais(vagasTotaisArray);
-  };
-
-  const [, setTotalAlunos] = useState<number>(0);
-  const [, setTotalVagasRestantes] = useState<number>(0);
-  const [allTurmas, setAllTurmas] = useState<boolean>(false);
-  const [, setAlunos] = useState<AlunoTurma[]>([]);
-
-  const onClose = () => {
-    setShowMenu(false);
-  };
-  useEffect(() => {
-    const fetchData = async () => {
-      const alunosData = await fetchTurmaAlunos(turmas);
-      setAlunos(alunosData);
-    };
-
-    const fetchData1 = async () => {
-      const alunosData = await fetchTotalAlunos(turmas);
-      setTotalAlunos(alunosData);
-    };
-    const fetchVagasRestantesData = async () => {
-      const totalVagasRestantesData = await fetchVagasRestantes();
-      setTotalVagasRestantes(totalVagasRestantesData);
-    };
-
-    fetchData();
-    fetchData1();
-    fetchVagasRestantesData();
-    graficBar();
-  }, []);
-  const data = modalidades.map((modalidade) => {
-    let generoAbreviado = modalidade.modalidade;
-
-    if (modalidade.modalidade.includes("Masculino")) {
-      generoAbreviado = generoAbreviado.replace("Masculino", "Masc");
-    } else if (modalidade.modalidade.includes("Feminino")) {
-      generoAbreviado = generoAbreviado.replace("Feminino", "Fem");
-    }
-
-    return {
-      id: modalidade.id,
-      modalidade: generoAbreviado,
-      vagas: modalidade.vagas,
-    };
-  });
-
-  const data1 = data.slice(0, 6);
+  // Busca as turmas equivalentes
+  const equivalentesPrimeirosSeis = buscarTurmasEquivalentes(
+    primeirosSeis,
+    turmas
+  );
+  const equivalentesTodos = buscarTurmasEquivalentes(todos, turmas);
   const toggleMenu = () => {
     setShowMenu(!showMenu);
   };
+  const toggleButton = () => {
+    setShowButton(!showButton);
+  };
+  const onClose = () => {
+    setShowMenu(false);
+  };
+  function mudarGenero(genero: string) {
+    if (genero === "Masculino") {
+      return "Masc";
+    }
+    if (genero === "Feminino") {
+      return "Fem";
+    }
+    return "Misto";
+  }
   return (
     <div className="flex w-screen flex-col bg-white-default">
       <div
@@ -527,7 +422,7 @@ export default function Home({
       </div>
       <div
         id="modalidades"
-        className="flex-col  bg-white-default bg-[url('/img-fundo.png')] bg-cover bg-no-repeat md:mt-20	lg:h-screen"
+        className="flex-col  bg-white-default bg-[url('/img-fundo.png')] bg-cover bg-no-repeat md:mt-20	lg:h-[80vh]"
       >
         <div
           className={`${bebas_neue.className} flex w-full justify-center pt-14 text-[53.551px] uppercase text-green-200`}
@@ -537,34 +432,32 @@ export default function Home({
         <div className="flex w-full justify-end pr-8">
           <button
             type="button"
-            onClick={() => setAllTurmas(!allTurmas)}
+            onClick={toggleButton}
             className={`${montserrat.className} h-14 w-36 bg-green-200 text-lg font-bold text-white-default`}
           >
-            {allTurmas ? "VER MENOS" : "VER MAIS"}
+            {showButton ? "VER MENOS" : "VER MAIS"}
           </button>
         </div>
-        <div className={`${allTurmas && "h-96 overflow-y-scroll"}`}>
+        <div className={`${showButton && "h-96 overflow-y-scroll"}`}>
           <div className="mx-auto mt-20 grid grid-cols-1 gap-8  md:grid-cols-2 lg:grid-cols-3">
-            {allTurmas &&
-              data.map((el, i) => (
+            {showButton &&
+              equivalentesTodos.map((el, i) => (
                 <CardModalidade
                   key={i}
-                  title={el.modalidade}
-                  number={i + 1}
                   id={el.id}
-                  vagas={el.vagas}
-                  turmas={turmas}
+                  title={`${el.nomeTurma} - ${mudarGenero(el.genero)}`}
+                  number={i + 1}
+                  turmas={equivalentesTodos}
                 />
               ))}
-            {!allTurmas &&
-              data1.map((el, i) => (
+            {!showButton &&
+              equivalentesPrimeirosSeis.map((el, i) => (
                 <CardModalidade
                   key={i}
-                  title={el.modalidade}
-                  number={i + 1}
                   id={el.id}
-                  vagas={el.vagas}
-                  turmas={turmas}
+                  title={`${el.modalidade} - ${mudarGenero(el.genero)}`}
+                  number={i + 1}
+                  turmas={equivalentesPrimeirosSeis}
                 />
               ))}
           </div>
