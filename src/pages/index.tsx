@@ -422,7 +422,7 @@ export default function Home({
       </div>
       <div
         id="modalidades"
-        className="flex-col  bg-white-default bg-[url('/img-fundo.png')] bg-cover bg-no-repeat md:mt-20	lg:h-[80vh]"
+        className="flex-col  bg-white-default bg-[url('/img-fundo.png')] bg-cover bg-no-repeat md:mt-20	lg:h-screen"
       >
         <div
           className={`${bebas_neue.className} flex w-full justify-center pt-14 text-[53.551px] uppercase text-green-200`}
