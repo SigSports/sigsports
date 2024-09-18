@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import { Drawer, Button, Form, Input } from "antd";
 import { useState } from "react";
 import { toast } from "react-toastify";
@@ -11,7 +12,7 @@ export default function FormUser({
 }: {
   quicksand: any;
   id: number;
-  capacidade: string;
+  capacidade: number;
 }) {
   const [open, setOpen] = useState(false);
   const router = useRouter();
@@ -27,10 +28,15 @@ export default function FormUser({
   const onFinish = async (values: any) => {
     setLoading(true);
     try {
-      const quantidadeAlunos = parseInt(capacidade.split("-")[1], 10);
-      const quantidadeVagas = parseInt(capacidade.split("-")[0], 10);
-      if (quantidadeAlunos === quantidadeVagas) {
-        toast.error("A turma já está totalmente cheia");
+      if (capacidade === 0) {
+        values.matriculado = 1;
+        await api.post(`v1/criarMatricula/${id}`, values);
+        toast.success("Matrícula criada com sucesso");
+        setTimeout(() => {
+          // Executar ação após 20 segundos
+          // Por exemplo, redirecionar para uma página específica
+          router.reload();
+        }, 3000); // 20 segundos
       } else {
         await api.post(`v1/criarMatricula/${id}`, values);
         toast.success("Matrícula criada com sucesso");
@@ -55,7 +61,9 @@ export default function FormUser({
         onClick={showDrawer}
         className={`  mt-4 flex items-center justify-center rounded-md bg-green-200 px-4 py-6 text-base font-bold leading-normal text-transparent  text-white-default`}
       >
-        Matricular Aluno(a)
+        {capacidade === 0
+          ? "Matricular Aluno(a) na espera"
+          : "Matricular Aluno(a)"}
       </Button>
 
       <Drawer title=" Matricular Aluno(a)" onClose={onClose} open={open}>
@@ -133,7 +141,7 @@ export default function FormUser({
               htmlType="submit"
               className="bg-green-200 hover:bg-green-100"
             >
-              Matricular Aluno
+              {capacidade === 0 ? "Matricular na espera" : "Matricular"}
             </Button>
           </Form.Item>
         </Form>

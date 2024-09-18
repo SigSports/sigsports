@@ -24,11 +24,6 @@ const montserrat = Montserrat({
   subsets: ["latin"],
 });
 
-type AlunosVagasType = {
-  turma_id: number;
-  vagas_restantes: number;
-};
-
 export type TurmaType = {
   id: number;
   nomeTurma: "string";
@@ -43,13 +38,7 @@ export type TurmaType = {
   turno: "string";
 };
 
-export default function ListarTurmas({
-  turmas,
-  vagas,
-}: {
-  turmas: TurmaType[];
-  vagas: AlunosVagasType[];
-}) {
+export default function ListarTurmas({ turmas }: { turmas: TurmaType[] }) {
   const menu = (
     <Menu>
       <Menu.Item
@@ -84,14 +73,6 @@ export default function ListarTurmas({
       handleSearch();
     }
   };
-
-  function getVagasRestantes(
-    turmasVagas: AlunosVagasType[],
-    id: number
-  ): number | undefined {
-    const turmaEncontrada = turmasVagas.find((turma) => turma.turma_id === id);
-    return turmaEncontrada?.vagas_restantes;
-  }
 
   return (
     <Layout>
@@ -183,9 +164,6 @@ export default function ListarTurmas({
               dias={turma.dias}
               horaInicial={turma.horarioInicial}
               horaFinal={turma.horarioFinal}
-              vagasRestantes={
-                turma.vagas - (getVagasRestantes(vagas, turma.id) ?? 0)
-              }
             />
           ))}
         </div>

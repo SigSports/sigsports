@@ -25,15 +25,16 @@ export default function FormUser({
   const [open, setOpen] = useState(false);
   const router = useRouter();
   const showDrawer = () => {
+    form.setFieldsValue(aluno[0]);
     setOpen(true);
   };
 
   const onClose = () => {
     setOpen(false);
+    form.resetFields();
   };
   const [loading, setLoading] = useState(false);
   const onFinish = async (values: Aluno) => {
-    console.log(values);
     const { id } = values;
     setLoading(true);
     try {
@@ -72,7 +73,6 @@ export default function FormUser({
           <Form
             layout="vertical"
             onFinish={onFinish}
-            initialValues={aluno[0]}
             form={form}
             name="control-hooks"
           >

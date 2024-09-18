@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable @typescript-eslint/no-use-before-define */
 /* eslint-disable object-shorthand */
@@ -8,7 +9,7 @@
 import { GetServerSideProps, NextPage } from "next";
 import Link from "next/link";
 import Image from "next/image";
-import { FilePdfTwoTone } from "@ant-design/icons";
+import { FilePdfTwoTone, UserAddOutlined } from "@ant-design/icons";
 import { Tabs, Table, Input, Form, notification, Checkbox, Modal } from "antd";
 import { useEffect, useState } from "react";
 import { DM_Sans, Quicksand } from "next/font/google";
@@ -20,6 +21,7 @@ import ModalAluno from "@/components/Forms/Aluno";
 import { pdfTurma } from "@/utils/pdfTurma";
 import { declaracao } from "@/utils/declaracaoAluno";
 import { api } from "@/services/api";
+import { matricularAlunoEspera } from "@/utils/matricularAluno/matricularAlunoEspera";
 
 const { TabPane } = Tabs;
 
@@ -49,12 +51,6 @@ export type TurmaType = {
   espaco: "string";
 };
 
-type AlunosVagasType = {
-  turma_id: number;
-
-  vagas_restantes: number;
-};
-
 export type AlunosType = {
   id: number;
   nomeAluno: string;
@@ -66,8 +62,24 @@ export type AlunosType = {
 const VisualizarTurma: NextPage<{
   turma: TurmaType;
   alunos: AlunosType[];
-  vagas: AlunosVagasType;
-}> = ({ turma, alunos, vagas }) => {
+}> = ({ turma, alunos }) => {
+  const [alunoF, setAlunoF] = useState<any>();
+  const [open, setOpen] = useState(false);
+  const onOpenModalAluno = (alunoE: any) => {
+    setOpen(true);
+    setAlunoF(alunoE);
+  };
+  const onClose = () => {
+    setOpen(false);
+  };
+
+  const onOk = async () => {
+    const mensage = await matricularAlunoEspera(alunoF);
+    mensage.status
+      ? notification.success({ message: mensage.mensage })
+      : notification.error({ message: mensage.mensage });
+    setOpen(false);
+  };
   const [searchTerm, setSearchTerm] = useState("");
   const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false);
   const [selectedUsers, setSelectedUsers] = useState<number[]>([]);
@@ -122,7 +134,7 @@ const VisualizarTurma: NextPage<{
     try {
       await api.delete(`v1/matriculas/${id}`);
       notification.success({
-        message: `Aluno deletado com sucesso ${id}`,
+        message: `Aluno deletado com sucesso`,
       });
       setFilteredAlunosMatriculados(
         filteredAlunosMatriculados.filter((aluno) => aluno.id !== id)
@@ -261,13 +273,13 @@ const VisualizarTurma: NextPage<{
           <FilePdfTwoTone
             className="h-[22px] w-5 text-[#616161] hover:cursor-pointer"
             onClick={() => {
-              const alunoF: any = filteredAlunosMatriculados.find(
+              const alunoE: any = filteredAlunosMatriculados.find(
                 (aluno) => aluno.id === record.id
               );
 
               declaracao(
-                alunoF.nomeAluno,
-                alunoF.matricula,
+                alunoE.nomeAluno,
+                alunoE.matricula,
                 turma.nomeTurma,
                 turma.turno
               );
@@ -349,6 +361,18 @@ const VisualizarTurma: NextPage<{
               setId(record.id);
             }}
           />
+          <UserAddOutlined
+            className="h-[22px] w-8 text-xl text-blue-600 hover:cursor-pointer"
+            onClick={async () => {
+              const alunoE: any = filteredAlunosEspera.filter(
+                (aluno) => aluno.id === record.id
+              );
+
+              turma.vagas - filteredAlunosMatriculados.length === 0
+                ? notification.error({ message: "Não há vagas disponíveis" })
+                : onOpenModalAluno(alunoE);
+            }}
+          />
         </div>
       ),
     },
@@ -379,14 +403,13 @@ const VisualizarTurma: NextPage<{
   const [form] = Form.useForm();
   const router = useRouter();
   const id: any = router.query?.id;
-  const vagasAlunos = turma.vagas - vagas.vagas_restantes;
   const handleTableChange = (pagination: any) => {
     setCurrentPage(pagination.current);
     setPageSize(pagination.pageSize);
   };
 
   useEffect(() => {
-    if (vagas?.vagas_restantes === 0) {
+    if (filteredAlunosMatriculados.length === turma.vagas) {
       notification.warning({
         message: "Turma completa",
         description: "A turma já atingiu sua capacidade máxima.",
@@ -469,11 +492,27 @@ const VisualizarTurma: NextPage<{
                   <span
                     className={`${quicksand.className} ml-2  font-medium text-green-bg`}
                   >
-                    {vagasAlunos > 1
-                      ? `${vagasAlunos} Alunos matriculados`
-                      : `${vagasAlunos} Aluno matriculado`}
+                    {filteredAlunosMatriculados.length <= turma.vagas &&
+                      `${filteredAlunosMatriculados.length} Alunos matriculados`}
                   </span>
                 </div>
+                {filteredAlunosEspera.length > 0 && (
+                  <div className="mt-4 flex w-full items-center">
+                    <Image
+                      src="/peoples.svg"
+                      alt="people"
+                      width={24}
+                      height={24}
+                    />
+                    <span
+                      className={`${quicksand.className} ml-2  font-medium text-green-bg`}
+                    >
+                      {filteredAlunosEspera.length > 1
+                        ? `${filteredAlunosEspera.length} Alunos em espera`
+                        : `${filteredAlunosEspera.length} Aluno em espera`}
+                    </span>
+                  </div>
+                )}
                 <div className="mt-[17px] flex w-full items-center">
                   <Image
                     src="/person-available.svg"
@@ -481,11 +520,12 @@ const VisualizarTurma: NextPage<{
                     width={24}
                     height={24}
                   />
-                  {vagas?.vagas_restantes ? (
+                  {turma.vagas - filteredAlunosMatriculados.length ? (
                     <span
                       className={`${quicksand.className} ml-2  font-medium text-green-bg`}
                     >
-                      {vagas?.vagas_restantes} Vagas disponíveis
+                      {turma.vagas - filteredAlunosMatriculados.length} Vagas
+                      disponíveis
                     </span>
                   ) : (
                     <span className="ml-2 font-Montserrat font-medium text-green-bg">
@@ -617,7 +657,7 @@ const VisualizarTurma: NextPage<{
                   <ModalAluno
                     quicksand={quicksand}
                     id={id}
-                    capacidade={`${turma.vagas} - ${alunos.length}`}
+                    capacidade={turma.vagas - filteredAlunosMatriculados.length}
                   />
                 )}
               </div>
@@ -683,11 +723,26 @@ const VisualizarTurma: NextPage<{
       >
         <div>
           {selectedUsers.length > 1 &&
-            `Tem certeza que deseja excluir esses usuários?`}
+            `Tem certeza que deseja excluir esses alunos(a)?`}
           {selectedUsers.length === 1 ||
             (selectedUsers.length === 0 &&
-              `Tem certeza que deseja excluir esse usuário?`)}
+              `Tem certeza que deseja excluir esse aluno(a)?`)}
         </div>
+      </Modal>
+      <Modal
+        title="Deletar Usuário"
+        open={open}
+        okButtonProps={{
+          loading: loading,
+          className: "bg-emerald-950 text-white-default",
+        }} // Estilo para o botão "OK"
+        cancelButtonProps={{ className: "bg-red-500 text-white-default" }}
+        okText="Confirmar" // Texto para o botão "OK"
+        cancelText="Cancelar" // Texto para o botão "Cancelar"
+        onOk={onOk}
+        onCancel={onClose}
+      >
+        <div>Tem certeza que deseja matricular esse aluno(a)?</div>
       </Modal>
     </>
   );

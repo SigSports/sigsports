@@ -1,3 +1,5 @@
+/* eslint-disable react/jsx-no-useless-fragment */
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
@@ -6,7 +8,7 @@
 /* eslint-disable react/jsx-no-bind */
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
 import { Quicksand } from "next/font/google";
@@ -20,6 +22,15 @@ const quicksand = Quicksand({
   subsets: ["latin"],
 });
 
+export type AlunosType = {
+  id: number;
+  nomeAluno: string;
+  matricula: string;
+  contato: string;
+  curso: string;
+  matriculado: number;
+};
+
 export default function Card({
   turma,
   sexo,
@@ -28,7 +39,6 @@ export default function Card({
   horaFinal,
   dias,
   id,
-  vagasRestantes,
 }: {
   turma: string;
   sexo: string;
@@ -37,10 +47,26 @@ export default function Card({
   horaFinal: string;
   dias: string;
   id: number;
-  vagasRestantes: number;
 }) {
   const [showModal, setShowModal] = useState(false);
   const router = useRouter();
+  const [alunosMatriculados, setAlunosMatriculados] = useState<AlunosType[]>();
+  const [alunosEspera, setAlunosEspera] = useState<AlunosType[]>();
+  const handleGetAlunos = async () => {
+    const response1 = await api.get(`v1/listarMatriculas/${id}`);
+    const filteredAlunosMatriculados = response1.data.filter(
+      (aluno: AlunosType) => aluno.matriculado === 0
+    );
+    const filteredAlunosEspera = response1.data.filter(
+      (aluno: AlunosType) => aluno.matriculado === 1
+    );
+    setAlunosMatriculados(filteredAlunosMatriculados);
+    setAlunosEspera(filteredAlunosEspera);
+  };
+
+  useEffect(() => {
+    handleGetAlunos();
+  }, []);
 
   function formatarDiasSemana(diasSemana: string) {
     const diasArray = diasSemana.split(",");
@@ -121,7 +147,7 @@ export default function Card({
           className={`${quicksand.className} flex h-[51px] w-full items-center justify-center bg-green-200 font-Montserrat text-[17.28px] font-bold text-white-default hover:cursor-pointer`}
           onClick={() => handleRedirect(id)}
         >
-          <b>{turma} </b>
+          <b>{turma}</b>
         </h1>
         <Dropdown
           overlay={menu}
@@ -134,15 +160,11 @@ export default function Card({
           </span>
         </Dropdown>
       </div>
-      <div className="ml-5 mt-4 flex flex-col justify-center gap-y-4 font-Montserrat text-sm font-medium ">
+      <div className="ml-5 mt-4 flex h-[calc(300px-51px-1rem)] flex-col justify-between gap-y-4 font-Montserrat text-sm font-medium">
+        {" "}
+        {/* Ajuste a altura aqui */}
         <div className="flex items-center">
-          <Image
-            src="/user.svg"
-            width={24}
-            height={24}
-            alt="user"
-            className=""
-          />
+          <Image src="/user.svg" width={24} height={24} alt="user" />
           <span className={`${quicksand.className}`}>Profª {prof}</span>
         </div>
         <div className="flex items-center">
@@ -150,11 +172,11 @@ export default function Card({
             src="/clock.svg"
             width={17}
             height={17}
-            alt="user"
+            alt="clock"
             className="ml-1 mr-1"
           />
           <span className={`${quicksand.className}`}>
-            {horaInicial} ás {horaFinal}
+            {horaInicial} às {horaFinal}
           </span>
         </div>
         <div className="flex items-center">
@@ -162,7 +184,7 @@ export default function Card({
             src="/calendar.svg"
             width={24}
             height={24}
-            alt="user"
+            alt="calendar"
             className="mr-1"
           />
           <span className={`${quicksand.className}`}>
@@ -174,35 +196,50 @@ export default function Card({
             src="/peoples.svg"
             width={24}
             height={24}
-            alt="user"
+            alt="peoples"
             className="mr-1"
           />
-          {vagasRestantes > 1 ? (
-            <span className={`${quicksand.className}`}>
-              {vagasRestantes} Alunos
-            </span>
-          ) : (
-            <span className={`${quicksand.className}`}>
-              {vagasRestantes} Aluno
-            </span>
-          )}
+          <span className={`${quicksand.className}`}>
+            {alunosMatriculados?.length} Aluno
+            {alunosMatriculados?.length && alunosMatriculados?.length > 1
+              ? "s matriculados"
+              : " matriculado"}
+          </span>
         </div>
-
-        <span
-          className={`${
-            quicksand.className
-          } mb-6 flex h-8 w-[90%] items-center justify-center rounded-md text-center text-base font-normal text-white-default ${
-            sexo === "Misto"
-              ? "bg-yellow text-orange"
-              : sexo === "Feminino"
-              ? "text-100 bg-pink-200"
-              : sexo === "Masculino"
-              ? "bg-blue-200 text-blue-100"
-              : ""
-          }`}
-        >
-          {sexo}
-        </span>
+        {(alunosEspera?.length ?? 0) > 0 && (
+          <div className="flex items-center">
+            <Image
+              src="/peoples.svg"
+              width={24}
+              height={24}
+              alt="peoples"
+              className="mr-1"
+            />
+            <span className={`${quicksand.className}`}>
+              {alunosEspera?.length && alunosEspera?.length} Aluno na espera{" "}
+              {alunosEspera?.length && alunosEspera?.length > 1
+                ? "s na espera"
+                : ""}
+            </span>
+          </div>
+        )}
+        <div className="flex h-full w-full items-end">
+          <span
+            className={`${
+              quicksand.className
+            } mb-6 flex h-8 w-[90%] items-center justify-center rounded-md text-center text-base font-normal text-white-default ${
+              sexo === "Misto"
+                ? "bg-yellow text-orange"
+                : sexo === "Feminino"
+                ? "text-100 bg-pink-200"
+                : sexo === "Masculino"
+                ? "bg-blue-200 text-blue-100"
+                : ""
+            }`}
+          >
+            {sexo}
+          </span>
+        </div>
       </div>
       <Modal
         title={
@@ -216,12 +253,11 @@ export default function Card({
           <div key="" className="flex w-full justify-center gap-x-4">
             <Button
               key="cancel"
-              className="h-12 w-[138.543px] rounded-md border border-green-200 font-Montserrat text-[14.87px] text-sm font-bold not-italic	text-black"
+              className="h-12 w-[138.543px] rounded-md border border-green-200 font-Montserrat text-[14.87px] text-sm font-bold not-italic text-black"
               onClick={() => setShowModal(false)}
             >
               CANCELAR
             </Button>
-            ,
             <Button
               key="delete"
               className="h-12 w-[138.543px] rounded-md bg-[#FF6636] font-Montserrat text-[14.87px] text-sm font-bold not-italic text-white-default"
@@ -229,7 +265,6 @@ export default function Card({
             >
               EXCLUIR
             </Button>
-            ,
           </div>,
         ]}
       >
