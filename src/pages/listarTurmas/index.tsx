@@ -38,7 +38,17 @@ export type TurmaType = {
   turno: "string";
 };
 
-export default function ListarTurmas({ turmas }: { turmas: TurmaType[] }) {
+export default function ListarTurmas({
+  turmas,
+  modalidades,
+  categorias,
+  professores,
+}: {
+  turmas: TurmaType[];
+  modalidades: any;
+  categorias: any;
+  professores: any;
+}) {
   const menu = (
     <Menu>
       <Menu.Item
@@ -152,18 +162,22 @@ export default function ListarTurmas({ turmas }: { turmas: TurmaType[] }) {
           </div>
         </div>
         <div
-          className={`${quicksand.className} mr-auto mt-14 grid gap-x-12 gap-y-10 rounded-lg md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3`}
+          className={`${quicksand.className} mr-auto mt-14 grid gap-x-12 gap-y-10 rounded-lg md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4`}
         >
           {filteredTurmas.map((turma) => (
             <Card
               key={turma.id}
               id={turma.id}
+              turmaCompleta={turma}
               turma={turma.nomeTurma}
               sexo={turma.genero}
               prof={turma.professor}
               dias={turma.dias}
               horaInicial={turma.horarioInicial}
               horaFinal={turma.horarioFinal}
+              categorias={categorias}
+              modalidades={modalidades}
+              professores={professores}
             />
           ))}
         </div>
@@ -184,13 +198,21 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   }
   const response = await api.get("v1/listarTurmas");
   const response2 = await api.get(`v1/vagasDeTurmas`);
-
+  const response3 = await api.get(`v1/listarModalidades`);
+  const response4 = await api.get(`v1/listarCaterogias/`);
+  const response5 = await api.get(`v1/listarProfessores/`);
   const turmas = await response.data;
   const vagas = await response2.data;
+  const modalidades = await response3.data;
+  const categorias = await response4.data;
+  const professores = await response5.data;
   return {
     props: {
       turmas,
       vagas,
+      modalidades,
+      categorias,
+      professores,
     },
   };
 };

@@ -8,6 +8,7 @@ import {
   Radio,
   Checkbox,
   Space,
+  Select,
   Spin,
 } from "antd";
 import { useEffect, useState } from "react";
@@ -25,29 +26,87 @@ export interface Turma {
   dias: string;
 }
 
+export type TurmaType = {
+  id: number;
+  nomeTurma: "string";
+  modalidade: number;
+  categoria: number;
+  vagas: number;
+  professor: string;
+  genero: "string";
+  dias: "string";
+  horarioInicial: "string";
+  horarioFinal: "string";
+  turno: "string";
+};
+
+export interface Modalidades {
+  id: number;
+  nomeModalidade: string;
+  descricao: string;
+}
+
+export interface Professores {
+  id: string;
+  nome: string;
+  matricula: string;
+  email: string;
+}
+
+export interface Categorias {
+  id: number;
+  categoria: string;
+  descricao: string;
+}
+
 export default function FormTurma({
   quicksand,
   text,
   id,
+  turmaCompleta,
+  modalidades,
+  categorias,
+  professores,
 }: {
   quicksand: any;
   text: string;
   id: number;
+  turmaCompleta: TurmaType;
+  modalidades: Modalidades[];
+  categorias: Categorias[];
+  professores: Professores[];
 }) {
   const [form] = Form.useForm();
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [loadingR, setLoadingR] = useState(true);
-
   async function getInfo() {
     setLoadingR(true);
+    const modalidade = modalidades.find(
+      (modalidadeV) =>
+        modalidadeV.nomeModalidade === String(turmaCompleta.modalidade)
+    );
+    const categoria = categorias.find(
+      (categoriaV) => categoriaV.categoria === String(turmaCompleta.categoria)
+    );
+    const professor = professores.find(
+      (professorV) => professorV.nome === turmaCompleta.professor
+    );
     try {
-      const resp = await api.get(`v1/gerenciarTurmaId/${id}/`);
-      const data: Turma = resp.data;
-      const values = { ...data, dias: data.dias.split(",") };
-      form.setFieldsValue(values);
+      form.setFieldsValue({
+        nomeTurma: turmaCompleta.nomeTurma,
+        modalidade: modalidade?.id,
+        categoria: categoria?.id,
+        professor: professor?.id,
+        genero: turmaCompleta.genero,
+        vagas: turmaCompleta.vagas,
+        turno: turmaCompleta.turno,
+        horarioInicial: turmaCompleta.horarioInicial,
+        horarioFinal: turmaCompleta.horarioFinal,
+        dias: turmaCompleta.dias,
+      });
     } catch (error) {
-      console.log(error);
+      //
     } finally {
       setLoadingR(false);
     }
@@ -92,21 +151,16 @@ export default function FormTurma({
     getInfo();
   }, []);
 
-  const onFinish = async (values: any) => {
+  const onFinish = async (values: TurmaType) => {
+    console.log("Valores do formulário:", values); // Adicione isso para debugar
     setLoading(true);
     try {
-      const diasString = values.dias.join(", ");
-      const values1 = { ...values, dias: diasString };
-
-      await api.post(`v1/CriarTurma/`, values1);
-      await api.post(`v1/CriarTurma/`, values1);
-      toast.success("Matrícula criada com sucesso");
+      await api.put(`v1/gerenciarTurmaId/${id}/`, values);
+      toast.success("Turma editada com sucesso");
       setTimeout(() => {
-        // Executar ação após 20 segundos
-        // Por exemplo, redirecionar para uma página específica
         if (router.asPath === "/listarTurmas") router.reload();
         setOpen(false);
-      }, 2000); // 20 segundos
+      }, 2000);
     } catch (e: any) {
       toast.error(e.response.data.erro);
     } finally {
@@ -159,18 +213,18 @@ export default function FormTurma({
                 { required: true, message: "Por favor, escolha a modalidade" },
               ]}
             >
-              {/* <Select
+              <Select
                 placeholder="Selecione"
-                className="bg-white h-10 w-80 rounded-[10px] border-2
-                border-green-200 bg-white-default align-bottom font-medium text-textGray hover:ring-green-100 focus:ring-2"
+                className="bg-white h-10 w-80 rounded-[10px] border-2 border-green-200 bg-white-default align-bottom font-medium text-textGray hover:ring-green-100 focus:ring-2"
               >
                 {modalidades?.map((modalidade) => (
                   <Select.Option value={modalidade.id} key={modalidade.id}>
                     {modalidade.nomeModalidade}
                   </Select.Option>
                 ))}
-              </Select> */}
+              </Select>
             </Form.Item>
+
             <Form.Item
               label="Categoria"
               className="h-full w-72 md:w-full"
@@ -179,18 +233,18 @@ export default function FormTurma({
                 { required: true, message: "Por favor, escolha a categoria" },
               ]}
             >
-              {/* <Select
+              <Select
                 placeholder="Selecione"
-                className="bg-white h-10 w-80 rounded-[10px] border-2
-                border-green-200 bg-white-default align-bottom font-medium text-textGray hover:ring-green-100 focus:ring-2"
+                className="bg-white h-10 w-80 rounded-[10px] border-2 border-green-200 bg-white-default align-bottom font-medium text-textGray hover:ring-green-100 focus:ring-2"
               >
                 {categorias?.map((categoria) => (
                   <Select.Option value={categoria.id} key={categoria.id}>
                     {categoria.categoria}
                   </Select.Option>
                 ))}
-              </Select> */}
+              </Select>
             </Form.Item>
+
             <Form.Item
               label="Professor"
               className="h-full w-72 md:w-full"
@@ -199,18 +253,18 @@ export default function FormTurma({
                 { required: true, message: "Por favor, escolha o professor" },
               ]}
             >
-              {/* <Select
+              <Select
                 placeholder="Selecione"
-                className="bg-white h-10 w-80 rounded-[10px] border-2
-                border-green-200 bg-white-default align-bottom font-medium text-textGray hover:ring-green-100 focus:ring-2"
+                className="bg-white h-10 w-80 rounded-[10px] border-2 border-green-200 bg-white-default align-bottom font-medium text-textGray hover:ring-green-100 focus:ring-2"
               >
                 {professores?.map((professor) => (
                   <Select.Option value={professor.id} key={professor.id}>
                     {professor.nome}
                   </Select.Option>
                 ))}
-              </Select> */}
+              </Select>
             </Form.Item>
+
             <Form.Item
               label="Informe o tipo da turma:"
               name="genero"
@@ -230,7 +284,6 @@ export default function FormTurma({
               className="font-Montserrat text-base font-medium italic"
               rules={[
                 { required: true, message: "Por favor, insira a matricula" },
-                { max: 3, message: "Digite quantidade correta" },
               ]}
             >
               <Input

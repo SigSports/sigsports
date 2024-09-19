@@ -63,6 +63,7 @@ const VisualizarTurma: NextPage<{
   turma: TurmaType;
   alunos: AlunosType[];
 }> = ({ turma, alunos }) => {
+  const router = useRouter();
   const [alunoF, setAlunoF] = useState<any>();
   const [open, setOpen] = useState(false);
   const onOpenModalAluno = (alunoE: any) => {
@@ -79,6 +80,7 @@ const VisualizarTurma: NextPage<{
       ? notification.success({ message: mensage.mensage })
       : notification.error({ message: mensage.mensage });
     setOpen(false);
+    router.reload();
   };
   const [searchTerm, setSearchTerm] = useState("");
   const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false);
@@ -401,7 +403,7 @@ const VisualizarTurma: NextPage<{
 
   const [currentPage, setCurrentPage] = useState(1);
   const [form] = Form.useForm();
-  const router = useRouter();
+
   const id: any = router.query?.id;
   const handleTableChange = (pagination: any) => {
     setCurrentPage(pagination.current);
@@ -599,7 +601,7 @@ const VisualizarTurma: NextPage<{
 
                 <span
                   className={`${quicksand.className}`}
-                  onClick={() => pdfTurma(turma, alunos)}
+                  onClick={() => pdfTurma(turma, filteredAlunosMatriculados)}
                 >
                   EXPORTAR
                 </span>
@@ -657,7 +659,10 @@ const VisualizarTurma: NextPage<{
                   <ModalAluno
                     quicksand={quicksand}
                     id={id}
+                    turma={turma}
                     capacidade={turma.vagas - filteredAlunosMatriculados.length}
+                    alunosMatriculados={filteredAlunosMatriculados}
+                    alunosEspera={filteredAlunosEspera}
                   />
                 )}
               </div>
@@ -705,7 +710,7 @@ const VisualizarTurma: NextPage<{
         </div>
       </Layout>
       <Modal
-        title="Deletar Usuário"
+        title="Deletar Aluno(a)"
         open={isModalDeleteOpen}
         okButtonProps={{
           loading: loading,
@@ -730,7 +735,7 @@ const VisualizarTurma: NextPage<{
         </div>
       </Modal>
       <Modal
-        title="Deletar Usuário"
+        title="Matricular Aluno(a)"
         open={open}
         okButtonProps={{
           loading: loading,

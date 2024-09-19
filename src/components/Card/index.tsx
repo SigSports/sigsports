@@ -7,7 +7,6 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable react/jsx-no-bind */
 import Image from "next/image";
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
@@ -15,6 +14,7 @@ import { Quicksand } from "next/font/google";
 import { Dropdown, Menu, Modal, Button } from "antd";
 import { MoreOutlined } from "@ant-design/icons";
 import { api } from "@/services/api";
+import EditarTurma from "@/components/Forms/editarTurma";
 
 const quicksand = Quicksand({
   weight: "400",
@@ -31,22 +31,49 @@ export type AlunosType = {
   matriculado: number;
 };
 
+export interface Modalidades {
+  id: number;
+  nomeModalidade: string;
+  descricao: string;
+}
+
+export interface Professores {
+  id: string;
+  nome: string;
+  matricula: string;
+  email: string;
+}
+
+export interface Categorias {
+  id: number;
+  categoria: string;
+  descricao: string;
+}
+
 export default function Card({
   turma,
   sexo,
   prof,
   horaInicial,
   horaFinal,
+  turmaCompleta,
   dias,
   id,
+  modalidades,
+  categorias,
+  professores,
 }: {
   turma: string;
+  turmaCompleta: any;
   sexo: string;
   prof: string;
   horaInicial: string;
   horaFinal: string;
   dias: string;
   id: number;
+  modalidades: Modalidades[];
+  categorias: Categorias[];
+  professores: Professores[];
 }) {
   const [showModal, setShowModal] = useState(false);
   const router = useRouter();
@@ -132,7 +159,15 @@ export default function Card({
   const menu = (
     <Menu className="flex w-24 flex-col items-center">
       <Menu.Item key="1">
-        <Link href={`editarTurma/${id}`}>Editar</Link>
+        <EditarTurma
+          id={id}
+          turmaCompleta={turmaCompleta}
+          text="Editar"
+          quicksand={quicksand}
+          categorias={categorias}
+          modalidades={modalidades}
+          professores={professores}
+        />
       </Menu.Item>
       <Menu.Item key="2" danger onClick={() => setShowModal(true)}>
         Excluir
@@ -216,10 +251,10 @@ export default function Card({
               className="mr-1"
             />
             <span className={`${quicksand.className}`}>
-              {alunosEspera?.length && alunosEspera?.length} Aluno na espera{" "}
+              {alunosEspera?.length && alunosEspera?.length} Aluno
               {alunosEspera?.length && alunosEspera?.length > 1
                 ? "s na espera"
-                : ""}
+                : " na espera"}
             </span>
           </div>
         )}

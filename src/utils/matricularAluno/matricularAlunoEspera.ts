@@ -11,7 +11,7 @@ export async function matricularAlunoEspera(aluno: any): Promise<ReturnValues> {
     // Verifica se não há vagas disponíveis
 
     // Marca aluno como matriculado
-    aluno[0].matriculado = 1;
+    aluno[0].matriculado = 0;
 
     // Faz a requisição para matricular o aluno
     const response = await api.put(`v1/matriculas/${aluno[0].id}`, aluno[0]);
