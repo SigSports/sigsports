@@ -51,6 +51,12 @@ type AlunoType = {
   genero: string;
 };
 
+type TurmaComAlunos = Turma & {
+  vagas_restantes: number;
+  alunosMatriculados: number;
+  vagaDisponivel: boolean;
+};
+
 const IndexPage = ({
   turmas,
   alunosT,
@@ -62,40 +68,54 @@ const IndexPage = ({
   const [selectedGenero, setSelectedGenero] = useState<string | undefined>(
     undefined
   );
+  const turmasComAlunos: TurmaComAlunos[] = alunosT
+    .map((aluno: AlunoType): TurmaComAlunos | null => {
+      const turma = turmas.find((turma: Turma) => turma.id === aluno.turma_id);
+      if (turma) {
+        return {
+          ...turma,
+          vagas_restantes: aluno.vagas_restantes,
+          alunosMatriculados: turma.vagas - aluno.vagas_restantes,
+          vagaDisponivel: aluno.vagas_restantes > 0,
+        };
+      }
+      return null;
+    })
+    .filter((turma): turma is TurmaComAlunos => turma !== null); // Removendo nulls
 
-  const turmasAlunosOrdenadas = alunosT.sort(
-    (a, b) => a.vagas_restantes - b.vagas_restantes
+  const turmasAlunosOrdenadas: TurmaComAlunos[] = turmasComAlunos.sort(
+    (a, b) => {
+      // Primeiro, ordena por alunos matriculados (do maior para o menor)
+      if (b.alunosMatriculados !== a.alunosMatriculados) {
+        return b.alunosMatriculados - a.alunosMatriculados;
+      }
+
+      // Em caso de empate, ordena por vagas totais (do maior para o menor)
+      return b.vagas - a.vagas;
+    }
   );
 
-  const todos = turmasAlunosOrdenadas;
-  const primeirosSeis = turmasAlunosOrdenadas.slice(0, 3);
+  // Função para buscar turmas equivalentes
+  const buscarTurmasEquivalentes = (
+    turmas: TurmaComAlunos[]
+  ): TurmaComAlunos[] =>
+    turmas.map((turma) => ({
+      ...turma,
+      vagaDisponivel: turma.vagas_restantes > 0,
+    }));
 
-  function buscarTurmasEquivalentes(alunos: AlunoType[], turmasT: Turma[]) {
-    return alunos
-      .map((turmaAluno) => {
-        const turma = turmasT.find((turma) => turma.id === turmaAluno.turma_id);
-        if (turma) {
-          return {
-            ...turma,
-            vagasRestantes: turmaAluno.vagas_restantes,
-            vagaDisponivel: turmaAluno.vagas_restantes > 0,
-          };
-        }
-        return null;
-      })
-      .filter((turma) => turma !== null) as Turma[];
-  }
-
-  const equivalentesPrimeirosTres = buscarTurmasEquivalentes(
-    primeirosSeis,
-    turmas
-  );
-
+  const equivalentesTodos: TurmaComAlunos[] =
+    buscarTurmasEquivalentes(turmasComAlunos);
+  const primeirosSeis: TurmaComAlunos[] = turmasAlunosOrdenadas.slice(0, 3);
+  const equivalentesPrimeirosTres: TurmaComAlunos[] =
+    buscarTurmasEquivalentes(primeirosSeis);
+  // Continue com o código para preparar os gráficos
   const customColors = ["#34DAFF", "#8BFFBA", "#058C42"];
+
   const data = equivalentesPrimeirosTres
     .map((turma: any) => ({
       type: turma.nomeTurma,
-      value: turma.vagaDisponivel ? turma.vagasRestantes : turma.vagas,
+      value: turma.alunosMatriculados,
     }))
     .sort((a, b) => b.value - a.value);
 
@@ -129,8 +149,6 @@ const IndexPage = ({
     },
   };
 
-  const equivalentesTodos = buscarTurmasEquivalentes(todos, turmas);
-
   const data1: any = [];
   equivalentesTodos.forEach((el: any) => {
     if (!selectedGenero || el.genero === selectedGenero) {
@@ -138,7 +156,7 @@ const IndexPage = ({
         {
           name: "Vagas Preenchidas",
           titulo: el.nomeTurma,
-          value: el.vagaDisponivel ? el.vagas - el.vagasRestantes : el.vagas,
+          value: el.alunosMatriculados,
         },
         {
           name: "Vagas Totais",
@@ -175,9 +193,10 @@ const IndexPage = ({
 
   useEffect(() => {
     const soma = equivalentesTodos.reduce(
-      (total, turma: any) => total + turma.vagasRestantes,
+      (total, turma) => total + turma.vagas_restantes,
       0
     );
+    console.log(soma);
     setSoma(soma);
   }, [equivalentesTodos]);
 
@@ -297,7 +316,7 @@ const IndexPage = ({
           </div>
         </div>
         <div className={`${quicksand.className} mt-9 w-[98%] shadow-xl`}>
-          <h1 className="flex h-20 w-full items-center justify-between rounded bg-gradient-to-br from-green-200 to-green-500 text-center text-2xl font-bold uppercase text-white-default">
+          <h1 className="flex h-20 w-full items-center justify-between rounded bg-gradient-to-br from-green-200 to-green-500 text-center text-base font-bold uppercase text-white-default md:text-2xl lg:text-2xl">
             <span className="flex-1 text-center">
               Quantidade de alunos por esporte
             </span>

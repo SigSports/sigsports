@@ -14,9 +14,11 @@ import {
 } from "react-icons/fa";
 import { GetServerSideProps } from "next";
 import { Quicksand, Bebas_Neue, Raleway, Montserrat } from "next/font/google";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import { api } from "@/services/api";
 import CardModalidade from "../components/CardModalidade";
+import Sugestao from "@/components/Forms/sugestao";
 
 const quicksand = Quicksand({
   weight: "400",
@@ -56,7 +58,14 @@ type Turma = {
   turno: string;
   espaco: string;
   vagas_restantes: number;
+  descricaoModalidade: string;
 };
+
+export interface Modalidades {
+  id: number;
+  nomeModalidade: string;
+  descricao: string;
+}
 
 type AlunoType = {
   turma_id: number;
@@ -67,13 +76,21 @@ type AlunoType = {
 export default function Home({
   turmas,
   alunosT,
+  modalidades,
 }: {
   // eslint-disable-next-line
   turmas: Turma[];
   alunosT: AlunoType[];
+  modalidades: Modalidades[];
 }) {
+  const router = useRouter();
+  const [path, setPath] = useState(router.asPath.replace("/#", ""));
   const [showMenu, setShowMenu] = useState(false);
   const [showButton, setShowButton] = useState(false);
+  useEffect(() => {
+    setPath(router.asPath.replace("/#", ""));
+  }, [router.asPath]);
+
   const turmasAlunosOrdenadas = alunosT.sort(
     (a, b) => a.vagas_restantes - b.vagas_restantes
   );
@@ -83,30 +100,46 @@ export default function Home({
   const todos = turmasAlunosOrdenadas;
 
   // Função para buscar turmas equivalentes
-  function buscarTurmasEquivalentes(alunosT: AlunoType[], turmas: Turma[]) {
+  function buscarTurmasEquivalentes(
+    alunosT: AlunoType[],
+    turmas: Turma[],
+    modalidades: Modalidades[]
+  ) {
     return alunosT
       .map((turmaAluno) => {
         // Encontra a turma correspondente
         const turma = turmas.find((turma) => turma.id === turmaAluno.turma_id);
         if (turma) {
-          // Calcula se há vagas disponíveis
+          // Encontra a modalidade correspondente
+          const modalidade = modalidades.find(
+            (mod) => mod.nomeModalidade === turma.modalidade
+          );
+
           return {
             ...turma,
             vagasRestantes: turmaAluno.vagas_restantes,
             vagaDisponivel: turmaAluno.vagas_restantes > 0, // True se há vagas disponíveis
+            descricaoModalidade: modalidade ? modalidade.descricao : "", // Inclui a descrição da modalidade
           };
         }
         return null; // Se a turma não for encontrada
       })
-      .filter((turma) => turma !== null) as Turma[]; // Remove possíveis nulls e garante que o tipo é Turma[]
+      .filter((turma) => turma !== null) as (Turma & {
+      descricaoModalidade: string;
+    })[]; // Remove possíveis nulls e garante que o tipo inclui a descrição da modalidade
   }
 
   // Busca as turmas equivalentes
   const equivalentesPrimeirosSeis = buscarTurmasEquivalentes(
     primeirosSeis,
-    turmas
+    turmas,
+    modalidades
   );
-  const equivalentesTodos = buscarTurmasEquivalentes(todos, turmas);
+  const equivalentesTodos = buscarTurmasEquivalentes(
+    todos,
+    turmas,
+    modalidades
+  );
   const toggleMenu = () => {
     setShowMenu(!showMenu);
   };
@@ -125,6 +158,7 @@ export default function Home({
     }
     return "Misto";
   }
+
   return (
     <div className="flex w-screen flex-col bg-white-default">
       <div
@@ -178,31 +212,11 @@ export default function Home({
                           </svg>
                         </span>
                       </Link>
-                      <a
-                        href=""
-                        className="flex items-center transition duration-300 hover:border-b-4 hover:border-green-500"
-                      >
-                        HORARIOS
-                        <span className="ml-1">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="16"
-                            height="16"
-                            viewBox="0 0 16 16"
-                            fill="none"
-                          >
-                            <path
-                              fillRule="evenodd"
-                              clipRule="evenodd"
-                              d="M7.99816 11.3125L13.5588 5.75184L12.4982 4.69118L7.99816 9.19118L3.49816 4.69118L2.4375 5.75184L7.99816 11.3125Z"
-                              fill="white"
-                            />
-                          </svg>
-                        </span>
-                      </a>
-                      <a
-                        href=""
-                        className="flex items-center transition duration-300 hover:border-b-4 hover:border-green-500"
+
+                      <Link
+                        href="/#equipe"
+                        prefetch={false}
+                        className="flex items-center  transition duration-300 hover:border-b-4 hover:border-green-500"
                       >
                         EQUIPES
                         <span className="ml-1">
@@ -221,7 +235,30 @@ export default function Home({
                             />
                           </svg>
                         </span>
-                      </a>
+                      </Link>
+                      <Link
+                        href="/#sugerir"
+                        prefetch={false}
+                        className="flex items-center  transition duration-300 hover:border-b-4 hover:border-green-500"
+                      >
+                        SUGERIR
+                        <span className="ml-1">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            viewBox="0 0 16 16"
+                            fill="none"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              clipRule="evenodd"
+                              d="M7.99816 11.3125L13.5588 5.75184L12.4982 4.69118L7.99816 9.19118L3.49816 4.69118L2.4375 5.75184L7.99816 11.3125Z"
+                              fill="white"
+                            />
+                          </svg>
+                        </span>
+                      </Link>
                       <Link
                         href="/login"
                         className="flex items-center transition duration-300 hover:border-b-4 hover:border-green-500"
@@ -300,28 +337,41 @@ export default function Home({
                       </a>
                     </div>
                     <li className="active">
-                      <a
-                        href="index.html"
-                        className="text-white block bg-green-500 px-2 py-4 text-sm font-semibold"
+                      <Link
+                        href="#modalidades"
+                        className={`${
+                          path === "modalidades"
+                            ? "bg-green-500"
+                            : "w-32 hover:border-b-4 hover:border-green-500"
+                        } text-white block  px-2 py-4 text-sm  font-semibold hover:text-white-default`}
                       >
                         MODALIDADES
-                      </a>
+                      </Link>
                     </li>
+
                     <li>
-                      <a
-                        href="#services"
-                        className="block px-2 py-4 text-sm transition duration-300 hover:bg-green-500"
-                      >
-                        HORARIOS
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        href="#about"
-                        className="block px-2 py-4 text-sm transition duration-300 hover:bg-green-500"
+                      <Link
+                        href="#equipes"
+                        className={`${
+                          path === "equipes"
+                            ? "bg-green-500"
+                            : "w-32 hover:border-b-4 hover:border-green-500"
+                        } text-white block  px-2 py-4 text-sm  font-semibold hover:text-white-default`}
                       >
                         EQUIPES
-                      </a>
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        href="#sugerir"
+                        className={`${
+                          path === "sugerir"
+                            ? "bg-green-500"
+                            : "w-32 hover:border-b-4 hover:border-green-500"
+                        } text-white block  px-2 py-4 text-sm  font-semibold hover:text-white-default`}
+                      >
+                        SUGERIR
+                      </Link>
                     </li>
                     <li>
                       <Link
@@ -380,7 +430,7 @@ export default function Home({
         </div>
       </div>
       <div
-        id="about"
+        id="equipe"
         className="flex flex-col bg-white-default bg-cover bg-no-repeat lg:bg-[url('/img-fundo1.png')]	xl:h-screen"
       >
         <div
@@ -448,6 +498,7 @@ export default function Home({
                   title={`${el.nomeTurma} - ${mudarGenero(el.genero)}`}
                   number={i + 1}
                   turmas={equivalentesTodos}
+                  description={el.descricaoModalidade}
                 />
               ))}
             {!showButton &&
@@ -458,12 +509,13 @@ export default function Home({
                   title={`${el.modalidade} - ${mudarGenero(el.genero)}`}
                   number={i + 1}
                   turmas={equivalentesPrimeirosSeis}
+                  description={el.descricaoModalidade}
                 />
               ))}
           </div>
         </div>
       </div>
-      <div className="w-full flex-col lg:h-screen">
+      <div className="w-full flex-col lg:h-screen" id="sugerir">
         <div className="flex h-[80vh] w-full items-center bg-bgGray lg:h-[50%]">
           <div className="flex flex-col px-8 lg:ml-24 lg:w-[1065px] lg:px-0">
             <span
@@ -473,12 +525,13 @@ export default function Home({
               até a Codesp para realizar sua matrícula! Algum esporte que
               gostaria não está na lista? Faça uma sugestão abaixo:
             </span>{" "}
-            <button
+            {/* <button
               type="button"
               className={`${montserrat.className} mt-7 h-14 w-36 bg-green-200 text-lg font-bold text-white-default`}
             >
               SUGERIR
-            </button>
+            </button> */}
+            <Sugestao quicksand={quicksand} montserrat={montserrat} />
           </div>
         </div>
         <div className="flex h-full w-full flex-col items-center bg-[#191919] pl-8 pt-20 md:h-[50%] md:flex-row md:pl-0">
@@ -537,12 +590,15 @@ export default function Home({
 export const getServerSideProps: GetServerSideProps = async () => {
   const response = await api.get(`v1/listarTurmas`);
   const resp1 = await api.get(`v1/vagasDeTurmas`);
+  const resp2 = await api.get(`v1/listarModalidades`);
   const turmas = await response.data;
   const alunosT = await resp1.data;
+  const modalidades = await resp2.data;
   return {
     props: {
       turmas,
       alunosT,
+      modalidades,
     },
   };
 };

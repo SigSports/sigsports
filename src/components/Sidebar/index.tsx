@@ -60,9 +60,12 @@ export default function Sidebar() {
         <div className="flex w-full">
           <Link
             href="/dashboard"
-            className={`${quicksand.className} t text-white block truncate whitespace-nowrap p-4 `}
+            className="text-white flex items-center space-x-2 px-2"
           >
-            Sig Sports
+            <img src="/mascote.svg" alt="" />
+            <span className="truncate whitespace-nowrap text-xl font-extrabold text-green-50">
+              SIG SPORTS
+            </span>
           </Link>
         </div>
         <div className="mr-2">
@@ -87,7 +90,7 @@ export default function Sidebar() {
           >
             <img src="/mascote.svg" alt="" />
             <span className="truncate whitespace-nowrap text-xl font-extrabold text-green-50">
-              SIG SPORTS.
+              SIG SPORTS
             </span>
           </Link>
 

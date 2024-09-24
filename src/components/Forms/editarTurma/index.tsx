@@ -152,7 +152,6 @@ export default function FormTurma({
   }, []);
 
   const onFinish = async (values: TurmaType) => {
-    console.log("Valores do formulário:", values); // Adicione isso para debugar
     setLoading(true);
     try {
       await api.put(`v1/gerenciarTurmaId/${id}/`, values);
@@ -173,7 +172,7 @@ export default function FormTurma({
       <button type="button" onClick={showDrawer}>
         {text}
       </button>
-      <Drawer title="Criar Turma" onClose={onClose} open={open}>
+      <Drawer title="Editar Turma" onClose={onClose} open={open}>
         <h2
           className={`${quicksand.className} px-4 text-sm font-semibold leading-9 text-green-bg dark:text-green-300 `}
         >
@@ -349,7 +348,7 @@ export default function FormTurma({
               <Checkbox.Group>
                 <Space direction="vertical">
                   <Checkbox value="segunda">Segunda-feira</Checkbox>
-                  <Checkbox value="terca">Terça-feira</Checkbox>
+                  <Checkbox value="terça">Terça-feira</Checkbox>
                   <Checkbox value="quarta">Quarta-feira</Checkbox>
                   <Checkbox value="quinta">Quinta-feira</Checkbox>
                   <Checkbox value="sexta">Sexta-feira</Checkbox>

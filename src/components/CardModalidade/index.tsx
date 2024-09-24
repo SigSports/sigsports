@@ -21,11 +21,13 @@ export default function CardModalidade({
   number,
   id,
   turmas,
+  description,
 }: {
   title: string;
   number: number;
   id: number;
   turmas: any[];
+  description: string;
 }) {
   const [modalVisible, setModalVisible] = useState(false);
   const handleOk = () => {
@@ -113,28 +115,16 @@ export default function CardModalidade({
         >
           Dias: {turma?.dias.replace(" ,", ", ")}
         </p>
-        {turma.vagaDisponivel ? (
-          <>
-            <p
-              className={`${quicksand.className} mb-6 w-full text-base font-medium text-green-bg`}
-            >
-              Vagas Disponíveis: {turma.vagasRestantes}
-            </p>
-            <span
-              className={`${raleway.className} w-full font-['Raleway'] text-2xl font-medium text-green-bg lg:h-[58px]`}
-            >
-              Dentre os esportes disponíveis, algum te chamou atenção? Dirija-se
-              até a Codesp para realizar sua matrícula!
-            </span>
-          </>
-        ) : (
-          <span
-            className={`${raleway.className} w-full font-['Raleway'] text-2xl font-medium text-green-bg lg:h-[58px]`}
-          >
-            Infelizmente, não há vagas disponíveis para essa modalidade. Por
-            favor, escolha outra modalidade ou visite novamente no futuro.
-          </span>
-        )}
+        <p
+          className={`${quicksand.className} mb-6 w-full text-base font-medium text-green-bg`}
+        >
+          Vagas Disponíveis: {turma.vagasRestantes}
+        </p>
+        <p
+          className={`${quicksand.className} mb-6 w-full text-base font-medium text-green-bg`}
+        >
+          Descrição: {description}
+        </p>
         {/* Adicione mais informações conforme necessário */}
       </Modal>
     </div>
