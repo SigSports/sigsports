@@ -85,7 +85,7 @@ export default function Sugestoes() {
     },
   ];
 
-  const { data } = useQuery("alunosMatriculados", async () => {
+  const { data } = useQuery("alunosMatriculadosSugestoes", async () => {
     const response = await api2.get("v1/esportes/");
     return response.data;
   });

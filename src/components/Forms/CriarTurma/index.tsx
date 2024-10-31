@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import {
   Drawer,
   Button,
@@ -88,6 +87,11 @@ export default function FormTurma({
     return formattedValue;
   };
 
+  useEffect(() => {
+    if (open) {
+      getInfo();
+    }
+  }, [open]);
   // Função para lidar com a mudança nos inputs de hora
   const handleHourChange =
     (fieldName: keyof FormValues) =>
@@ -99,10 +103,6 @@ export default function FormTurma({
         [fieldName]: formattedValue,
       });
     };
-
-  useEffect(() => {
-    getInfo();
-  }, []);
 
   const onFinish = async (values: any) => {
     setLoading(true);

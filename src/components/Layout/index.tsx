@@ -10,7 +10,7 @@ const quicksand = Quicksand({
 
 export default function index({ children }: { children: React.ReactNode }) {
   return (
-    <div className={`${quicksand.className} h-screen w-screen `}>
+    <div className={`${quicksand.className} h-screen `}>
       <div
         className="mdw-full relative min-h-screen bg-white-default md:flex"
         data-dev-hint="container"

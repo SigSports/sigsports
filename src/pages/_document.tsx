@@ -13,7 +13,7 @@ export default function Document() {
         />
       </Head>
 
-      <body className="h-screen w-screen bg-bgGray">
+      <body className="h-screen bg-bgGray">
         <Main />
         <NextScript />
       </body>
