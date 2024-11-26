@@ -7,10 +7,14 @@
 import Link from "next/link";
 import { Spin as Hamburger } from "hamburger-react";
 import Router, { useRouter } from "next/router";
-import { destroyCookie } from "nookies";
+import { destroyCookie, parseCookies, setCookie } from "nookies";
 import { Quicksand } from "next/font/google";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
+import { Tour, ConfigProvider } from "antd";
+import ptBR from "antd/lib/locale/pt_BR"; // Importa a tradução pt-BR
+import type { TourProps } from "antd";
 import CriarTurma from "../Forms/CriarTurma";
+import { AuthContext } from "@/contexts/AuthContext";
 
 const quicksand = Quicksand({
   weight: "600",
@@ -19,6 +23,44 @@ const quicksand = Quicksand({
 });
 
 export default function Sidebar() {
+  const { admin } = useContext(AuthContext);
+  console.log(admin)
+  const ref = useRef(null);
+  const ref1 = useRef(null);
+  const ref2 = useRef(null);
+  const cookies = parseCookies();
+  const tour = cookies.Tour;
+  const [openTour, setOpenTour] = useState<boolean>(false);
+  function setTour() {
+    setCookie(undefined, "Tour", "0");
+    setOpenTour(false);
+  }
+  useEffect(() => {
+    setTimeout(() => {
+      setOpenTour(tour === "1"); // Define o estado openTour para true após 4 segundos
+    }, 4000);
+  }, [openTour]);
+  const steps: TourProps["steps"] = [
+    {
+      title: "Criar Turma",
+      description: "Formulário de criação de uma turma no sistema",
+      target: () => ref.current,
+      arrow: true,
+    },
+    {
+      title: "Listar Turmas",
+      description: "Listagem de todas as turmas do sistema",
+      placement: "right",
+      target: () => ref1.current,
+    },
+    {
+      title: "Empréstimo",
+      description: "Formulário de empréstimo de materiais",
+      placement: "top",
+      target: () => ref2.current,
+    },
+  ];
+
   const router = useRouter();
   const [rota, setRota] = useState("");
   const [isOpen, setOpen] = useState(false);
@@ -110,7 +152,10 @@ export default function Sidebar() {
 
               <span className="">Inicio</span>
             </Link>
-            <div className=" flex w-full items-center transition duration-200 hover:bg-green-300">
+            <div
+              ref={ref}
+              className=" flex w-full items-center transition duration-200 hover:bg-green-300"
+            >
               <span className="ml-4">
                 <svg
                   width="16"
@@ -132,6 +177,7 @@ export default function Sidebar() {
               </div>
             </div>
             <Link
+              ref={ref1}
               href="/listarTurmas"
               className={`${
                 rota.includes("listarTurmas") ? ` bg-green-300 ` : ` `
@@ -170,6 +216,7 @@ export default function Sidebar() {
               <span className="">Listar Turmas</span>
             </Link>
             <Link
+              ref={ref2}
               href="/emprestimos"
               className="hover:text-white group flex items-center space-x-2 px-4 py-2 transition duration-200 hover:bg-green-300"
             >
@@ -183,7 +230,23 @@ export default function Sidebar() {
 
               <span className="pl-1">Empréstimos</span>
             </Link>
+            {admin && (
+              <Link
+                ref={ref2}
+                href="/usuarios"
+                className="hover:text-white group flex items-center space-x-2 px-4 py-2 transition duration-200 hover:bg-green-300"
+              >
+                <div className="text-white-default">
+                  <img
+                    src="/emprestimo.svg"
+                    alt=""
+                    className="fill-white-default"
+                  />
+                </div>
 
+                <span className="pl-1">Usuários</span>
+              </Link>
+            )}
             <button
               type="button"
               onClick={() => {
@@ -200,6 +263,14 @@ export default function Sidebar() {
           </nav>
         </div>
       </aside>
+      <ConfigProvider locale={ptBR}>
+        <Tour
+          open={openTour}
+          onClose={() => setTour()}
+          steps={steps}
+          type="primary"
+        />
+      </ConfigProvider>
     </>
   );
 }

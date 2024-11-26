@@ -196,7 +196,6 @@ const IndexPage = ({
       (total, turma) => total + turma.vagas_restantes,
       0
     );
-    console.log(soma);
     setSoma(soma);
   }, [equivalentesTodos]);
 
