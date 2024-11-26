@@ -14,7 +14,6 @@ import { useState } from "react";
 import { useQuery } from "react-query";
 import { toast } from "react-toastify";
 import { GetServerSideProps } from "next";
-// import { destroyCookie, parseCookies } from "nookies";
 import {
   Button,
   Checkbox,
@@ -30,6 +29,7 @@ import {
 } from "antd";
 // import ModalUserDelete from "@/components/ModalUserDelete";
 import router from "next/router";
+import FormEdit from "@/components/Forms/editarUsuario";
 import Layout from "@/components/Layout";
 import api from "@/pages/api";
 
@@ -84,6 +84,7 @@ export default function Index() {
       //   router.push("/login");
     }
   });
+  const [id, setId] = useState(0);
   const [form] = Form.useForm(); // Extrai a referência do form
   const [selectedUsers, setSelectedUsers] = useState<number[]>([]);
   const [admin, setAdmin] = useState(false);
@@ -248,7 +249,7 @@ export default function Index() {
           <button
             type="button"
             onClick={() => deleteUsers()}
-            className={`ml-4 flex h-[28.62px] w-[98px] items-center justify-center rounded-[32px] bg-red-800 text-base font-normal text-white-default ${dm.className}`}
+            className={`ml-4 flex h-[28.62px] w-[98px] items-center justify-center rounded-[32px] bg-emerald-950   text-base font-normal text-white-default ${dm.className}`}
           >
             DELETAR
           </button>
@@ -301,16 +302,21 @@ export default function Index() {
       key: "actions",
       render: (text: any, record: any) => (
         <div className="flex gap-x-4">
-          <TbPencil
-            className="h-[22px] w-5 text-[#616161] hover:cursor-pointer"
-            onClick={() => editUser(record.id)}
+          <FormEdit
+            quicksand={quicksand}
+            usuario={currentUsers.find(
+              (aluno: UserType) => aluno.id === record.id
+            )}
           />
           <SlTrash
             className="h-[22px] w-5 text-[#616161] hover:cursor-pointer"
-            onClick={() => deleteUser(record.id)}
+            onClick={() => {
+              setIsModalDeleteOpen(true);
+              setId(record.id);
+            }}
           />
         </div>
-      ),
+      ), 
     },
   ];
 

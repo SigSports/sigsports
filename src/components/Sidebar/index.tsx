@@ -1,3 +1,4 @@
+/* eslint-disable no-empty */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable @next/next/no-img-element */
@@ -15,6 +16,7 @@ import ptBR from "antd/lib/locale/pt_BR"; // Importa a tradução pt-BR
 import type { TourProps } from "antd";
 import CriarTurma from "../Forms/CriarTurma";
 import { AuthContext } from "@/contexts/AuthContext";
+import { api2 } from "@/services/api";
 
 const quicksand = Quicksand({
   weight: "600",
@@ -23,22 +25,28 @@ const quicksand = Quicksand({
 });
 
 export default function Sidebar() {
-  const { admin } = useContext(AuthContext);
-  console.log(admin)
+  const { admin, id } = useContext(AuthContext);
   const ref = useRef(null);
   const ref1 = useRef(null);
   const ref2 = useRef(null);
+  const ref3 = useRef(null);
   const cookies = parseCookies();
   const tour = cookies.Tour;
   const [openTour, setOpenTour] = useState<boolean>(false);
-  function setTour() {
-    setCookie(undefined, "Tour", "0");
-    setOpenTour(false);
+  async function setTour() {
+    try {
+      await api2.put(`v1/usuarios/update/${id}/`, {
+        tour: 0,
+      });
+
+      if (tour === "1") setCookie(undefined, "Tour", "0");
+      setOpenTour(false);
+    } catch (error) {}
   }
   useEffect(() => {
     setTimeout(() => {
       setOpenTour(tour === "1"); // Define o estado openTour para true após 4 segundos
-    }, 4000);
+    }, 2000);
   }, [openTour]);
   const steps: TourProps["steps"] = [
     {
@@ -218,7 +226,9 @@ export default function Sidebar() {
             <Link
               ref={ref2}
               href="/emprestimos"
-              className="hover:text-white group flex items-center space-x-2 px-4 py-2 transition duration-200 hover:bg-green-300"
+              className={`${
+                rota.includes("emprestimos") ? ` bg-green-300 ` : ` `
+              } hover:text-white group flex items-center space-x-2 px-4 py-2 transition duration-200 hover:bg-green-300`}
             >
               <div className="text-white-default">
                 <img
@@ -232,19 +242,38 @@ export default function Sidebar() {
             </Link>
             {admin && (
               <Link
-                ref={ref2}
+                ref={ref3}
                 href="/usuarios"
-                className="hover:text-white group flex items-center space-x-2 px-4 py-2 transition duration-200 hover:bg-green-300"
+                className={`${
+                  rota.includes("usuarios") ? ` bg-green-300 ` : ` `
+                } hover:text-white group flex items-center py-2 pl-3 transition duration-200 hover:bg-green-300`}
               >
-                <div className="text-white-default">
-                  <img
-                    src="/emprestimo.svg"
-                    alt=""
-                    className="fill-white-default"
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M7.125 12C8.98896 12 10.5 10.489 10.5 8.625C10.5 6.76104 8.98896 5.25 7.125 5.25C5.26104 5.25 3.75 6.76104 3.75 8.625C3.75 10.489 5.26104 12 7.125 12Z"
+                    fill="white"
                   />
-                </div>
+                  <path
+                    d="M10.9688 13.875C9.64875 13.2047 8.19187 12.9375 7.125 12.9375C5.03531 12.9375 0.75 14.2191 0.75 16.7812V18.75H7.78125V17.9967C7.78125 17.1061 8.15625 16.2131 8.8125 15.4688C9.33609 14.8744 10.0692 14.3227 10.9688 13.875Z"
+                    fill="white"
+                  />
+                  <path
+                    d="M15.9375 13.5C13.4967 13.5 8.625 15.0075 8.625 18V20.25H23.25V18C23.25 15.0075 18.3783 13.5 15.9375 13.5Z"
+                    fill="white"
+                  />
+                  <path
+                    d="M15.9375 12C18.2157 12 20.0625 10.1532 20.0625 7.875C20.0625 5.59683 18.2157 3.75 15.9375 3.75C13.6593 3.75 11.8125 5.59683 11.8125 7.875C11.8125 10.1532 13.6593 12 15.9375 12Z"
+                    fill="white"
+                  />
+                </svg>
 
-                <span className="pl-1">Usuários</span>
+                <span className="pl-2">Usuários</span>
               </Link>
             )}
             <button
