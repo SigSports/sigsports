@@ -17,6 +17,28 @@ api_form.getAllUsers = async () => {
   }
 };
 
+api_form.updateUser = async (id: number, data: any) => {
+  try {
+    const response = await api_form.put(`usuarios/gerenciar/${id}/`, data);
+    return response;
+  } catch (error: any) {
+    if (error?.response?.status === 401) {
+      throw error;
+    }
+  }
+};
+
+api_form.deleteUser = async (id: number) => {
+  try {
+    const response = await api_form.delete(`usuarios/gerenciar/${id}/`);
+    return response;
+  } catch (error: any) {
+    if (error?.response?.status === 401) {
+      throw error;
+    }
+  }
+};
+
 api_form.createUser = async (data: any) => {
   try {
     const response = await api_form.post("usuarios/", data);

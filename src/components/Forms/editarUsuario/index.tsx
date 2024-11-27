@@ -6,7 +6,8 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import { TbPencil } from "react-icons/tb";
 import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
-import { api } from "@/services/api";
+import { parseCookies, setCookie } from "nookies";
+import api from "@/pages/api";
 
 type Aluno = {
   id: number;
@@ -24,36 +25,40 @@ export default function FormUser({
   quicksand: any;
   usuario: Aluno;
 }) {
-  const [admin, setAdmin] = useState(usuario.administrador === 1);
+  const [admin, setAdmin] = useState(usuario?.administrador === 1);
   const [form] = Form.useForm();
   const [open, setOpen] = useState(false);
   const router = useRouter();
   const showDrawer = () => {
     form.setFieldsValue({
-      nome: usuario.nome,
-      sobrenome: usuario.sobrenome,
-      matricula: usuario.matricula,
+      nome: usuario?.nome,
+      sobrenome: usuario?.sobrenome,
+      matricula: usuario?.matricula,
     });
-    console.log(usuario);
-    console.log(form.getFieldsValue());
     setOpen(true);
   };
 
   const onClose = () => {
     setOpen(false);
-    console.log(form.getFieldsValue());
     form.resetFields();
   };
   const [loading, setLoading] = useState(false);
+  const cookies = parseCookies();
   const onFinish = async (values: Aluno) => {
-    const { id } = values;
     setLoading(true);
+    const { adminC } = cookies;
     try {
-      await api.put(`v1/matriculas/${id}`, values);
-      toast.success("Aluno editado com sucesso");
+      const user = { ...values, adm: admin ? 1 : 0, tour: 0 };
+      await api.updateUser(usuario.id, user);
+      toast.success("Usuário editado com sucesso");
       setOpen(false);
       setTimeout(() => {
-        router.reload();
+        if (adminC !== `${values.administrador}`) {
+          setCookie(undefined, "admin", `0`);
+          router.push("/dashboard");
+        } else {
+          router.reload();
+        }
       }, 3000); // 20 segundos
     } catch (e) {
       console.log(e);
@@ -123,7 +128,7 @@ export default function FormUser({
               className="text-white h-10 w-full rounded-lg border-2 border-green-200 pl-4 font-Montserrat text-base font-medium italic placeholder:text-textGray focus:outline-none focus:ring-2 focus:ring-green-100"
             />
           </Form.Item>
-          <Form.Item className="" name="admin">
+          <Form.Item className="" name="adm">
             <Space direction="horizontal" className="mb-4 flex">
               <Switch
                 checkedChildren={<CheckOutlined />}
@@ -144,7 +149,7 @@ export default function FormUser({
               htmlType="submit"
               className="bg-green-200 hover:bg-green-100"
             >
-              CADASTRAR
+              ATUALIZAR
             </Button>
           </Form.Item>
         </Form>

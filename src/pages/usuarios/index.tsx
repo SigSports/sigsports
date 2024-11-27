@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable consistent-return */
 /* eslint-disable @typescript-eslint/no-shadow */
@@ -27,11 +29,12 @@ import {
   Space,
   Drawer,
 } from "antd";
-// import ModalUserDelete from "@/components/ModalUserDelete";
 import router from "next/router";
+import ModalUserDelete from "@/components/ModalUserDelete";
 import FormEdit from "@/components/Forms/editarUsuario";
 import Layout from "@/components/Layout";
 import api from "@/pages/api";
+import { apiSuap, api2 } from "@/services/api";
 
 const raleway = Raleway({
   weight: "400",
@@ -107,10 +110,8 @@ export default function Index() {
   };
   const usersPerPage = 6;
 
-  function handleAdmin(admin: boolean) {
-    setAdmin(!admin);
-  }
-  const toggleUserSelection = (userId: number) => {
+  const toggleUserSelection = (id: number) => {
+    const userId = id;
     const isSelected = selectedUsers.includes(userId);
     if (isSelected) {
       setSelectedUsers(selectedUsers.filter((id) => id !== userId));
@@ -126,33 +127,6 @@ export default function Index() {
       setSelectedUsers(allUserIds);
     } else {
       setSelectedUsers([]);
-    }
-  };
-
-  const deleteUser = async (id: number) => {
-    setIsModalDeleteOpen(true);
-    setUserId(id);
-  };
-
-  const editUser = async (id: number) => {
-    try {
-      const response = await api.getUser(id);
-      const user = response.data;
-      setIsEditMode(true);
-      setUserId(id);
-      form.setFieldsValue({
-        nome: user.name.split(" ")[0],
-        sobrenome: user.name.split(" ").slice(1).join(" "),
-        email: user.email,
-        tipo: user.tipo?.definicaoTipo,
-        area: user.area?.definicaoArea,
-      });
-      setIsModalEditOpen(true);
-    } catch (error: any) {
-      toast.error("Tempo expirado");
-      //   destroyCookie(null, "psi-token");
-      //   destroyCookie(null, "psi-refreshToken");
-      //   router.push("/login");
     }
   };
 
@@ -218,7 +192,7 @@ export default function Index() {
       user.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.sobrenome.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.matricula.includes(searchTerm) ||
-      user.administrador.includes(searchTerm)
+      user.administrador.toString().includes(searchTerm.toString()) // Garantindo que searchTerm também seja string
   );
 
   // Calcula o índice do último usuário na página atual
@@ -312,11 +286,11 @@ export default function Index() {
             className="h-[22px] w-5 text-[#616161] hover:cursor-pointer"
             onClick={() => {
               setIsModalDeleteOpen(true);
-              setId(record.id);
+              setId(record?.id);
             }}
           />
         </div>
-      ), 
+      ),
     },
   ];
 
@@ -546,19 +520,24 @@ export default function Index() {
           </Form.Item>
         </Form>
       </Modal>
-      {/* <ModalUserDelete
+      <ModalUserDelete
         isModalDeleteOpen={isModalDeleteOpen}
         setIsModalDeleteOpen={setIsModalDeleteOpen}
-        userId={userId}
+        userId={id}
         selectedUsers={selectedUsers}
         refetch={refetch}
-      /> */}
+      />
     </Layout>
   );
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   const token = req.cookies["sig-token"];
+  const refreshToken = req.cookies["sig-refreshToken"];
+
+  // Variável para armazenar matrícula
+
+  // Verificando se o token está presente
   if (!token) {
     return {
       redirect: {
@@ -567,12 +546,75 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
       },
     };
   }
-  const tipos = "response.data";
-  const areas = "response1.data";
+
+  // Tentando acessar a API com o token
+  let response = await apiSuap.get("minhas-informacoes/meus-dados/", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  // Se a resposta for diferente de 200, tentamos o refresh token
+  if (response.status !== 200) {
+    if (!refreshToken) {
+      return {
+        redirect: {
+          destination: "/login",
+          permanent: false,
+        },
+      };
+    }
+
+    // Tentamos obter um novo token com o refresh token
+    response = await apiSuap.get("autenticacao/token/refresh/", {
+      headers: {
+        Authorization: `Bearer ${refreshToken}`,
+      },
+    });
+
+    // Se o refresh token também não for válido, redirecionamos para login
+    if (response.status !== 200) {
+      return {
+        redirect: {
+          destination: "/login",
+          permanent: false,
+        },
+      };
+    }
+
+    // Usamos o novo token para acessar os dados do usuário
+    const newToken = response.data.access;
+    response = await apiSuap.get("minhas-informacoes/meus-dados/", {
+      headers: {
+        Authorization: `Bearer ${newToken}`,
+      },
+    });
+  }
+
+  // Acessamos a matrícula dos dados do usuário
+  const { matricula } = response.data;
+  // Buscando informações sobre o usuário
+  const response1 = await api2.get(`v1/usuarios/`);
+  const users = response1.data;
+
+  // Encontrando o usuário correspondente
+  const user = users.find((user: any) => user.matricula === matricula);
+  const admin = `${user?.adm}`;
+  // Se o usuário não for admin ou não estiver autenticado, redirecionamos para login
+  if (!token || admin === "0") {
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    };
+  }
+
+  // Agora, retornamos os dados para as props da página
   return {
     props: {
-      tipos,
-      areas,
+      tipos: response.data, // Dados do usuário
+      areas: response1.data, // Usuários da segunda API
     },
   };
 };

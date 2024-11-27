@@ -8,7 +8,6 @@ import { apiSuap, api2 } from "@/services/api";
 
 type AuthContextType = {
   isAuthenticated: boolean;
-  admin: boolean;
   id: number;
   signIn: (credentials: SignInCredentials) => Promise<any>;
 };
@@ -31,7 +30,6 @@ export const AuthContext = createContext({} as AuthContextType);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [token, setToken] = useState<string | null>(null);
   const isAuthenticated = !!token;
-  const [admin, setAdmin] = useState<boolean>(false);
   const [id, setId] = useState(0);
 
   async function signIn({ username, password }: SignInCredentials) {
@@ -50,7 +48,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         (pessoa) => pessoa.matricula === username
       );
       if (pessoaEncontrada) {
-        setAdmin(pessoaEncontrada.adm === 1);
+        setCookie(undefined, "admin", `${pessoaEncontrada.adm}`);
         setCookie(undefined, "Tour", pessoaEncontrada.tour);
         setId(pessoaEncontrada.id);
       }
@@ -67,7 +65,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, signIn, admin, id }}>
+    <AuthContext.Provider value={{ isAuthenticated, signIn, id }}>
       {children}
     </AuthContext.Provider>
   );

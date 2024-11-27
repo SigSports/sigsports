@@ -11,12 +11,11 @@ import { Spin as Hamburger } from "hamburger-react";
 import Router, { useRouter } from "next/router";
 import { destroyCookie, parseCookies, setCookie } from "nookies";
 import { Quicksand } from "next/font/google";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Tour, ConfigProvider } from "antd";
 import ptBR from "antd/lib/locale/pt_BR"; // Importa a tradução pt-BR
 import type { TourProps } from "antd";
 import CriarTurma from "../Forms/CriarTurma";
-import { AuthContext } from "@/contexts/AuthContext";
 import { api2 } from "@/services/api";
 
 const quicksand = Quicksand({
@@ -26,13 +25,15 @@ const quicksand = Quicksand({
 });
 
 export default function Sidebar() {
-  const { admin, id } = useContext(AuthContext);
   const ref = useRef(null);
   const ref1 = useRef(null);
   const ref2 = useRef(null);
   const ref3 = useRef(null);
+  const ref4 = useRef(null);
   const cookies = parseCookies();
   const tour = cookies.Tour;
+  const { id } = cookies;
+  const admin = cookies.admin === "1";
   const [openTour, setOpenTour] = useState<boolean>(false);
   async function setTour() {
     try {
@@ -63,10 +64,22 @@ export default function Sidebar() {
       target: () => ref1.current,
     },
     {
-      title: "Empréstimo",
-      description: "Formulário de empréstimo de materiais",
+      title: "Sugestões",
+      description: "Sugestões de esportes escolhidos pelos alunos",
       placement: "top",
       target: () => ref2.current,
+    },
+    {
+      title: "Empréstimo",
+      description: "Formulário de empréstimo de materiais",
+      placement: "right",
+      target: () => ref3.current,
+    },
+    {
+      title: "Usuários",
+      description: "Listagem de todos os usuários do sistema",
+      placement: "top",
+      target: () => ref4.current,
     },
   ];
 
@@ -226,6 +239,7 @@ export default function Sidebar() {
             </Link>
             <Link
               href="/sugestoes"
+              ref={ref2}
               className={`${
                 rota.includes("sugestoes") ? ` bg-green-300 ` : ` `
               } hover:text-white group flex items-center space-x-2 px-3 py-2 transition duration-200 hover:bg-green-300`}
@@ -235,6 +249,7 @@ export default function Sidebar() {
               <span className="">Sugestões</span>
             </Link>
             <Link
+              ref={ref3}
               href="/emprestimos"
               className={`${
                 rota.includes("emprestimos") ? ` bg-green-300 ` : ` `
@@ -252,7 +267,7 @@ export default function Sidebar() {
             </Link>
             {admin && (
               <Link
-                ref={ref3}
+                ref={ref4}
                 href="/usuarios"
                 className={`${
                   rota.includes("usuarios") ? ` bg-green-300 ` : ` `
