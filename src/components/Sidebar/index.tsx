@@ -6,6 +6,7 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
 import Link from "next/link";
+import { FaRegLightbulb } from "react-icons/fa";
 import { Spin as Hamburger } from "hamburger-react";
 import Router, { useRouter } from "next/router";
 import { destroyCookie, parseCookies, setCookie } from "nookies";
@@ -224,7 +225,16 @@ export default function Sidebar() {
               <span className="">Listar Turmas</span>
             </Link>
             <Link
-              ref={ref2}
+              href="/sugestoes"
+              className={`${
+                rota.includes("sugestoes") ? ` bg-green-300 ` : ` `
+              } hover:text-white group flex items-center space-x-2 px-3 py-2 transition duration-200 hover:bg-green-300`}
+            >
+              <FaRegLightbulb size={20} />
+
+              <span className="">Sugestões</span>
+            </Link>
+            <Link
               href="/emprestimos"
               className={`${
                 rota.includes("emprestimos") ? ` bg-green-300 ` : ` `
