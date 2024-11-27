@@ -85,10 +85,13 @@ export default function Sugestoes() {
     },
   ];
 
-  const { data } = useQuery("alunosMatriculadosSugestoes", async () => {
-    const response = await api2.get("v1/esportes/");
-    return response.data;
-  });
+  const { data, isLoading } = useQuery(
+    "alunosMatriculadosSugestoes2",
+    async () => {
+      const response = await api2.get("v1/esportes/");
+      return response.data;
+    }
+  );
   return (
     <Layout>
       <div className="flex h-full  flex-col items-center justify-center pl-4 md:w-4/5 md:pl-16 ">
@@ -126,6 +129,11 @@ export default function Sugestoes() {
             Sugestões
           </h1>
         </div>
+        <div className="mt-4 flex w-full">
+          <h2 className="max-w-lg text-2xl font-semibold leading-9 text-green-bg dark:text-green-300 ">
+            Gerenciamento de sugestões cadastrados no sistema
+          </h2>
+        </div>
         <div className={`${quicksand.className} mt-4 w-full`}>
           <Table
             dataSource={data}
@@ -137,6 +145,7 @@ export default function Sugestoes() {
               showSizeChanger: true,
               pageSizeOptions: ["3", "5", "10", "20", "50"],
             }}
+            loading={isLoading}
             className="even:bg-d9d9d9 odd:bg-aeaeae mt-2 w-full table-auto divide-y divide-gray-200"
             scroll={{ x: true }}
             onChange={handleTableChange}
