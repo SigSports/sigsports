@@ -13,11 +13,12 @@ import {
   FaFacebookSquare,
 } from "react-icons/fa";
 import { GetServerSideProps } from "next";
-import axios from "axios";
 import { Quicksand, Bebas_Neue, Raleway, Montserrat } from "next/font/google";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import { api } from "@/services/api";
 import CardModalidade from "../components/CardModalidade";
+import Sugestao from "@/components/Forms/sugestao";
 
 const quicksand = Quicksand({
   weight: "400",
@@ -56,12 +57,15 @@ type Turma = {
   horarioFinal: string;
   turno: string;
   espaco: string;
+  vagas_restantes: number;
+  descricaoModalidade: string;
 };
 
-type AlunoTurma = {
-  modalidade: string;
-  quantidadeAlunos: number;
-};
+export interface Modalidades {
+  id: number;
+  nomeModalidade: string;
+  descricao: string;
+}
 
 type AlunoType = {
   turma_id: number;
@@ -69,169 +73,94 @@ type AlunoType = {
   vagas_restantes: number;
 };
 
-type modalidades = {
-  id: number;
-  modalidade: string;
-  vagas: number;
-};
-
 export default function Home({
   turmas,
   alunosT,
+  modalidades,
 }: {
   // eslint-disable-next-line
   turmas: Turma[];
   alunosT: AlunoType[];
+  modalidades: Modalidades[];
 }) {
+  const router = useRouter();
+  const [path, setPath] = useState(router.asPath.replace("/#", ""));
   const [showMenu, setShowMenu] = useState(false);
-  const fetchTurmaAlunos = async (turmas: Turma[]): Promise<AlunoTurma[]> => {
-    try {
-      const promises = turmas.map(async (turma) => {
-        const response = await axios.get(`${api}v1/vagasDeTurmas/${turma.id}`);
-        const turmaData = response.data;
-
-        const vagasRestantes = turma.vagas - turmaData.vagas_restantes;
-
-        const alunoTurma: AlunoTurma = {
-          modalidade: turma.modalidade,
-          quantidadeAlunos: vagasRestantes,
-        };
-
-        return alunoTurma;
-      });
-
-      const alunos = await Promise.all(promises);
-
-      // Sort the array in descending order based on the number of students
-      const sortedAlunos = alunos.sort(
-        (a, b) => b.quantidadeAlunos - a.quantidadeAlunos
-      );
-
-      return sortedAlunos;
-    } catch (error) {
-      return [];
-    }
-  };
-
-  const fetchTotalAlunos = async (turmas: Turma[]): Promise<number> => {
-    try {
-      const promises = turmas.map(async (turma) => {
-        const response = await axios.get(`${api}v1/vagasDeTurmas/${turma.id}`);
-        const turmaData = response.data;
-
-        const quantidadeAlunos = turma.vagas - turmaData.vagas_restantes;
-
-        return quantidadeAlunos;
-      });
-
-      const alunos = await Promise.all(promises);
-
-      // Calcular o total de alunos
-      const totalAlunos = alunos.reduce(
-        (total, quantidade) => total + quantidade,
-        0
-      );
-
-      return totalAlunos;
-    } catch (error) {
-      return 0;
-    }
-  };
-  const fetchVagasRestantes = async () => {
-    try {
-      const response = await axios.get(`${api}aluno/vagasDeTurmas`);
-      const { data } = response;
-
-      // Calcular o total de vagas restantes
-      const totalVagasRestantes = data.reduce(
-        (total: any, turma: { vagas_restantes: any }) =>
-          total + turma.vagas_restantes,
-        0
-      );
-
-      return totalVagasRestantes;
-    } catch (error) {
-      return 0;
-    }
-  };
-  const [modalidades, setModalidades] = useState<modalidades[]>([]);
-  const [, setVagas] = useState<number[]>([]);
-  const [, setVagasTotais] = useState<number[]>([]);
-  const graficBar = () => {
-    const modalidadesArray: modalidades[] = [];
-    const vagasArray: number[] = [];
-    const vagasTotaisArray: number[] = [];
-
-    turmas.forEach((turma) => {
-      const turmaEncontrada = alunosT.find(
-        (aluno) => aluno.turma_id === turma.id
-      );
-      if (turmaEncontrada) {
-        modalidadesArray.push({
-          id: turma.id,
-          modalidade: `${turma.modalidade} - ${turma.genero} `,
-          vagas: turmaEncontrada.vagas_restantes,
-        });
-        vagasArray.push(turma.vagas - turmaEncontrada.vagas_restantes);
-        vagasTotaisArray.push(turma.vagas);
-      }
-    });
-
-    setModalidades(modalidadesArray);
-    setVagas(vagasArray);
-    setVagasTotais(vagasTotaisArray);
-  };
-
-  const [, setTotalAlunos] = useState<number>(0);
-  const [, setTotalVagasRestantes] = useState<number>(0);
-  const [allTurmas, setAllTurmas] = useState<boolean>(false);
-  const [, setAlunos] = useState<AlunoTurma[]>([]);
-
-  const onClose = () => {
-    setShowMenu(false);
-  };
+  const [showButton, setShowButton] = useState(false);
   useEffect(() => {
-    const fetchData = async () => {
-      const alunosData = await fetchTurmaAlunos(turmas);
-      setAlunos(alunosData);
-    };
+    setPath(router.asPath.replace("/#", ""));
+  }, [router.asPath]);
 
-    const fetchData1 = async () => {
-      const alunosData = await fetchTotalAlunos(turmas);
-      setTotalAlunos(alunosData);
-    };
-    const fetchVagasRestantesData = async () => {
-      const totalVagasRestantesData = await fetchVagasRestantes();
-      setTotalVagasRestantes(totalVagasRestantesData);
-    };
+  const turmasAlunosOrdenadas = alunosT.sort(
+    (a, b) => a.vagas_restantes - b.vagas_restantes
+  );
 
-    fetchData();
-    fetchData1();
-    fetchVagasRestantesData();
-    graficBar();
-  }, []);
-  const data = modalidades.map((modalidade) => {
-    let generoAbreviado = modalidade.modalidade;
+  // Separa os primeiros 6 e todos os turmas
+  const primeirosSeis = turmasAlunosOrdenadas.slice(0, 6);
+  const todos = turmasAlunosOrdenadas;
 
-    if (modalidade.modalidade.includes("Masculino")) {
-      generoAbreviado = generoAbreviado.replace("Masculino", "Masc");
-    } else if (modalidade.modalidade.includes("Feminino")) {
-      generoAbreviado = generoAbreviado.replace("Feminino", "Fem");
-    }
+  // Função para buscar turmas equivalentes
+  function buscarTurmasEquivalentes(
+    alunosT: AlunoType[],
+    turmas: Turma[],
+    modalidades: Modalidades[]
+  ) {
+    return alunosT
+      .map((turmaAluno) => {
+        // Encontra a turma correspondente
+        const turma = turmas.find((turma) => turma.id === turmaAluno.turma_id);
+        if (turma) {
+          // Encontra a modalidade correspondente
+          const modalidade = modalidades.find(
+            (mod) => mod.nomeModalidade === turma.modalidade
+          );
 
-    return {
-      id: modalidade.id,
-      modalidade: generoAbreviado,
-      vagas: modalidade.vagas,
-    };
-  });
+          return {
+            ...turma,
+            vagasRestantes: turmaAluno.vagas_restantes,
+            vagaDisponivel: turmaAluno.vagas_restantes > 0, // True se há vagas disponíveis
+            descricaoModalidade: modalidade ? modalidade.descricao : "", // Inclui a descrição da modalidade
+          };
+        }
+        return null; // Se a turma não for encontrada
+      })
+      .filter((turma) => turma !== null) as (Turma & {
+      descricaoModalidade: string;
+    })[]; // Remove possíveis nulls e garante que o tipo inclui a descrição da modalidade
+  }
 
-  const data1 = data.slice(0, 6);
+  // Busca as turmas equivalentes
+  const equivalentesPrimeirosSeis = buscarTurmasEquivalentes(
+    primeirosSeis,
+    turmas,
+    modalidades
+  );
+  const equivalentesTodos = buscarTurmasEquivalentes(
+    todos,
+    turmas,
+    modalidades
+  );
   const toggleMenu = () => {
     setShowMenu(!showMenu);
   };
+  const toggleButton = () => {
+    setShowButton(!showButton);
+  };
+  const onClose = () => {
+    setShowMenu(false);
+  };
+  function mudarGenero(genero: string) {
+    if (genero === "Masculino") {
+      return "Masc";
+    }
+    if (genero === "Feminino") {
+      return "Fem";
+    }
+    return "Misto";
+  }
+
   return (
-    <div className="flex w-screen flex-col bg-white-default">
+    <div className="flex flex-col bg-white-default">
       <div
         className={`${quicksand.className} flex w-full bg-bgGray pb-10 md:pb-10  lg:h-screen lg:pb-0 `}
       >
@@ -283,31 +212,11 @@ export default function Home({
                           </svg>
                         </span>
                       </Link>
-                      <a
-                        href=""
-                        className="flex items-center transition duration-300 hover:border-b-4 hover:border-green-500"
-                      >
-                        HORARIOS
-                        <span className="ml-1">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="16"
-                            height="16"
-                            viewBox="0 0 16 16"
-                            fill="none"
-                          >
-                            <path
-                              fillRule="evenodd"
-                              clipRule="evenodd"
-                              d="M7.99816 11.3125L13.5588 5.75184L12.4982 4.69118L7.99816 9.19118L3.49816 4.69118L2.4375 5.75184L7.99816 11.3125Z"
-                              fill="white"
-                            />
-                          </svg>
-                        </span>
-                      </a>
-                      <a
-                        href=""
-                        className="flex items-center transition duration-300 hover:border-b-4 hover:border-green-500"
+
+                      <Link
+                        href="/#equipe"
+                        prefetch={false}
+                        className="flex items-center  transition duration-300 hover:border-b-4 hover:border-green-500"
                       >
                         EQUIPES
                         <span className="ml-1">
@@ -326,7 +235,30 @@ export default function Home({
                             />
                           </svg>
                         </span>
-                      </a>
+                      </Link>
+                      <Link
+                        href="/#sugerir"
+                        prefetch={false}
+                        className="flex items-center  transition duration-300 hover:border-b-4 hover:border-green-500"
+                      >
+                        SUGERIR
+                        <span className="ml-1">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            viewBox="0 0 16 16"
+                            fill="none"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              clipRule="evenodd"
+                              d="M7.99816 11.3125L13.5588 5.75184L12.4982 4.69118L7.99816 9.19118L3.49816 4.69118L2.4375 5.75184L7.99816 11.3125Z"
+                              fill="white"
+                            />
+                          </svg>
+                        </span>
+                      </Link>
                       <Link
                         href="/login"
                         className="flex items-center transition duration-300 hover:border-b-4 hover:border-green-500"
@@ -405,28 +337,41 @@ export default function Home({
                       </a>
                     </div>
                     <li className="active">
-                      <a
-                        href="index.html"
-                        className="text-white block bg-green-500 px-2 py-4 text-sm font-semibold"
+                      <Link
+                        href="#modalidades"
+                        className={`${
+                          path === "modalidades"
+                            ? "bg-green-500"
+                            : "w-32 hover:border-b-4 hover:border-green-500"
+                        } text-white block  px-2 py-4 text-sm  font-semibold hover:text-white-default`}
                       >
                         MODALIDADES
-                      </a>
+                      </Link>
                     </li>
+
                     <li>
-                      <a
-                        href="#services"
-                        className="block px-2 py-4 text-sm transition duration-300 hover:bg-green-500"
-                      >
-                        HORARIOS
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        href="#about"
-                        className="block px-2 py-4 text-sm transition duration-300 hover:bg-green-500"
+                      <Link
+                        href="#equipes"
+                        className={`${
+                          path === "equipes"
+                            ? "bg-green-500"
+                            : "w-32 hover:border-b-4 hover:border-green-500"
+                        } text-white block  px-2 py-4 text-sm  font-semibold hover:text-white-default`}
                       >
                         EQUIPES
-                      </a>
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        href="#sugerir"
+                        className={`${
+                          path === "sugerir"
+                            ? "bg-green-500"
+                            : "w-32 hover:border-b-4 hover:border-green-500"
+                        } text-white block  px-2 py-4 text-sm  font-semibold hover:text-white-default`}
+                      >
+                        SUGERIR
+                      </Link>
                     </li>
                     <li>
                       <Link
@@ -485,7 +430,7 @@ export default function Home({
         </div>
       </div>
       <div
-        id="about"
+        id="equipe"
         className="flex flex-col bg-white-default bg-cover bg-no-repeat lg:bg-[url('/img-fundo1.png')]	xl:h-screen"
       >
         <div
@@ -537,40 +482,40 @@ export default function Home({
         <div className="flex w-full justify-end pr-8">
           <button
             type="button"
-            onClick={() => setAllTurmas(!allTurmas)}
+            onClick={toggleButton}
             className={`${montserrat.className} h-14 w-36 bg-green-200 text-lg font-bold text-white-default`}
           >
-            {allTurmas ? "VER MENOS" : "VER MAIS"}
+            {showButton ? "VER MENOS" : "VER MAIS"}
           </button>
         </div>
-        <div className={`${allTurmas && "h-96 overflow-y-scroll"}`}>
+        <div className={`${showButton && "h-96 overflow-y-scroll"}`}>
           <div className="mx-auto mt-20 grid grid-cols-1 gap-8  md:grid-cols-2 lg:grid-cols-3">
-            {allTurmas &&
-              data.map((el, i) => (
+            {showButton &&
+              equivalentesTodos.map((el, i) => (
                 <CardModalidade
                   key={i}
-                  title={el.modalidade}
-                  number={i + 1}
                   id={el.id}
-                  vagas={el.vagas}
-                  turmas={turmas}
+                  title={`${el.nomeTurma} - ${mudarGenero(el.genero)}`}
+                  number={i + 1}
+                  turmas={equivalentesTodos}
+                  description={el.descricaoModalidade}
                 />
               ))}
-            {!allTurmas &&
-              data1.map((el, i) => (
+            {!showButton &&
+              equivalentesPrimeirosSeis.map((el, i) => (
                 <CardModalidade
                   key={i}
-                  title={el.modalidade}
-                  number={i + 1}
                   id={el.id}
-                  vagas={el.vagas}
-                  turmas={turmas}
+                  title={`${el.modalidade} - ${mudarGenero(el.genero)}`}
+                  number={i + 1}
+                  turmas={equivalentesPrimeirosSeis}
+                  description={el.descricaoModalidade}
                 />
               ))}
           </div>
         </div>
       </div>
-      <div className="w-full flex-col lg:h-screen">
+      <div className="w-full flex-col lg:h-screen" id="sugerir">
         <div className="flex h-[80vh] w-full items-center bg-bgGray lg:h-[50%]">
           <div className="flex flex-col px-8 lg:ml-24 lg:w-[1065px] lg:px-0">
             <span
@@ -580,12 +525,13 @@ export default function Home({
               até a Codesp para realizar sua matrícula! Algum esporte que
               gostaria não está na lista? Faça uma sugestão abaixo:
             </span>{" "}
-            <button
+            {/* <button
               type="button"
               className={`${montserrat.className} mt-7 h-14 w-36 bg-green-200 text-lg font-bold text-white-default`}
             >
               SUGERIR
-            </button>
+            </button> */}
+            <Sugestao quicksand={quicksand} montserrat={montserrat} />
           </div>
         </div>
         <div className="flex h-full w-full flex-col items-center bg-[#191919] pl-8 pt-20 md:h-[50%] md:flex-row md:pl-0">
@@ -644,12 +590,15 @@ export default function Home({
 export const getServerSideProps: GetServerSideProps = async () => {
   const response = await api.get(`v1/listarTurmas`);
   const resp1 = await api.get(`v1/vagasDeTurmas`);
+  const resp2 = await api.get(`v1/listarModalidades`);
   const turmas = await response.data;
   const alunosT = await resp1.data;
+  const modalidades = await resp2.data;
   return {
     props: {
       turmas,
       alunosT,
+      modalidades,
     },
   };
 };

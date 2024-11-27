@@ -1,23 +1,51 @@
-import { Drawer, Button, Form, Input } from "antd";
+/* eslint-disable no-param-reassign */
+import { Drawer, Button, Form, Input, notification } from "antd";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import { api } from "@/services/api";
 
+export type AlunosType = {
+  id: number;
+  nomeAluno: string;
+  matricula: string;
+  contato: string;
+  curso: string;
+  matriculado: number;
+};
+
+export type TurmaType = {
+  id: number;
+  nomeTurma: "string";
+  modalidade: number;
+  categoria: number;
+  vagas: number;
+  professor: "string";
+  genero: "string";
+  dias: "string";
+  horarioInicial: "string";
+  horarioFinal: "string";
+  turno: "string";
+  espaco: "string";
+};
+
 export default function FormUser({
   quicksand,
   id,
   capacidade,
+  alunosEspera,
+  alunosMatriculados,
+  turma,
 }: {
   quicksand: any;
   id: number;
-  capacidade: string;
+  turma: TurmaType;
+  capacidade: number;
+  alunosMatriculados: AlunosType[];
+  alunosEspera: AlunosType[];
 }) {
   const [open, setOpen] = useState(false);
   const router = useRouter();
-  const showDrawer = () => {
-    setOpen(true);
-  };
 
   const onClose = () => {
     setOpen(false);
@@ -27,10 +55,15 @@ export default function FormUser({
   const onFinish = async (values: any) => {
     setLoading(true);
     try {
-      const quantidadeAlunos = parseInt(capacidade.split("-")[1], 10);
-      const quantidadeVagas = parseInt(capacidade.split("-")[0], 10);
-      if (quantidadeAlunos === quantidadeVagas) {
-        toast.error("A turma já está totalmente cheia");
+      if (capacidade === 0) {
+        values.matriculado = 1;
+        await api.post(`v1/criarMatricula/${id}`, values);
+        toast.success("Matrícula criada com sucesso");
+        setTimeout(() => {
+          // Executar ação após 20 segundos
+          // Por exemplo, redirecionar para uma página específica
+          router.reload();
+        }, 3000); // 20 segundos
       } else {
         await api.post(`v1/criarMatricula/${id}`, values);
         toast.success("Matrícula criada com sucesso");
@@ -46,16 +79,26 @@ export default function FormUser({
       setLoading(false);
     }
   };
-
+  const notificationAluno = () => {
+    if (alunosMatriculados.length < turma.vagas && alunosEspera.length > 0) {
+      notification.error({
+        message: `Existe ${alunosEspera.length} alunos na lista de espera`,
+      });
+    } else {
+      setOpen(true);
+    }
+  };
   const [form] = Form.useForm();
   return (
     <>
       <Button
         type="default"
-        onClick={showDrawer}
+        onClick={notificationAluno}
         className={`  mt-4 flex items-center justify-center rounded-md bg-green-200 px-4 py-6 text-base font-bold leading-normal text-transparent  text-white-default`}
       >
-        Matricular Aluno(a)
+        {capacidade === 0
+          ? "Matricular Aluno(a) na espera"
+          : "Matricular Aluno(a)"}
       </Button>
 
       <Drawer title=" Matricular Aluno(a)" onClose={onClose} open={open}>
@@ -133,7 +176,7 @@ export default function FormUser({
               htmlType="submit"
               className="bg-green-200 hover:bg-green-100"
             >
-              Matricular Aluno
+              {capacidade === 0 ? "Matricular na espera" : "Matricular"}
             </Button>
           </Form.Item>
         </Form>

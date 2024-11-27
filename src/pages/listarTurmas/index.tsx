@@ -6,6 +6,7 @@ import { useState } from "react";
 import { Montserrat, Quicksand } from "next/font/google";
 import Link from "next/link";
 import { Dropdown, Menu } from "antd";
+import CriarTurma from "@/components/Forms/CriarTurma";
 import Layout from "@/components/Layout";
 import Card from "@/components/Card";
 import { api } from "@/services/api";
@@ -23,11 +24,6 @@ const montserrat = Montserrat({
   subsets: ["latin"],
 });
 
-type AlunosVagasType = {
-  turma_id: number;
-  vagas_restantes: number;
-};
-
 export type TurmaType = {
   id: number;
   nomeTurma: "string";
@@ -44,10 +40,14 @@ export type TurmaType = {
 
 export default function ListarTurmas({
   turmas,
-  vagas,
+  modalidades,
+  categorias,
+  professores,
 }: {
   turmas: TurmaType[];
-  vagas: AlunosVagasType[];
+  modalidades: any;
+  categorias: any;
+  professores: any;
 }) {
   const menu = (
     <Menu>
@@ -55,13 +55,13 @@ export default function ListarTurmas({
         key="1"
         className="border-b border-[#e8e8e8] hover:scale-105 hover:border-b "
       >
-        <Link href="/criarTurma" className="w-full">
-          <span
+        <div className="w-full">
+          <div
             className={` ${montserrat.className} w-full text-base font-medium `}
           >
-            Criar Turma Manualmente
-          </span>
-        </Link>
+            <CriarTurma quicksand={quicksand} text="Criar Turma Manualmente" />
+          </div>
+        </div>
       </Menu.Item>
 
       <Menu.Item key="2" className=" hover:scale-105">
@@ -83,14 +83,6 @@ export default function ListarTurmas({
       handleSearch();
     }
   };
-
-  function getVagasRestantes(
-    turmasVagas: AlunosVagasType[],
-    id: number
-  ): number | undefined {
-    const turmaEncontrada = turmasVagas.find((turma) => turma.turma_id === id);
-    return turmaEncontrada?.vagas_restantes;
-  }
 
   return (
     <Layout>
@@ -170,21 +162,22 @@ export default function ListarTurmas({
           </div>
         </div>
         <div
-          className={`${quicksand.className} mr-auto mt-14 grid gap-x-12 gap-y-10 rounded-lg md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3`}
+          className={`${quicksand.className} mr-auto mt-14 grid gap-x-12 gap-y-10 rounded-lg md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4`}
         >
           {filteredTurmas.map((turma) => (
             <Card
               key={turma.id}
               id={turma.id}
+              turmaCompleta={turma}
               turma={turma.nomeTurma}
               sexo={turma.genero}
               prof={turma.professor}
               dias={turma.dias}
               horaInicial={turma.horarioInicial}
               horaFinal={turma.horarioFinal}
-              vagasRestantes={
-                turma.vagas - (getVagasRestantes(vagas, turma.id) ?? 0)
-              }
+              categorias={categorias}
+              modalidades={modalidades}
+              professores={professores}
             />
           ))}
         </div>
@@ -205,13 +198,21 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   }
   const response = await api.get("v1/listarTurmas");
   const response2 = await api.get(`v1/vagasDeTurmas`);
-
+  const response3 = await api.get(`v1/listarModalidades`);
+  const response4 = await api.get(`v1/listarCaterogias/`);
+  const response5 = await api.get(`v1/listarProfessores/`);
   const turmas = await response.data;
   const vagas = await response2.data;
+  const modalidades = await response3.data;
+  const categorias = await response4.data;
+  const professores = await response5.data;
   return {
     props: {
       turmas,
       vagas,
+      modalidades,
+      categorias,
+      professores,
     },
   };
 };
